@@ -17,7 +17,7 @@ public class Swagger2Config {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage("com.project.system-management"))
+                .apis(RequestHandlerSelectors.basePackage("com.project.SEP_BE_EmployeeManagement"))
                 .paths(PathSelectors.regex("/.*"))
                 .build()
                 .apiInfo(apiEndPointsInfo());
