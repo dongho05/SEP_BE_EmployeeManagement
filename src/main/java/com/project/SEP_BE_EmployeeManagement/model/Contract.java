@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "contract")
@@ -24,4 +25,6 @@ public class Contract {
 //    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
 //    @ToString.Exclude // Khoonhg sử dụng trong toString()
     private Set<User> users;
+
+
 }

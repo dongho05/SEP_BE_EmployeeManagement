@@ -8,7 +8,9 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "users")
 @Table(name = "users")
@@ -19,8 +21,8 @@ public class User {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "user_code")
-    private String code;
+    @Column(name = "user_name")
+    private String username;
 
     @Column(name = "start_date")
     private Timestamp startDate;
@@ -70,8 +72,12 @@ public class User {
 //    @Column(name = "contract")
     private Contract contract;
 
-    @ManyToOne
-    @JoinColumn(name = "position_id")
-    private Position position;
-
+    //    @ManyToOne
+//    @JoinColumn(name = "position_id")
+//    private Position position;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 }

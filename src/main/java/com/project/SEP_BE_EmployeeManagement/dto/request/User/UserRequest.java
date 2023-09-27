@@ -4,10 +4,12 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import java.sql.Timestamp;
+import java.util.Set;
+
 @Data
 public class UserRequest {
-    private String code;
 
+    private String username;
 
     private String userImage;
 
@@ -17,11 +19,11 @@ public class UserRequest {
 
     private String password;
 
-    private String address;
+    private boolean gender;
 
     private String phone;
 
     private boolean status;
 
-
+    private Set<String> role;
 }

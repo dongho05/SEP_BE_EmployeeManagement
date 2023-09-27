@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserServiceImp implements UserService{
@@ -16,7 +17,7 @@ public class UserServiceImp implements UserService{
     private UserRepository userRepository;
     @Override
     public User login(LoginRequest request) {
-        User user = userRepository.findByEmailAndPassword(request.getEmail(),request.getPassword());
+        User user = userRepository.findByUsernameAndPassword(request.getUsername(),request.getPassword());
         if(user != null){
             return user;
         }
@@ -26,6 +27,11 @@ public class UserServiceImp implements UserService{
     @Override
     public List<User> GetAllPerson() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> GetPersonByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
