@@ -39,6 +39,8 @@ public class UserController {
     RoleRepository roleRepository;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    PasswordEncoder encoder;
     @PostMapping("/api/login")
     public ResponseEntity<?> Login(@RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(
@@ -72,6 +74,7 @@ public class UserController {
     @PostMapping("/api/auth/create")
     public ResponseEntity<?> CreateNewUser(@RequestBody UserRequest user){
         User u = UserMapper.toUser(user);
+        u.setPassword(encoder.encode(user.getPassword()));
         Set<String> strRoles = user.getRole();
         Set<Role> roles = new HashSet<>();
 
