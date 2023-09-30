@@ -67,17 +67,18 @@ public class User {
     // Many to One Có nhiều người ở 1 contract.
     @ManyToOne
     @JoinColumn(name = "contract_id") // thông qua khóa ngoại contract_id
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
 //    @Column(name = "contract")
     private Contract contract;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "position_id")
-//    private Position position;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private Position position;
+
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "user_roles",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    private Set<Role> roles = new HashSet<>();
 }

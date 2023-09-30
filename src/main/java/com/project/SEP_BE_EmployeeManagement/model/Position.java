@@ -1,6 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -17,12 +19,14 @@ public class Position {
     @Column(name = "position_name", nullable = false, length = 200)
     private String positionName;
 
-//    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
-//    private Set<Role> roles;
+    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<User> users;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "position_roles",
-//            joinColumns = @JoinColumn(name = "position_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "position_roles",
+            joinColumns = @JoinColumn(name = "position_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    Set<Role> roles = new HashSet<>();
 }
