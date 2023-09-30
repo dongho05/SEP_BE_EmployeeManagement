@@ -1,21 +1,21 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Entity(name = "users")
 @Table(name = "users")
 @Data
-public class User {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,10 +25,10 @@ public class User {
     private String username;
 
     @Column(name = "start_date")
-    private Timestamp startDate;
+    private LocalDate startWork;
 
-    @Column(name = "end_date")
-    private Timestamp endDate;
+    @Column(name = "end_work")
+    private LocalDate endWork;
 
     @Column(name = "user_image", nullable = false, length = 200)
     private String userImage;
@@ -51,14 +51,8 @@ public class User {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "created_at")
-    private Timestamp createdAt;
-
-    @Column(name = "created_date")
-    private Timestamp createdDate;
-
     @Column(name = "birth_day")
-    private Timestamp birthDay;
+    private LocalDate birthDay;
 
     @Column(name = "gender")
     private boolean gender;
@@ -75,6 +69,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "position_id")
     private Position position;
+
 
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(name = "user_roles",

@@ -4,11 +4,13 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity(name = "request")
 @Table(name = "request")
 @Data
-public class Request {
+public class Request extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
@@ -24,28 +26,22 @@ public class Request {
     private int requestTypeId;
 
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time")
-    private Timestamp endTime;
+    private LocalTime endTime;
 
-    @Column(name = "date_from")
-    private Timestamp dateFrom;
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
-    @Column(name = "date_to")
-    private Timestamp dateTo;
-
-    @Column(name = "create_by")
-    private long createBy;
-
-    @Column(name = "create_at")
-    private Timestamp createAt;
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @Column(name = "accept_by", nullable = false)
     private long acceptBy;
 
     @Column(name = "accept_at")
-    private Timestamp acceptAt;
+    private LocalDate acceptAt;
 
     @Column(name = "status", nullable = false)
     private boolean status;

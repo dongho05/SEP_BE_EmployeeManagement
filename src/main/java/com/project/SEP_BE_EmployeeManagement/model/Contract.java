@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity(name = "contract")
 @Table(name = "contract")
 @Data
-public class Contract {
+public class Contract extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

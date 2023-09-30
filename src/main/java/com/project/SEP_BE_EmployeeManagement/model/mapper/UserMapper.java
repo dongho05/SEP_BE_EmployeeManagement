@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class UserMapper {
     public static User toUser(UserRequest req) {
@@ -18,7 +19,7 @@ public class UserMapper {
         // Hash password using BCrypt
         String hash = BCrypt.hashpw(req.getPassword(), BCrypt.gensalt(12));
         user.setPassword(req.getPassword());
-        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+//        user.getCreatedDate(new Date());
         user.setStatus(true);
         user.setUserImage("no image");
         user.setUsername(req.getUsername());
