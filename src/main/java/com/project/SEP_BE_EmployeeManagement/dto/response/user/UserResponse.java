@@ -4,20 +4,23 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+
 @Data
 public class UserResponse {
+    private long id;
+
     private String username;
 
-    private Timestamp startDate;
+    private LocalDate startWork;
 
-    private Timestamp endDate;
+    private LocalDate endWork;
 
     private String userImage;
 
     private String fullName;
 
     private String email;
-
     private String password;
 
     private String address;
@@ -26,11 +29,7 @@ public class UserResponse {
 
     private boolean status;
 
-    private Timestamp createdAt;
-
-    private Timestamp createdDate;
-
-    private Timestamp birthDay;
+    private LocalDate birthDay;
 
     private boolean gender;
 }

@@ -37,16 +37,14 @@ public class UserServiceImp implements UserService{
             ur.setEmail(u.getEmail());
             ur.setPassword(u.getPassword());
             ur.setPhone(u.getPhone());
-            ur.setCreatedAt(u.getCreatedAt());
             ur.setUserImage(u.getUserImage());
             ur.setStatus(u.isStatus());
             ur.setBirthDay(u.getBirthDay());
-            ur.setCreatedDate(u.getCreatedDate());
-            ur.setStartDate(u.getStartDate());
-            ur.setEndDate(u.getEndDate());
             ur.setFullName(u.getFullName());
             ur.setGender(u.isGender());
-
+            ur.setUsername(u.getUsername());
+            ur.setEndWork(u.getEndWork());
+            ur.setStartWork(u.getStartWork());
             response.add(ur);
         }
         return response;
@@ -55,6 +53,11 @@ public class UserServiceImp implements UserService{
     @Override
     public Optional<User> GetPersonByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public Optional<User> GetPersonByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
