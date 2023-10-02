@@ -56,10 +56,7 @@ public class LoginController {
                 roles));
     }
 
-    @GetMapping("/api/get-all")
-    public ResponseEntity<?> GetAllPerson() {
-        return ResponseEntity.ok(userService.GetAllPerson());
-    }
+
 
     @GetMapping("/api/get-user/{username}")
 //    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")

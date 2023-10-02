@@ -38,11 +38,11 @@ public class CreateUser {
     @Size(min = 6, max = 50)
     private String phone;
 
-    private boolean status;
+    private Integer status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDay;
     @NotBlank(message = "Chưa chọn giới tính")
-    private boolean gender;
+    private Integer gender;
 
     @NotBlank(message = "Chưa chọn vị trí")
     private long positionId;

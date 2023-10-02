@@ -14,8 +14,12 @@ import com.project.SEP_BE_EmployeeManagement.repository.PositionRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -37,29 +41,7 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
-    @Override
-    public List<UserResponse> GetAllPerson() {
-        List<UserResponse> response = new ArrayList<>();
-        List<User> list = userRepository.findAll();
-        for (User u:
-             list) {
-            UserResponse ur = new UserResponse();
-            ur.setAddress(u.getAddress());
-            ur.setEmail(u.getEmail());
-            ur.setPassword(u.getPassword());
-            ur.setPhone(u.getPhone());
-            ur.setUserImage(u.getUserImage());
-            ur.setStatus(u.isStatus());
-            ur.setBirthDay(u.getBirthDay());
-            ur.setStartDate(u.getStartWork());
-            ur.setEndDate(u.getEndWork());
-            ur.setFullName(u.getFullName());
-            ur.setGender(u.isGender());
 
-            response.add(ur);
-        }
-        return response;
-    }
 
     @Override
     public Optional<User> GetPersonByUsername(String username) {
@@ -116,14 +98,14 @@ public class UserServiceImp implements UserService {
 
         // common
         user.setFullName(createUser.getFullName());
-        user.setGender(createUser.isGender());
+        user.setGender(createUser.getGender());
         user.setStartWork(createUser.getStartWork());
         user.setEndWork(createUser.getEndWork());
         user.setBirthDay(createUser.getBirthDay());
         user.setPhone(createUser.getPhone());
         user.setAddress(createUser.getAddress());
         user.setEmail(createUser.getEmail());
-        user.setStatus(true);
+        user.setStatus(1);
 
         //set contracts
         Set<Contract> contracts = new HashSet<>();
@@ -135,5 +117,17 @@ public class UserServiceImp implements UserService {
         user.setContracts(contracts);
         userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public Page<User> getData(String codeInput, String departmentIdInput, String searchInput, String statusInput, Pageable pageable) {
+        String code =  codeInput == null || codeInput.toString() == "" ? "" : codeInput;
+        Integer departId = departmentIdInput == null || departmentIdInput == "" ? -1 : Integer.parseInt(departmentIdInput);
+        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String status = statusInput == null || statusInput.toString() == "" ? "" : searchInput;
+
+        Page<User> list = userRepository.getData(code, departId,search, status,pageable);
+//        Page<User> list = userRepository.getData(departId,pageable);
+        return list;
     }
 }

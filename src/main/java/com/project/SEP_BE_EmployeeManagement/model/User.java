@@ -1,5 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -52,13 +54,13 @@ public class User extends BaseEntity{
     private String phone;
 
     @Column(name = "status")
-    private boolean status;
+    private Integer status; // 1 hieu luc; 2 vo hieu luc
 
     @Column(name = "birth_day")
     private LocalDate birthDay;
 
     @Column(name = "gender")
-    private boolean gender;
+    private Integer gender;// 1 nam; 2 nu
 
 
 
@@ -71,13 +73,17 @@ public class User extends BaseEntity{
 //    private Contract contract;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // Quan hệ 1-n với đối tượng ở dưới (Person) (1 địa điểm có nhiều người ở)
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Contract> contracts;
 
     @ManyToOne
+
     @JoinColumn(name = "position_id")
     private Position position;
 
     @ManyToOne
+
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 

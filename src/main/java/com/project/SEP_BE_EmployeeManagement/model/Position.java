@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -22,6 +23,7 @@ public class Position extends BaseEntity{
     @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<User> users;
 
 //    @ManyToOne

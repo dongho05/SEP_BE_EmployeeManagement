@@ -20,7 +20,7 @@ public class UserMapper {
         String hash = BCrypt.hashpw(req.getPassword(), BCrypt.gensalt(12));
         user.setPassword(req.getPassword());
 //        user.getCreatedDate(new Date());
-        user.setStatus(true);
+        user.setStatus(1);
         user.setUserImage("no image");
         user.setUsername(req.getUsername());
         return user;
