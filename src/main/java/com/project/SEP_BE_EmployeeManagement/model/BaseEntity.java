@@ -24,21 +24,21 @@ import java.util.Date;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-    @Column
+    @Column(name = "create_date")
     @CreatedDate
     @JsonIgnore
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date createdDate;
-    @Column
+    @Column(name = "created_by")
+    @CreatedBy
+    @JsonIgnore
+    private String createdBy;
+    @Column(name = "updated_date")
     @LastModifiedDate
     @JsonIgnore
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date updatedDate;
-    @Column
-    @CreatedBy
-    @JsonIgnore
-    private String createdBy;
-    @Column
+    @Column(name = "updated_by")
     @LastModifiedBy
     @JsonIgnore
     private String updatedBy;

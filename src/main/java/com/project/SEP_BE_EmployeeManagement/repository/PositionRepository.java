@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PositionRepository extends JpaRepository<Position, Integer> {
+public interface PositionRepository extends JpaRepository<Position, Long> {
 //    @Query(value = "select * from position p join role r where p.position",nativeQuery = true)
 //    public List<Position> GetListPosition();
 }

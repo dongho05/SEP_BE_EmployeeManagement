@@ -14,7 +14,7 @@ public class Position extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "position_id")
-    private int id;
+    private Long id;
 
     @Column(name = "position_name", nullable = false, length = 200)
     private String positionName;
@@ -23,6 +23,10 @@ public class Position extends BaseEntity{
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<User> users;
+
+//    @ManyToOne
+//    @JoinColumn(name = "role_id")
+//    private Role role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "position_roles",

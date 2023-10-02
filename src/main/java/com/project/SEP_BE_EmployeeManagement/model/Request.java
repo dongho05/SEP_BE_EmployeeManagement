@@ -14,7 +14,7 @@ public class Request extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
-    private int id;
+    private Long id;
 
     @Column(name = "request_title", nullable = false, length = 100)
     private String requestTitle;

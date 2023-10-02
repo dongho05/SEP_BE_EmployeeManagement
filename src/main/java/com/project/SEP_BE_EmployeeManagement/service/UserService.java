@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service;
 
+import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
@@ -16,4 +17,6 @@ public interface UserService {
     Optional<User> GetPersonByUsername(String username);
     public User CreateNewPerson(User user);
     public User UpdatePerson(UserRequest user);
+
+    User createUser(CreateUser createUser);
 }

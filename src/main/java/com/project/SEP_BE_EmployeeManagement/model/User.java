@@ -24,13 +24,16 @@ public class User extends BaseEntity{
     @Column(name = "user_name")
     private String username;
 
+    @Column(name = "user_code")
+    private String userCode;
+
     @Column(name = "start_date")
     private LocalDate startWork;
 
     @Column(name = "end_work")
     private LocalDate endWork;
 
-    @Column(name = "user_image", nullable = false, length = 200)
+    @Column(name = "user_image")
     private String userImage;
 
     @Column(name = "full_name", nullable = false, length = 200)
@@ -58,22 +61,24 @@ public class User extends BaseEntity{
     private boolean gender;
 
 
+
     // Many to One Có nhiều người ở 1 contract.
-    @ManyToOne
-    @JoinColumn(name = "contract_id") // thông qua khóa ngoại contract_id
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-//    @Column(name = "contract")
-    private Contract contract;
+//    @ManyToOne
+//    @JoinColumn(name = "contract_id") // thông qua khóa ngoại contract_id
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+////    @Column(name = "contract")
+//    private Contract contract;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // Quan hệ 1-n với đối tượng ở dưới (Person) (1 địa điểm có nhiều người ở)
+    private Set<Contract> contracts;
 
     @ManyToOne
     @JoinColumn(name = "position_id")
     private Position position;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private Set<Role> roles = new HashSet<>();
 }
