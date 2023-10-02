@@ -78,6 +78,11 @@ public class UserServiceImp implements UserService {
         }
         user.setUserCode(createUser.getUserCode());
 
+        if (userRepository.existsByEmail(createUser.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại!");
+        }
+        user.setEmail(createUser.getEmail());
+
         // set department
         Optional<Department> department = departmentRepository.findById(createUser.getDepartmentId());
         if(!department.isPresent()){
@@ -104,7 +109,6 @@ public class UserServiceImp implements UserService {
         user.setBirthDay(createUser.getBirthDay());
         user.setPhone(createUser.getPhone());
         user.setAddress(createUser.getAddress());
-        user.setEmail(createUser.getEmail());
         user.setStatus(1);
 
         //set contracts
@@ -120,13 +124,16 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Page<User> getData(String codeInput, String departmentIdInput, String searchInput, String statusInput, Pageable pageable) {
-        String code =  codeInput == null || codeInput.toString() == "" ? "" : codeInput;
-        Integer departId = departmentIdInput == null || departmentIdInput == "" ? -1 : Integer.parseInt(departmentIdInput);
-        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        String status = statusInput == null || statusInput.toString() == "" ? "" : searchInput;
+    public Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable) {
 
-        Page<User> list = userRepository.getData(code, departId,search, status,pageable);
+//        Integer departId = departmentIdInput == null || departmentIdInput == "" ? -1 : Integer.parseInt(departmentIdInput);
+//        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+//        Integer status = statusInput == null || statusInput.toString() == "" ? -1 : Integer.parseInt(statusInput);
+        String departId = departmentIdInput == null || departmentIdInput == "" ? "" : departmentIdInput;
+        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String status = statusInput == null || statusInput.toString() == "" ? "" : statusInput;
+
+        Page<User> list = userRepository.getData( departId,search, status,pageable);
 //        Page<User> list = userRepository.getData(departId,pageable);
         return list;
     }

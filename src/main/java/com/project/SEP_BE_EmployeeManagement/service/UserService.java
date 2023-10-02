@@ -22,6 +22,6 @@ public interface UserService {
 
     User createUser(CreateUser createUser);
 
-    Page<User> getData(String codeInput, String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
+    Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
 
 }
