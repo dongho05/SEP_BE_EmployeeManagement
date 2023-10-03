@@ -14,7 +14,8 @@ public interface UserService {
     public User login(LoginRequest request);
     public List<UserResponse> GetAllPerson();
     Optional<User> GetPersonByUsername(String username);
-    Optional<User> GetPersonByEmail(String email);
+    User GetPersonByEmail(String email);
     public User CreateNewPerson(User user);
     public User UpdatePerson(UserRequest user);
+    public boolean UpdatePassword(String email,String newPassword);
 }

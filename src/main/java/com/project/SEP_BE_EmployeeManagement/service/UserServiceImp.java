@@ -56,7 +56,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public Optional<User> GetPersonByEmail(String email) {
+    public User GetPersonByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -70,5 +70,14 @@ public class UserServiceImp implements UserService{
     public User UpdatePerson(UserRequest user) {
         User u = UserMapper.toUser(user);
         return null;
+    }
+
+    @Override
+    public boolean UpdatePassword(String email,String newPassword) {
+        User user = GetPersonByEmail(email);
+        if(user != null){
+            userRepository.updatePassword(email,newPassword);
+        }
+        return false;
     }
 }

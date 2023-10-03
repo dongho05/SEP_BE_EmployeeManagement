@@ -2,12 +2,15 @@ package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.login.PasswordRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.JwtResponse;
 import com.project.SEP_BE_EmployeeManagement.extensions.Utilities;
 import com.project.SEP_BE_EmployeeManagement.repository.RoleRepository;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.JwtUtils;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
+import com.project.SEP_BE_EmployeeManagement.service.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Random;
@@ -36,6 +40,11 @@ public class LoginController {
     JwtUtils jwtUtils;
     @Autowired
     PasswordEncoder encoder;
+    private MailService mailService;
+
+    public LoginController(MailService mailService) {
+        this.mailService = mailService;
+    }
     private static Random generator = new Random();
 
 
@@ -72,5 +81,17 @@ public class LoginController {
         return ResponseEntity.ok(userService.GetPersonByUsername(username));
     }
 
-    
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> ForgotPassword(@RequestBody PasswordRequest request) {
+        int length = 8 + generator.nextInt(12);
+        String randomPassword = Utilities.alphaNumericString(length);
+        String hashedPassword = encoder.encode(randomPassword);
+
+        mailService.sendPassword(new ResetPasswordRequest(request.getEmail(),
+                "Reset password",
+                "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
+        userService.UpdatePassword(request.getEmail(), hashedPassword);
+
+        return ResponseEntity.ok(hashedPassword);
+    }
 }
