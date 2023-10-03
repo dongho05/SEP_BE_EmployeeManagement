@@ -49,6 +49,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public User GetPersonByEmail(String email) {
+        return null;
+    }
+
+    @Override
     public User CreateNewPerson(User user) {
         User u = userRepository.save(user);
         return u;
@@ -73,9 +78,10 @@ public class UserServiceImp implements UserService {
         user.setPassword(createUser.getPassword());
 
         // set user code
-        if (userRepository.existsByUserCode(createUser.getUserCode())) {
-            throw new RuntimeException("Mã nhân viên đã tồn tại!");
+        if (userRepository.existsByEmail(createUser.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại!");
         }
+        user.setEmail(createUser.getEmail());
         user.setUserCode(createUser.getUserCode());
 
         if (userRepository.existsByEmail(createUser.getEmail())) {
@@ -136,5 +142,10 @@ public class UserServiceImp implements UserService {
         Page<User> list = userRepository.getData( departId,search, status,pageable);
 //        Page<User> list = userRepository.getData(departId,pageable);
         return list;
+    }
+
+    @Override
+    public boolean UpdatePassword(String email, String newPassword) {
+        return false;
     }
 }

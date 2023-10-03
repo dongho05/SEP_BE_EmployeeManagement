@@ -17,4 +17,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
+    @Query(value = "select u.* from users u " +
+            " join department d on d.department_id = u.department_id" +
+            " where (:departId = '' or u.department_id = :departId)  " +
+            " and (:search is null or :search = '' or u.full_name LIKE %:search% or d.department_name LIKE %:search% or u.user_name LIKE %:search% or u.user_code LIKE %:search%) " +
+            " and (:status = '' or u.status = :status) " +
+            " order by u.updated_date desc ",nativeQuery = true)
+    Page<User> getData( String departId, String search, String status, Pageable pageable);
+
+    @Query(value = "select u.* from users u " +
+            " join department d on d.department_id = u.department_id" +
+            " where (:departId = '' or u.department_id = :departId)  " +
+            " and (:search is null or :search = '' or u.full_name LIKE %:search% or d.department_name LIKE %:search% or u.user_name LIKE %:search% or u.user_code LIKE %:search%) " +
+            " and (:status = '' or u.status = :status) " +
+            " order by u.updated_date desc ",nativeQuery = true)
+    List<User> getDataExport(String departId, String search, String status);
 }

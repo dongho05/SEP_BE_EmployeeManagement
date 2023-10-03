@@ -20,13 +20,10 @@ public interface UserService {
     User GetPersonByEmail(String email);
     public User CreateNewPerson(User user);
     public User UpdatePerson(UserRequest user);
-<<<<<<< HEAD
 
     User createUser(CreateUser createUser);
 
     Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
 
-=======
     public boolean UpdatePassword(String email,String newPassword);
->>>>>>> dongho
 }
