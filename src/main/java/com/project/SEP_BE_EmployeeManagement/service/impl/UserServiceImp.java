@@ -16,6 +16,7 @@ import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -32,6 +33,8 @@ public class UserServiceImp implements UserService {
     FileManagerService fileManagerService;
     @Autowired
     PositionRepository positionRepository;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     @Override
     public User login(LoginRequest request) {
         User user = userRepository.findByUsernameAndPassword(request.getUsername(),request.getPassword());
@@ -70,7 +73,7 @@ public class UserServiceImp implements UserService {
         user.setUsername(createUser.getUsername());
 
         // set password
-        user.setPassword(createUser.getPassword());
+        user.setPassword(encoder.encode(createUser.getPassword()));
 
         // set user code
         if (userRepository.existsByUserCode(createUser.getUserCode())) {
@@ -136,5 +139,16 @@ public class UserServiceImp implements UserService {
         Page<User> list = userRepository.getData( departId,search, status,pageable);
 //        Page<User> list = userRepository.getData(departId,pageable);
         return list;
+    }
+
+    private static String alphaNumericString(int len) {
+        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random rnd = new Random();
+
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
     }
 }
