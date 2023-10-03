@@ -16,6 +16,7 @@ import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -32,6 +33,8 @@ public class UserServiceImp implements UserService {
     FileManagerService fileManagerService;
     @Autowired
     PositionRepository positionRepository;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     @Override
     public User login(LoginRequest request) {
         User user = userRepository.findByUsernameAndPassword(request.getUsername(),request.getPassword());
@@ -46,11 +49,6 @@ public class UserServiceImp implements UserService {
     @Override
     public Optional<User> GetPersonByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public User GetPersonByEmail(String email) {
-        return null;
     }
 
     @Override
@@ -75,13 +73,12 @@ public class UserServiceImp implements UserService {
         user.setUsername(createUser.getUsername());
 
         // set password
-        user.setPassword(createUser.getPassword());
+        user.setPassword(encoder.encode(createUser.getPassword()));
 
         // set user code
-        if (userRepository.existsByEmail(createUser.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
+        if (userRepository.existsByUserCode(createUser.getUserCode())) {
+            throw new RuntimeException("Mã nhân viên đã tồn tại!");
         }
-        user.setEmail(createUser.getEmail());
         user.setUserCode(createUser.getUserCode());
 
         if (userRepository.existsByEmail(createUser.getEmail())) {
@@ -144,8 +141,14 @@ public class UserServiceImp implements UserService {
         return list;
     }
 
-    @Override
-    public boolean UpdatePassword(String email, String newPassword) {
-        return false;
+    private static String alphaNumericString(int len) {
+        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random rnd = new Random();
+
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
     }
 }
