@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service.mail;
 
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,27 @@ public class MailServiceImpl implements MailService {
                         , new ByteArrayResource(file[i].getBytes())
                 );
             }
+
+            javaMailSender.send(mimeMessage);
+
+            return "Mail sent!";
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String sendPassword(ResetPasswordRequest request) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+            mimeMessageHelper.setFrom(fromEmail);
+            mimeMessageHelper.setTo(request.getTo());
+            mimeMessageHelper.setSubject(request.getSubject());
+            mimeMessageHelper.setText(request.getBody());
 
             javaMailSender.send(mimeMessage);
 
