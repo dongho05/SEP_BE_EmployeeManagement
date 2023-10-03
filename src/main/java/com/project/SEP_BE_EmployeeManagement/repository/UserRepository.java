@@ -32,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " and (:status = '' or u.status = :status) " +
             " order by u.updated_date desc ",nativeQuery = true)
     List<User> getDataExport(String departId, String search, String status);
+
+    boolean existsByUserCode(String userCode);
 }

@@ -18,12 +18,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@Component
+@Service
 public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -49,6 +50,11 @@ public class UserServiceImp implements UserService {
     @Override
     public Optional<User> GetPersonByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User GetPersonByEmail(String email) {
+        return null;
     }
 
     @Override
@@ -139,6 +145,11 @@ public class UserServiceImp implements UserService {
         Page<User> list = userRepository.getData( departId,search, status,pageable);
 //        Page<User> list = userRepository.getData(departId,pageable);
         return list;
+    }
+
+    @Override
+    public boolean UpdatePassword(String email, String newPassword) {
+        return false;
     }
 
     private static String alphaNumericString(int len) {
