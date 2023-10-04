@@ -8,18 +8,19 @@ import java.time.LocalDate;
 
 @Data
 public class UserResponse {
+    private long id;
+
     private String username;
 
-    private LocalDate startDate;
+    private LocalDate startWork;
 
-    private LocalDate endDate;
+    private LocalDate endWork;
 
     private String userImage;
 
     private String fullName;
 
     private String email;
-
     private String password;
 
     private String address;
