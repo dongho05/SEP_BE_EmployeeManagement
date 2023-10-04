@@ -54,13 +54,13 @@ public class User extends BaseEntity{
     private String phone;
 
     @Column(name = "status")
-    private Integer status; // 1 hieu luc; 2 vo hieu luc
+    private Integer status; // 1 hieu luc; 0 vo hieu luc
 
     @Column(name = "birth_day")
     private LocalDate birthDay;
 
     @Column(name = "gender")
-    private Integer gender;// 1 nam; 2 nu
+    private Integer gender;// 1 nam; 0 nu
 
 
 
@@ -73,7 +73,6 @@ public class User extends BaseEntity{
 //    private Contract contract;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // Quan hệ 1-n với đối tượng ở dưới (Person) (1 địa điểm có nhiều người ở)
-
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Contract> contracts;
 

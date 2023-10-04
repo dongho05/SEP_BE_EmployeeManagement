@@ -19,8 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,8 +43,7 @@ public class UserController {
     @Autowired
     DepartmentRepository departmentRepository;
     @PostMapping(value = "create")
-
-    public MessageResponse createUser(@RequestBody CreateUser createUser) {
+    public MessageResponse createUser(@Valid @ModelAttribute CreateUser createUser) throws MessagingException, UnsupportedEncodingException {
 
 //            for(CreateUser s : createUser){
 //                userService.createUser(s);

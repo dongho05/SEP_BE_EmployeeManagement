@@ -3,6 +3,7 @@ package com.project.SEP_BE_EmployeeManagement.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
