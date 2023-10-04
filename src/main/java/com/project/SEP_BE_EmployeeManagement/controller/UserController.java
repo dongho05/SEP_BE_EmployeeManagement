@@ -78,6 +78,8 @@ public class UserController {
     public ResponseEntity<UserDto> blockUser(@PathVariable long id) throws NotFoundException {
         UserDto userDto = userService.blockUser(id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
     @GetMapping("/export_users")
     public ResponseEntity exportUser(@RequestParam(name = "departmentId", required = false, defaultValue = "") String departmentId,
                                      @RequestParam(name = "search", required = false, defaultValue = "") String search,

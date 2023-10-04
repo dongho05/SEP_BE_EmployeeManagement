@@ -76,6 +76,8 @@ public class UserServiceImp implements UserService {
         user.setBirthDay(profileRequest.getBirthDay());
 
         return UserMapper.toUserDto(userRepository.save(user));
+    }
+
     public User GetPersonByEmail(String email) {
         return null;
     }
