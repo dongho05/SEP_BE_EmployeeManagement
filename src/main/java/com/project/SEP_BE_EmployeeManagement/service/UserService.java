@@ -31,5 +31,5 @@ public interface UserService {
 
     Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
 
-    public boolean UpdatePassword(String email,String newPassword);
+    public void UpdatePassword(String email,String newPassword);
 }
