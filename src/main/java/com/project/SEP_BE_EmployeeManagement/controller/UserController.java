@@ -2,6 +2,7 @@ package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
@@ -45,8 +46,14 @@ public class UserController {
     }
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<UserDto> ViewProfile(@PathVariable long id) throws NotFoundException {
-        UserDto userDto = userService.GetUserById(id);
+    public ResponseEntity<UserDto> viewProfile(@PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.getUserById(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("/profile/{id}")
+    public ResponseEntity<UserDto> updateProfile(@RequestBody ProfileRequest profileRequest, @PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.updateProfile(profileRequest, id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

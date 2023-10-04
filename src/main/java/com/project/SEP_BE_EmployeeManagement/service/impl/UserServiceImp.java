@@ -3,6 +3,7 @@ package com.project.SEP_BE_EmployeeManagement.service.impl;
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Contract;
@@ -43,16 +44,27 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
-
-
     @Override
     public Optional<User> GetPersonByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public UserDto GetUserById(long id) throws NotFoundException {
+    public UserDto getUserById(long id) throws NotFoundException {
         return UserMapper.toUserDto(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"))) ;
+    }
+
+    @Override
+    public UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
+
+        user.setFullName(profileRequest.getFullName());
+        user.setPhone(profileRequest.getPhone());
+        user.setAddress(profileRequest.getAddress());
+        user.setGender(profileRequest.getGender());
+        user.setBirthDay(profileRequest.getBirthDay());
+
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override

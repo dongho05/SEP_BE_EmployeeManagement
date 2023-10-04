@@ -3,6 +3,7 @@ package com.project.SEP_BE_EmployeeManagement.service;
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
 import com.project.SEP_BE_EmployeeManagement.model.User;
@@ -19,7 +20,8 @@ public interface UserService {
     public User login(LoginRequest request);
 //    public List<UserResponse> GetAllPerson();
     Optional<User> GetPersonByUsername(String username);
-    UserDto GetUserById(long id) throws NotFoundException;
+    UserDto getUserById(long id) throws NotFoundException;
+    UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException;
     public User CreateNewPerson(User user);
     public User UpdatePerson(UserRequest user);
 
