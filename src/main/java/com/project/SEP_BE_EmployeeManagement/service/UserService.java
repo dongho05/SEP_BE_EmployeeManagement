@@ -23,11 +23,13 @@ public interface UserService {
     UserDto getUserById(long id) throws NotFoundException;
     UserDto blockUser(long id) throws NotFoundException;
     UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException;
+    User GetPersonByEmail(String email);
     public User CreateNewPerson(User user);
     public User UpdatePerson(UserRequest user);
 
     User createUser(CreateUser createUser);
 
-    Page<User> getData(String codeInput, String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
+    Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
 
+    public boolean UpdatePassword(String email,String newPassword);
 }

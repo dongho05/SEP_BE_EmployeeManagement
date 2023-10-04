@@ -19,13 +19,15 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@Component
+@Service
 public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -35,6 +37,8 @@ public class UserServiceImp implements UserService {
     FileManagerService fileManagerService;
     @Autowired
     PositionRepository positionRepository;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     @Override
     public User login(LoginRequest request) {
         User user = userRepository.findByUsernameAndPassword(request.getUsername(),request.getPassword());
@@ -72,6 +76,8 @@ public class UserServiceImp implements UserService {
         user.setBirthDay(profileRequest.getBirthDay());
 
         return UserMapper.toUserDto(userRepository.save(user));
+    public User GetPersonByEmail(String email) {
+        return null;
     }
 
     @Override
@@ -96,13 +102,18 @@ public class UserServiceImp implements UserService {
         user.setUsername(createUser.getUsername());
 
         // set password
-        user.setPassword(createUser.getPassword());
+        user.setPassword(encoder.encode(createUser.getPassword()));
 
         // set user code
         if (userRepository.existsByUserCode(createUser.getUserCode())) {
             throw new RuntimeException("Mã nhân viên đã tồn tại!");
         }
         user.setUserCode(createUser.getUserCode());
+
+        if (userRepository.existsByEmail(createUser.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại!");
+        }
+        user.setEmail(createUser.getEmail());
 
         // set department
         Optional<Department> department = departmentRepository.findById(createUser.getDepartmentId());
@@ -130,7 +141,6 @@ public class UserServiceImp implements UserService {
         user.setBirthDay(createUser.getBirthDay());
         user.setPhone(createUser.getPhone());
         user.setAddress(createUser.getAddress());
-        user.setEmail(createUser.getEmail());
         user.setStatus(1);
 
         //set contracts
@@ -146,14 +156,33 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Page<User> getData(String codeInput, String departmentIdInput, String searchInput, String statusInput, Pageable pageable) {
-        String code =  codeInput == null || codeInput.toString() == "" ? "" : codeInput;
-        Integer departId = departmentIdInput == null || departmentIdInput == "" ? -1 : Integer.parseInt(departmentIdInput);
-        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        String status = statusInput == null || statusInput.toString() == "" ? "" : searchInput;
+    public Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable) {
 
-        Page<User> list = userRepository.getData(code, departId,search, status,pageable);
+//        Integer departId = departmentIdInput == null || departmentIdInput == "" ? -1 : Integer.parseInt(departmentIdInput);
+//        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+//        Integer status = statusInput == null || statusInput.toString() == "" ? -1 : Integer.parseInt(statusInput);
+        String departId = departmentIdInput == null || departmentIdInput == "" ? "" : departmentIdInput;
+        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String status = statusInput == null || statusInput.toString() == "" ? "" : statusInput;
+
+        Page<User> list = userRepository.getData( departId,search, status,pageable);
 //        Page<User> list = userRepository.getData(departId,pageable);
         return list;
+    }
+
+    @Override
+    public boolean UpdatePassword(String email, String newPassword) {
+        return false;
+    }
+
+    private static String alphaNumericString(int len) {
+        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random rnd = new Random();
+
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        return sb.toString();
     }
 }
