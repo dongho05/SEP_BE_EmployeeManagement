@@ -3,9 +3,11 @@ package com.project.SEP_BE_EmployeeManagement.controller;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.login.PasswordRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.UpdatePasswordRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.JwtResponse;
 import com.project.SEP_BE_EmployeeManagement.extensions.Utilities;
+import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.RoleRepository;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.JwtUtils;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
@@ -23,10 +25,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api")
 public class LoginController {
     @Autowired
@@ -62,11 +66,15 @@ public class LoginController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        Optional<User> user = userService.findByUsernameOrEmail(loginRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles,
+                user.get().getUserCode(),
+                user.get().getDepartment().getId(),
+                user.get().getFullName()));
     }
 
 
@@ -87,8 +95,29 @@ public class LoginController {
         mailService.sendPassword(new ResetPasswordRequest(request.getEmail(),
                 "Reset password",
                 "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
-        userService.UpdatePassword(request.getEmail(), hashedPassword);
-
+        try {
+            userService.UpdatePassword(request.getEmail(), hashedPassword);
+        }catch (Exception e){
+        }
         return ResponseEntity.ok(hashedPassword);
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordRequest request){
+
+        Optional<User> user = userService.findByUsernameOrEmail(request.getEmail());
+        if(!encoder.matches(request.getOldPassword(), user.get().getPassword())){
+            throw new RuntimeException("Mật khẩu cũ không đúng!");
+        }
+        if(!request.getNewPassword1().equals(request.getNewPassword2())){
+            throw new RuntimeException("Mật khẩu nhập lại không đúng!");
+        }
+        String hashPassword = encoder.encode(request.getNewPassword1());
+        try {
+            userService.UpdatePassword(request.getEmail(), hashPassword);
+
+        }catch (Exception e){
+
+        }
+        return ResponseEntity.ok(request.getNewPassword1());
     }
 }

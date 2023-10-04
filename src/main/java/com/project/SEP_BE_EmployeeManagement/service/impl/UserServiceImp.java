@@ -50,7 +50,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Optional<User> GetPersonByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameOrEmail(username);
     }
 
     @Override
@@ -78,8 +78,8 @@ public class UserServiceImp implements UserService {
         return UserMapper.toUserDto(userRepository.save(user));
     }
 
-    public User GetPersonByEmail(String email) {
-        return null;
+    public Optional<User> findByUsernameOrEmail(String email) {
+        return userRepository.findByUsernameOrEmail(email);
     }
 
     @Override
@@ -173,8 +173,8 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean UpdatePassword(String email, String newPassword) {
-        return false;
+    public void UpdatePassword(String email, String newPassword) {
+        userRepository.UpdatePassword(email,newPassword);
     }
 
     private static String alphaNumericString(int len) {
