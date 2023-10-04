@@ -11,11 +11,11 @@ import java.time.LocalDate;
 
 @Data
 public class CreateUser {
-    @NotBlank(message = "Chưa nhập tên đăng nhập")
-    @Size(min = 3, max = 50)
+//    @NotBlank(message = "Chưa nhập tên đăng nhập")
+//    @Size(min = 3, max = 50)
     private String username;
 
-    @NotNull(message = "Chưa nhập mã nhân viên")
+//    @NotNull(message = "Chưa nhập mã nhân viên")
     private String userCode;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startWork;
@@ -24,27 +24,27 @@ public class CreateUser {
 
     private MultipartFile userImage;
 
-    @NotBlank(message = "Chưa nhập tên")
-    @Size(min = 6, max = 50)
+//    @NotBlank(message = "Chưa nhập tên")
+//    @Size(min = 6, max = 50)
     private String fullName;
-    @NotBlank(message = "Chưa nhập email")
-    @Size(min = 6, max = 50)
+//    @NotBlank(message = "Chưa nhập email")
+//    @Size(min = 6, max = 50)
     private String email;
 
     private String password;
 
     private String address;
-    @NotBlank(message = "Chưa nhập điện thoại")
-    @Size(min = 6, max = 50)
+//    @NotBlank(message = "Chưa nhập điện thoại")
+//    @Size(min = 6, max = 50)
     private String phone;
 
     private Integer status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDay;
-    @NotBlank(message = "Chưa chọn giới tính")
+//    @NotBlank(message = "Chưa chọn giới tính")
     private Integer gender;
 
-    @NotBlank(message = "Chưa chọn vị trí")
+//    @NotBlank(message = "Chưa chọn vị trí")
     private long positionId;
 
     private long departmentId;
