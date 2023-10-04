@@ -49,12 +49,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Optional<User> GetPersonByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameOrEmail(username);
     }
 
     @Override
-    public User GetPersonByEmail(String email) {
-        return null;
+    public Optional<User> findByUsernameOrEmail(String email) {
+        return userRepository.findByUsernameOrEmail(email);
     }
 
     @Override

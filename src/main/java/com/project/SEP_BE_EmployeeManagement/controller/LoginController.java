@@ -6,6 +6,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequ
 import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.JwtResponse;
 import com.project.SEP_BE_EmployeeManagement.extensions.Utilities;
+import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.RoleRepository;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.JwtUtils;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -62,11 +64,15 @@ public class LoginController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        Optional<User> user = userService.findByUsernameOrEmail(loginRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles,
+                user.get().getUserCode(),
+                user.get().getDepartment().getId(),
+                user.get().getFullName()));
     }
 
 
