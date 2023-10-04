@@ -148,8 +148,8 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean UpdatePassword(String email, String newPassword) {
-        return false;
+    public void UpdatePassword(String email, String newPassword) {
+        userRepository.UpdatePassword(email,newPassword);
     }
 
     private static String alphaNumericString(int len) {
