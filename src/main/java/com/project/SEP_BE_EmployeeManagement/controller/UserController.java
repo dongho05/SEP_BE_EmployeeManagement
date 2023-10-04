@@ -1,9 +1,11 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,5 +42,11 @@ public class UserController {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> pageUsers = userService.getData(code, departmentId,search,status, pageable);
         return new ResponseEntity<>(pageUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<UserDto> ViewProfile(@PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.GetUserById(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

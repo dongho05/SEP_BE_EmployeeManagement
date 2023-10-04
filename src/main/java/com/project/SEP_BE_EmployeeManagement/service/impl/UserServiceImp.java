@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
@@ -13,6 +14,7 @@ import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.PositionRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +48,11 @@ public class UserServiceImp implements UserService {
     @Override
     public Optional<User> GetPersonByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserDto GetUserById(long id) throws NotFoundException {
+        return UserMapper.toUserDto(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"))) ;
     }
 
     @Override
