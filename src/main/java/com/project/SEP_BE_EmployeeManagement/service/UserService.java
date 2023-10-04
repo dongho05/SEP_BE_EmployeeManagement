@@ -21,6 +21,7 @@ public interface UserService {
 //    public List<UserResponse> GetAllPerson();
     Optional<User> GetPersonByUsername(String username);
     UserDto getUserById(long id) throws NotFoundException;
+    UserDto blockUser(long id) throws NotFoundException;
     UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException;
     public User CreateNewPerson(User user);
     public User UpdatePerson(UserRequest user);

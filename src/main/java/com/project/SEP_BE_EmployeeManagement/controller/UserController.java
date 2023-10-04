@@ -56,4 +56,10 @@ public class UserController {
         UserDto userDto = userService.updateProfile(profileRequest, id);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
+
+    @GetMapping("/block/{id}")
+    public ResponseEntity<UserDto> blockUser(@PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.blockUser(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
 }

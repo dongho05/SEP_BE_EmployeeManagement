@@ -55,6 +55,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserDto blockUser(long id) throws NotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
+        user.setStatus(2);
+        return UserMapper.toUserDto(userRepository.save(user));
+    }
+
+    @Override
     public UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
 
