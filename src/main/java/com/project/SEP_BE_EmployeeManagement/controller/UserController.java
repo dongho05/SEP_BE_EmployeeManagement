@@ -1,12 +1,15 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.exportExcel.ExcelExportUser;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,6 +62,24 @@ public class UserController {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> pageUsers = userService.getData(departmentId,search,status, pageable);
         return new ResponseEntity<>(pageUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<UserDto> viewProfile(@PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.getUserById(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("/profile/{id}")
+    public ResponseEntity<UserDto> updateProfile(@RequestBody ProfileRequest profileRequest, @PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.updateProfile(profileRequest, id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/block/{id}")
+    public ResponseEntity<UserDto> blockUser(@PathVariable long id) throws NotFoundException {
+        UserDto userDto = userService.blockUser(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @GetMapping("/export_users")

@@ -82,7 +82,7 @@ public class User extends BaseEntity{
     private Position position;
 
     @ManyToOne
-
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 

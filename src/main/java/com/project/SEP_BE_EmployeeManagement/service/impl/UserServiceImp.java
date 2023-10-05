@@ -1,7 +1,9 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Contract;
@@ -13,6 +15,7 @@ import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.PositionRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,16 +48,38 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
-
-
     @Override
     public Optional<User> GetPersonByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameOrEmail(username);
     }
 
     @Override
-    public User GetPersonByEmail(String email) {
-        return null;
+    public UserDto getUserById(long id) throws NotFoundException {
+        return UserMapper.toUserDto(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"))) ;
+    }
+
+    @Override
+    public UserDto blockUser(long id) throws NotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
+        user.setStatus(2);
+        return UserMapper.toUserDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
+
+        user.setFullName(profileRequest.getFullName());
+        user.setPhone(profileRequest.getPhone());
+        user.setAddress(profileRequest.getAddress());
+        user.setGender(profileRequest.getGender());
+        user.setBirthDay(profileRequest.getBirthDay());
+
+        return UserMapper.toUserDto(userRepository.save(user));
+    }
+
+    public Optional<User> findByUsernameOrEmail(String email) {
+        return userRepository.findByUsernameOrEmail(email);
     }
 
     @Override
@@ -148,8 +173,8 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean UpdatePassword(String email, String newPassword) {
-        return false;
+    public void UpdatePassword(String email, String newPassword) {
+        userRepository.UpdatePassword(email,newPassword);
     }
 
     private static String alphaNumericString(int len) {
