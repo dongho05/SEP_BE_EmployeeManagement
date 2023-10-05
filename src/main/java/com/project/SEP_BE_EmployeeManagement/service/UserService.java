@@ -32,4 +32,6 @@ public interface UserService {
     Page<User> getData( String departmentIdInput, String searchInput, String statusInput, Pageable pageable);
 
     public void UpdatePassword(String email,String newPassword);
+
+    Boolean existsByEmail(String email);
 }

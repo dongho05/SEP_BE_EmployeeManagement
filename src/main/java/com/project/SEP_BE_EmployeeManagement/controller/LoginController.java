@@ -92,14 +92,20 @@ public class LoginController {
         String randomPassword = Utilities.alphaNumericString(length);
         String hashedPassword = encoder.encode(randomPassword);
 
-        mailService.sendPassword(new ResetPasswordRequest(request.getEmail(),
-                "Reset password",
-                "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
-        try {
-            userService.UpdatePassword(request.getEmail(), hashedPassword);
-        }catch (Exception e){
+
+
+        if(userService.existsByEmail(request.getEmail())==true){
+            mailService.sendPassword(new ResetPasswordRequest(request.getEmail(),
+                    "Reset password",
+                    "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
+            try {
+                userService.UpdatePassword(request.getEmail(), hashedPassword);
+            }catch (Exception e){
+            }
+            return ResponseEntity.ok("Mật khẩu mới đã được gửi hòm thư của bạn.");
         }
-        return ResponseEntity.ok(hashedPassword);
+        return  ResponseEntity.ok("Email không tồn tại.");
+
     }
     @PostMapping("/change-password")
     public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordRequest request){
