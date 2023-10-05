@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "contract")
+@Entity
 @Table(name = "contract")
 @Data
 public class Contract extends BaseEntity{

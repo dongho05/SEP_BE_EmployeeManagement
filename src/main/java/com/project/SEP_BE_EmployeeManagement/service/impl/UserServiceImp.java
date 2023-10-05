@@ -177,6 +177,16 @@ public class UserServiceImp implements UserService {
         userRepository.UpdatePassword(email,newPassword);
     }
 
+    @Override
+    public Boolean existsByEmail(String email) {
+        boolean result = userRepository.existsByEmail(email);
+        if(result == true){
+            return true;
+        }
+        return false;
+    }
+
+
     private static String alphaNumericString(int len) {
         String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random rnd = new Random();

@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity(name = "position")
+@Entity
 public class Position extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
