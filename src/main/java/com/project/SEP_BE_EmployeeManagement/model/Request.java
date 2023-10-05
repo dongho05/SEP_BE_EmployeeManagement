@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity(name = "request")
+@Entity
 @Table(name = "request")
 @Data
 public class Request extends BaseEntity {
