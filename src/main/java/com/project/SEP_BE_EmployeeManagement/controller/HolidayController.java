@@ -1,0 +1,62 @@
+package com.project.SEP_BE_EmployeeManagement.controller;
+
+import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
+import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
+import com.project.SEP_BE_EmployeeManagement.model.Holiday;
+import com.project.SEP_BE_EmployeeManagement.model.User;
+import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/holiday")
+@CrossOrigin(origins = "*", maxAge = 3600)
+public class HolidayController {
+    @Autowired
+    HolidayService holidayService;
+
+    @PostMapping("/create-holiday")
+    public ResponseEntity<?> createHoliday(@RequestBody HolidayRequest request) {
+        holidayService.createHoliday(request);
+        return ResponseEntity.ok("Tạo mới thành công.");
+    }
+
+    @GetMapping("/get-all-holiday")
+    public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
+                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                     @RequestParam(name = "size", defaultValue = "30") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<HolidayResponse> pageHolidays = holidayService.getList(search, pageable);
+        return ResponseEntity.ok(pageHolidays);
+    }
+
+    @PutMapping("/update-holiday/{id}")
+    public ResponseEntity<?> updateHoliday(@RequestBody HolidayRequest request, @PathVariable int id) {
+        if (request.getStartDate().isAfter(request.getEndDate()) == true) {
+            throw new RuntimeException("Hãy chọn ngày bắt đầu nhở hơn ngày kết thúc.");
+        }
+        try {
+            holidayService.updateHoliday(request, id);
+        } catch (Exception e) {
+
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-holiday/{id}")
+    public ResponseEntity<?> deleteHoliday(@PathVariable int id) {
+        try {
+            holidayService.deleteHoliday(id);
+
+        } catch (Exception e) {
+
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}
