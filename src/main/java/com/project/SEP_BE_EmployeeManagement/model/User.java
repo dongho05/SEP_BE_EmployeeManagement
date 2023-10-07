@@ -86,4 +86,7 @@ public class User extends BaseEntity{
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Set<Request> requests;
 }
