@@ -1,13 +1,13 @@
 package com.project.SEP_BE_EmployeeManagement.dto.request.mail;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
+
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MailRequest {
+public class MailReq {
     private String to;
     private String[] cc;
     private String subject;

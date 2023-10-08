@@ -1,9 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayReq;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Holiday;
-import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.HolidayRepository;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.function.Function;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -43,7 +41,7 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     @Override
-    public Holiday createHoliday(HolidayRequest request) {
+    public Holiday createHoliday(HolidayReq request) {
         Holiday obj = new Holiday();
         obj.setHolidayName(request.getHolidayName());
         obj.setStartDate(request.getStartDate());
@@ -53,7 +51,7 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     @Override
-    public Holiday updateHoliday(HolidayRequest request,int id) {
+    public Holiday updateHoliday(HolidayReq request, int id) {
         if(!holidayRepository.existsById(id)){
             throw new RuntimeException("Ngày nghỉ không tồn tại");
         }

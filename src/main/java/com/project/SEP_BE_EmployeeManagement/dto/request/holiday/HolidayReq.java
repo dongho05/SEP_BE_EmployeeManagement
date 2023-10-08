@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HolidayRequest {
+public class HolidayReq {
     private String holidayName;
 
     private LocalDate startDate;

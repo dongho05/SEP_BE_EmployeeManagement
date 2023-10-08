@@ -1,10 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayReq;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
-import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
-import com.project.SEP_BE_EmployeeManagement.model.Holiday;
-import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +19,7 @@ public class HolidayController {
     HolidayService holidayService;
 
     @PostMapping("/create-holiday")
-    public ResponseEntity<?> createHoliday(@RequestBody HolidayRequest request) {
+    public ResponseEntity<?> createHoliday(@RequestBody HolidayReq request) {
         holidayService.createHoliday(request);
         return ResponseEntity.ok("Tạo mới thành công.");
     }
@@ -37,7 +34,7 @@ public class HolidayController {
     }
 
     @PutMapping("/update-holiday/{id}")
-    public ResponseEntity<?> updateHoliday(@RequestBody HolidayRequest request, @PathVariable int id) {
+    public ResponseEntity<?> updateHoliday(@RequestBody HolidayReq request, @PathVariable int id) {
         if (request.getStartDate().isAfter(request.getEndDate()) == true) {
             throw new RuntimeException("Hãy chọn ngày bắt đầu nhở hơn ngày kết thúc.");
         }
