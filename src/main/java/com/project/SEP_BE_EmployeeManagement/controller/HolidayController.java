@@ -2,6 +2,7 @@ package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayReq;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
+import com.project.SEP_BE_EmployeeManagement.model.Holiday;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,5 +56,10 @@ public class HolidayController {
 
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("/holiday-details/{id}")
+    public ResponseEntity<?> findById(@PathVariable int id){
+        Holiday obj= holidayService.detailHoliday(id);
+        return ResponseEntity.ok(obj);
     }
 }

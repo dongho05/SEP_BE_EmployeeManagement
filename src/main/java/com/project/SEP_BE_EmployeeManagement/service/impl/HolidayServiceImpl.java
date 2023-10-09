@@ -33,7 +33,8 @@ public class HolidayServiceImpl implements HolidayService {
                 dto.setId(entity.getId());
                 dto.setHolidayName(entity.getHolidayName());
                 dto.setStartDate(entity.getStartDate());
-                dto.setTotalDayOff((int)totalDays);
+                dto.setEndDate(entity.getEndDate());
+                dto.setTotalDayOff((int)totalDays + 1);
                 return dto;
             }
         });
@@ -66,5 +67,14 @@ public class HolidayServiceImpl implements HolidayService {
         if(obj != null){
             holidayRepository.delete(obj);
         }
+    }
+
+    @Override
+    public Holiday detailHoliday(int id) {
+       Holiday obj =holidayRepository.findById(id);
+       if(obj == null){
+           throw new RuntimeException("Không có ngày nghỉ phù hợp.");
+       }
+       return obj;
     }
 }

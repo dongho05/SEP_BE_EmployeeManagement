@@ -13,4 +13,5 @@ public interface HolidayService {
     Holiday createHoliday(HolidayReq request);
     Holiday updateHoliday(HolidayReq holiday, int id);
     void deleteHoliday(int id);
+    Holiday detailHoliday(int id);
 }

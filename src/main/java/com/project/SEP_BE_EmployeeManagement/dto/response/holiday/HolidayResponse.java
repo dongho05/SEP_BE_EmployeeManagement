@@ -14,4 +14,5 @@ public class HolidayResponse {
     private LocalDate startDate;
     private String holidayName;
     private int totalDayOff;
+    private LocalDate endDate;
 }
