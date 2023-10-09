@@ -30,4 +30,13 @@ public class RequestType {
     @ToString.Exclude
     @JsonIgnore
     private Set<Request> requests = new HashSet<>();
+
+    //Người làm thay
+    @Column(name = "replacement_person", length = 100)
+    private String replacementPerson;
+
+    //Những công việc bàn giao
+    @Column(name = "replacement_work", length = 100)
+    private String replacementWork;
+
 }
