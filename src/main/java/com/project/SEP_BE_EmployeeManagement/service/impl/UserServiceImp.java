@@ -3,9 +3,9 @@ package com.project.SEP_BE_EmployeeManagement.service.impl;
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.UpdateUserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Contract;
 import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.model.Position;
@@ -20,11 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -56,6 +53,46 @@ public class UserServiceImp implements UserService {
     @Override
     public UserDto getUserById(long id) throws NotFoundException {
         return UserMapper.toUserDto(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"))) ;
+    }
+
+    @Override
+    public UserDto updateUser(long id, UpdateUserRequest updateUserRequest) throws NotFoundException {
+        User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
+        u.setFullName(updateUserRequest.getFullName());
+        u.setUserCode(updateUserRequest.getUserCode());
+        u.setGender(updateUserRequest.getGender());
+        u.setAddress(updateUserRequest.getAddress());
+        u.setEmail(updateUserRequest.getEmail());
+        u.setPhone(updateUserRequest.getPhone());
+        u.setBirthDay(updateUserRequest.getBirthDay());
+
+        // set department
+        Optional<Department> department = departmentRepository.findById(updateUserRequest.getDepartmentId());
+        if(!department.isPresent()){
+            throw new RuntimeException("Chưa chọn phòng ban!");
+        }
+        u.setDepartment(department.get());
+
+        // set position
+        Optional<Position> position = positionRepository.findById(updateUserRequest.getPositionId());
+        if(!position.isPresent()){
+            throw new RuntimeException("Chưa chọn vị trí!");
+        }
+        u.setPosition(position.get());
+
+
+        // set user Image
+        String userImage = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
+        u.setUserImage(userImage);
+
+        //set contracts
+        Set<Contract> contracts = new HashSet<>();
+        Contract contract = new Contract();
+        String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
+        contract.setFileName(contractFile);
+        u.setContracts(contracts);
+
+        return UserMapper.toUserDto(userRepository.save(u));
     }
 
     @Override

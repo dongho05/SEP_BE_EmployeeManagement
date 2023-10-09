@@ -3,6 +3,7 @@ package com.project.SEP_BE_EmployeeManagement.controller;
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.User.UpdateUserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.exportExcel.ExcelExportUser;
 import com.project.SEP_BE_EmployeeManagement.model.User;
@@ -79,6 +80,11 @@ public class UserController {
     @GetMapping("/block/{id}")
     public ResponseEntity<UserDto> blockUser(@PathVariable long id) throws NotFoundException {
         UserDto userDto = userService.blockUser(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @RequestBody UpdateUserRequest request) throws NotFoundException {
+        UserDto userDto = userService.updateUser(id, request);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
