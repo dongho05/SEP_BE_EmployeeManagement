@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,8 +23,8 @@ public class Request extends BaseEntity {
     @Column(name = "content", nullable = false, length = 300)
     private String requestContent;
 
-    @Column(name = "request_type_id", nullable = false)
-    private int requestTypeId;
+//    @Column(name = "request_type_id", nullable = false)
+//    private int requestTypeId;
 
     @Column(name = "start_time")
     private LocalTime startTime;
@@ -46,5 +47,14 @@ public class Request extends BaseEntity {
     @Column(name = "status", nullable = false)
     private boolean status;
 
+    @ManyToOne
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "request_type_id", nullable = false)
+    private RequestType requestType;
+
+    @ManyToOne
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 //    @ManyToMany
 }

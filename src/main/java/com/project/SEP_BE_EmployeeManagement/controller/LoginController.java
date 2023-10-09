@@ -1,10 +1,9 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.PasswordRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.UpdatePasswordRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.PasswordReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.UpdatePasswordReq;
 import com.project.SEP_BE_EmployeeManagement.dto.response.JwtResponse;
 import com.project.SEP_BE_EmployeeManagement.extensions.Utilities;
 import com.project.SEP_BE_EmployeeManagement.model.User;
@@ -22,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +85,7 @@ public class LoginController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> ForgotPassword(@RequestBody PasswordRequest request) {
+    public ResponseEntity<?> ForgotPassword(@RequestBody PasswordReq request) {
         int length = 8 + generator.nextInt(12);
         String randomPassword = Utilities.alphaNumericString(length);
         String hashedPassword = encoder.encode(randomPassword);
@@ -95,7 +93,7 @@ public class LoginController {
 
 
         if(userService.existsByEmail(request.getEmail())==true){
-            mailService.sendPassword(new ResetPasswordRequest(request.getEmail(),
+            mailService.sendPassword(new ResetPasswordReq(request.getEmail(),
                     "Reset password",
                     "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
             try {
@@ -108,7 +106,7 @@ public class LoginController {
 
     }
     @PostMapping("/change-password")
-    public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordRequest request){
+    public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordReq request){
 
         Optional<User> user = userService.findByUsernameOrEmail(request.getEmail());
         if(!encoder.matches(request.getOldPassword(), user.get().getPassword())){

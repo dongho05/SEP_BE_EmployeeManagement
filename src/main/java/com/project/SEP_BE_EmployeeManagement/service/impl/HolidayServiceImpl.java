@@ -1,9 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayReq;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Holiday;
-import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.HolidayRepository;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -21,9 +21,9 @@ public class HolidayServiceImpl implements HolidayService {
     @Autowired
     HolidayRepository holidayRepository;
     @Override
-    public Page<HolidayResponse> getList(String searchInput, Pageable pageable) {
+    public Page<HolidayResponse> getList(String searchInput, Pageable pageable,Integer year) {
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        Page<Holiday> list = holidayRepository.getList(search,pageable);
+        Page<Holiday> list = holidayRepository.getList(search,pageable,year);
         Page<HolidayResponse> result = list.map(new Function<Holiday, HolidayResponse>() {
             @Override
             public HolidayResponse apply(Holiday entity) {
@@ -35,7 +35,8 @@ public class HolidayServiceImpl implements HolidayService {
                 dto.setId(entity.getId());
                 dto.setHolidayName(entity.getHolidayName());
                 dto.setStartDate(entity.getStartDate());
-                dto.setTotalDayOff((int)totalDays);
+                dto.setEndDate(entity.getEndDate());
+                dto.setTotalDayOff((int)totalDays + 1);
                 return dto;
             }
         });
@@ -43,7 +44,7 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     @Override
-    public Holiday createHoliday(HolidayRequest request) {
+    public Holiday createHoliday(HolidayReq request) {
         Holiday obj = new Holiday();
         obj.setHolidayName(request.getHolidayName());
         obj.setStartDate(request.getStartDate());
@@ -53,7 +54,7 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     @Override
-    public Holiday updateHoliday(HolidayRequest request,int id) {
+    public Holiday updateHoliday(HolidayReq request, int id) {
         if(!holidayRepository.existsById(id)){
             throw new RuntimeException("Ngày nghỉ không tồn tại");
         }
@@ -68,5 +69,26 @@ public class HolidayServiceImpl implements HolidayService {
         if(obj != null){
             holidayRepository.delete(obj);
         }
+    }
+
+    @Override
+    public Holiday detailHoliday(int id) {
+       Holiday obj =holidayRepository.findById(id);
+       if(obj == null){
+           throw new RuntimeException("Không có ngày nghỉ phù hợp.");
+       }
+       return obj;
+    }
+
+    @Override
+    public List<Integer> getListByDateDesc() {
+        List<Holiday> holidays = holidayRepository.getListByDateDesc();
+        List<Integer> holidayYears = new ArrayList<>();
+        int smallestYear = holidays.get(0).getStartDate().getYear() - 1;
+        int largestYear = holidays.get(holidays.size()-1).getStartDate().getYear() + 1;
+        for (int i = smallestYear;i<= largestYear; i++){
+            holidayYears.add(i);
+        }
+        return holidayYears;
     }
 }

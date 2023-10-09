@@ -1,6 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailReq;
 import com.project.SEP_BE_EmployeeManagement.service.mail.MailService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ public class MailController {
     }
 
     @PostMapping("/api/send")
-    public String sendMail(@RequestParam(value = "file",required = false) MultipartFile[] file, MailRequest request){
+    public String sendMail(@RequestParam(value = "file",required = false) MultipartFile[] file, MailReq request){
         return mailService.sendMail(file,request);
     }
 }

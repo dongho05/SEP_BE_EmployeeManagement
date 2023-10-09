@@ -29,7 +29,7 @@ public class User extends BaseEntity{
     @Column(name = "user_code")
     private String userCode;
 
-    @Column(name = "start_date")
+    @Column(name = "start_work")
     private LocalDate startWork;
 
     @Column(name = "end_work")
@@ -74,10 +74,10 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // Quan hệ 1-n với đối tượng ở dưới (Person) (1 địa điểm có nhiều người ở)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private Set<Contract> contracts;
 
     @ManyToOne
-
     @JoinColumn(name = "position_id")
     private Position position;
 
@@ -86,4 +86,7 @@ public class User extends BaseEntity{
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Set<Request> requests;
 }
