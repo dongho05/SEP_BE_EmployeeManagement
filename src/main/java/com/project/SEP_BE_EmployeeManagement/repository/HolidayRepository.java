@@ -23,4 +23,8 @@ public interface HolidayRepository extends JpaRepository<Holiday,Integer> {
     Boolean existsByHolidayName(String holidayName);
     Boolean existsById(int id);
     Holiday findById(int id);
+
+    @Query(value = "select * from holiday h " +
+            " order by h.start_date desc",nativeQuery = true)
+    List<Holiday> getListByDateDesc();
 }

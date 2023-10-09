@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -76,5 +78,17 @@ public class HolidayServiceImpl implements HolidayService {
            throw new RuntimeException("Không có ngày nghỉ phù hợp.");
        }
        return obj;
+    }
+
+    @Override
+    public List<Integer> getListByDateDesc() {
+        List<Holiday> holidays = holidayRepository.getListByDateDesc();
+        List<Integer> holidayYears = new ArrayList<>();
+        int smallestYear = holidays.get(0).getStartDate().getYear() - 1;
+        int largestYear = holidays.get(holidays.size()-1).getStartDate().getYear() + 1;
+        for (int i = smallestYear;i<= largestYear; i++){
+            holidayYears.add(i);
+        }
+        return holidayYears;
     }
 }

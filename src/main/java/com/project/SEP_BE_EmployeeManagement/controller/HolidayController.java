@@ -62,4 +62,8 @@ public class HolidayController {
         Holiday obj= holidayService.detailHoliday(id);
         return ResponseEntity.ok(obj);
     }
+    @GetMapping("/get-holidays/get-years")
+    public ResponseEntity<?> getYearFromHolidays(){
+        return ResponseEntity.ok(holidayService.getListByDateDesc());
+    }
 }

@@ -6,11 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestReq extends BaseEntity {
+public class CreateRequestReq {
     private String requestTitle;
 
     private String requestContent;
@@ -23,10 +24,8 @@ public class CreateRequestReq extends BaseEntity {
 
     private LocalDate endDate;
 
-    private long acceptBy;
-
-    private LocalDate acceptAt;
-
     private boolean status;
+
+    private int requestTypeId;
 
 }

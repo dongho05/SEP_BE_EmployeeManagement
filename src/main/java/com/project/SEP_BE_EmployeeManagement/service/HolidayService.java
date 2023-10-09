@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface HolidayService {
     Page<HolidayResponse> getList(String search, Pageable pageable);
@@ -14,4 +16,5 @@ public interface HolidayService {
     Holiday updateHoliday(HolidayReq holiday, int id);
     void deleteHoliday(int id);
     Holiday detailHoliday(int id);
+    List<Integer> getListByDateDesc();
 }

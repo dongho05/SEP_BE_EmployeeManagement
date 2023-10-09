@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestReq;
+import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.RequestService;
@@ -25,23 +26,25 @@ public class RequestController {
 
     @PostMapping("/create-request")
     public ResponseEntity<?> createRequest(@RequestBody CreateRequestReq request){
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Request obj =requestService.createRequest(request);
 
-        request.setAcceptBy(userDetails.getId());
-
-        requestService.createRequest(request);
-
-        return ResponseEntity.ok("Thêm mới thành công");
+        return ResponseEntity.ok(obj);
     }
     @GetMapping("/get-list-request")
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "30") int size){
         Pageable pageable = PageRequest.of(page, size);
-        Page<Request> pageRequests = requestService.getList(search, pageable);
+        Page<RequestRes> pageRequests = requestService.getList(search, pageable);
         return ResponseEntity.ok(pageRequests);
     }
+
+    @PutMapping("/update-request/{id}")
+    public ResponseEntity<?> updateRequest(@RequestBody CreateRequestReq request, @PathVariable int id){
+        Request obj = requestService.updateRequest(request,id);
+        return ResponseEntity.ok(obj);
+    }
+
     @GetMapping("/get-current-user")
     public ResponseEntity<?> getCurrentUser(){
         UserDetailsImpl userDetails =
