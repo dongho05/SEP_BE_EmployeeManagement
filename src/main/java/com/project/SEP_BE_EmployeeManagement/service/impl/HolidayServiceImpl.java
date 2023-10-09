@@ -21,9 +21,9 @@ public class HolidayServiceImpl implements HolidayService {
     @Autowired
     HolidayRepository holidayRepository;
     @Override
-    public Page<HolidayResponse> getList(String searchInput, Pageable pageable) {
+    public Page<HolidayResponse> getList(String searchInput, Pageable pageable,Integer year) {
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        Page<Holiday> list = holidayRepository.getList(search,pageable);
+        Page<Holiday> list = holidayRepository.getList(search,pageable,year);
         Page<HolidayResponse> result = list.map(new Function<Holiday, HolidayResponse>() {
             @Override
             public HolidayResponse apply(Holiday entity) {

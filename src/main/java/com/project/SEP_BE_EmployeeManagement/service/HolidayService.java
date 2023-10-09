@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public interface HolidayService {
-    Page<HolidayResponse> getList(String search, Pageable pageable);
+    Page<HolidayResponse> getList(String search, Pageable pageable, Integer year);
     Holiday createHoliday(HolidayReq request);
     Holiday updateHoliday(HolidayReq holiday, int id);
     void deleteHoliday(int id);

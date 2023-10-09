@@ -28,9 +28,10 @@ public class HolidayController {
     @GetMapping("/get-all-holiday")
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
-                                     @RequestParam(name = "size", defaultValue = "30") int size) {
+                                     @RequestParam(name = "size", defaultValue = "30") int size,
+                                     @RequestParam(name = "year", required = false,defaultValue = "") Integer year) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<HolidayResponse> pageHolidays = holidayService.getList(search, pageable);
+        Page<HolidayResponse> pageHolidays = holidayService.getList(search, pageable,year);
         return ResponseEntity.ok(pageHolidays);
     }
 
