@@ -11,6 +11,7 @@ import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.model.Position;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.model.mapper.UserMapper;
+import com.project.SEP_BE_EmployeeManagement.repository.ContractRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.PositionRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
@@ -37,6 +38,8 @@ public class UserServiceImp implements UserService {
     FileManagerService fileManagerService;
     @Autowired
     PositionRepository positionRepository;
+    @Autowired
+    ContractRepository contractRepository;
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     @Override
@@ -97,6 +100,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User createUser(CreateUser createUser) {
         User user = new User();
+        String password = "123";
         // set user name
         if (userRepository.existsByUsername(createUser.getUsername())) {
             throw new RuntimeException("Tài khoản đã tồn tại!");
@@ -104,7 +108,8 @@ public class UserServiceImp implements UserService {
         user.setUsername(createUser.getUsername());
 
         // set password
-        user.setPassword(encoder.encode(createUser.getPassword()));
+        user.setPassword(encoder.encode(password));
+//        user.setPassword(encoder.encode(createUser.getPassword()));
 
         // set user code
         if (userRepository.existsByUserCode(createUser.getUserCode())) {
@@ -144,14 +149,18 @@ public class UserServiceImp implements UserService {
         user.setPhone(createUser.getPhone());
         user.setAddress(createUser.getAddress());
         user.setStatus(1);
+        userRepository.save(user);
 
         //set contracts
         Set<Contract> contracts = new HashSet<>();
         Contract contract = new Contract();
-//        String contractFile = fileManagerService.saveUserContract(createUser.getContractFile());
-//        contract.setFileName(contractFile);
-
+        String contractFile = fileManagerService.saveUserContract(createUser.getContractFile());
+        contract.setFileName(contractFile);
+        contract.setUser(user);
         contract.setContractName(createUser.getContractName());
+        contractRepository.save(contract);
+
+        contracts.add(contract);
         user.setContracts(contracts);
         userRepository.save(user);
         return user;
