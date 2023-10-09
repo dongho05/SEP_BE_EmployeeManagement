@@ -77,9 +77,10 @@ public class UserController {
     }
 
     @GetMapping("/block/{id}")
-    public ResponseEntity<UserDto> blockUser(@PathVariable long id) throws NotFoundException {
-        UserDto userDto = userService.blockUser(id);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    public MessageResponse blockUser(@PathVariable long id) throws NotFoundException {
+//        UserDto userDto = userService.changeStatus(id);
+//        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return userService.changeStatus(id);
     }
 
     @GetMapping("/export_users")

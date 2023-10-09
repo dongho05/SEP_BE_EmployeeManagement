@@ -5,6 +5,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import javassist.NotFoundException;
@@ -21,7 +22,7 @@ public interface UserService {
 //    public List<UserResponse> GetAllPerson();
     Optional<User> GetPersonByUsername(String username);
     UserDto getUserById(long id) throws NotFoundException;
-    UserDto blockUser(long id) throws NotFoundException;
+    MessageResponse changeStatus(long id) throws NotFoundException;
     UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException;
     Optional<User> findByUsernameOrEmail(String email);
     public User CreateNewPerson(User user);
