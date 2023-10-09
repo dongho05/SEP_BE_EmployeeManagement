@@ -28,7 +28,7 @@ public class RequestController {
     public ResponseEntity<?> createRequest(@RequestBody CreateRequestReq request){
         Request obj =requestService.createRequest(request);
 
-        return ResponseEntity.ok(obj);
+        return ResponseEntity.ok("Thêm mới yêu cầu thành công.");
     }
     @GetMapping("/get-list-request")
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
@@ -42,7 +42,12 @@ public class RequestController {
     @PutMapping("/update-request/{id}")
     public ResponseEntity<?> updateRequest(@RequestBody CreateRequestReq request, @PathVariable int id){
         Request obj = requestService.updateRequest(request,id);
-        return ResponseEntity.ok(obj);
+        return ResponseEntity.ok("Cập nhật yêu cầu thành công.");
+    }
+
+    @GetMapping("/get-request-by-id/{id}")
+    public ResponseEntity<?> findById(@PathVariable long id){
+        return ResponseEntity.ok(requestService.findById(id));
     }
 
     @GetMapping("/get-current-user")

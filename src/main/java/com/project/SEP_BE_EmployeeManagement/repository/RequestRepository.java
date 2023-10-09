@@ -14,5 +14,5 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             " order by r.request_id",nativeQuery = true)
     Page<Request> getList(String search, Pageable pageable);
     Boolean existsById(int id);
-    Request findById(int id);
+    Request findById(long id);
 }

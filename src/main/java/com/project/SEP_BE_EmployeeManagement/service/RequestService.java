@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public interface RequestService {
 
     Request createRequest(CreateRequestReq request);
-    Request updateRequest(CreateRequestReq request, int id);
-    Request findById(int id);
+    Request updateRequest(CreateRequestReq request, long id);
+    RequestRes findById(long id);
     Page<RequestRes> getList(String search, Pageable pageable);
 }

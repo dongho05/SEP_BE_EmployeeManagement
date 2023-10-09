@@ -68,7 +68,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request updateRequest(CreateRequestReq request, int id) {
+    public Request updateRequest(CreateRequestReq request, long id) {
         LocalDate localDate = LocalDate.now();
         Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
@@ -99,8 +99,25 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request findById(int id) {
-        return requestRepository.findById(id);
+    public RequestRes findById(long id) {
+        Request entity = requestRepository.findById(id);
+        RequestRes dto = new RequestRes();
+        dto.setId(entity.getId());
+        dto.setRequestContent(entity.getRequestContent());
+        dto.setRequestTitle(entity.getRequestTitle());
+        dto.setCreatedBy(entity.getCreatedBy());
+        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setEndDate(entity.getEndDate());
+        dto.setEndTime(entity.getEndTime());
+        dto.setRequestTypeId(entity.getRequestType().getId());
+        dto.setStartDate(entity.getStartDate());
+        dto.setStartTime(entity.getStartTime());
+        dto.setUpdatedBy(entity.getUpdatedBy());
+        dto.setUpdatedDate(entity.getUpdatedDate());
+        dto.setUserId(entity.getUser().getId());
+
+
+        return dto;
     }
 
     @Override
