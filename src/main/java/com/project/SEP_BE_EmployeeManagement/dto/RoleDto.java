@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,5 +15,4 @@ import lombok.Setter;
 public class RoleDto {
     private Long id;
     private ERole roleName;
-
 }
