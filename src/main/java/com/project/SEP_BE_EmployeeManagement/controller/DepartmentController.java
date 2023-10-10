@@ -32,20 +32,29 @@ public class DepartmentController {
     @GetMapping("/data")
     public ResponseEntity<DepartmentResponse> getDepartment(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
                                                             @RequestParam(name = "pageSize", defaultValue = "30") int pageSize,
-                                                            @RequestParam(name = "search", required = false, defaultValue = "") String search){
+                                                            @RequestParam(name = "search", required = false, defaultValue = "") String search) {
         DepartmentResponse response = departmentService.getData(search, pageNo, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<DepartmentDto> createDepartment(@RequestBody CreateDepartmentRequest request){
+    public ResponseEntity<DepartmentDto> createDepartment(@RequestBody CreateDepartmentRequest request) {
         DepartmentDto response = departmentService.createDepartment(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<DepartmentDto> updateDepartment(@RequestBody CreateDepartmentRequest request, @PathVariable Integer id) throws NotFoundException {
-        DepartmentDto response = departmentService.updateDearpartment(request,id);
+        DepartmentDto response = departmentService.updateDearpartment(request, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteDepartment(@PathVariable Integer id) throws NotFoundException {
+        int result = departmentService.deleteDepartment(id);
+        if (result == 1) {
+            return ResponseEntity.ok("Delete Department successful!");
+        }
+        return ResponseEntity.ok("Can not delete Department!");
     }
 }

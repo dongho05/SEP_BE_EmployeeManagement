@@ -17,6 +17,6 @@ public interface DepartmentService {
 
     DepartmentDto updateDearpartment(CreateDepartmentRequest request, long id) throws NotFoundException;
 
-
+    int deleteDepartment(long id) throws NotFoundException;
 
 }
