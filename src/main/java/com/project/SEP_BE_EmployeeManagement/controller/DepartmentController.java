@@ -1,5 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
+import com.project.SEP_BE_EmployeeManagement.dto.request.department.CreateDepartmentRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.department.DepartmentResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
@@ -31,6 +33,12 @@ public class DepartmentController {
                                                             @RequestParam(name = "pageSize", defaultValue = "30") int pageSize,
                                                             @RequestParam(name = "search", required = false, defaultValue = "") String search){
         DepartmentResponse response = departmentService.getData(search, pageNo, pageSize);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<DepartmentDto> createDepartment(@RequestBody CreateDepartmentRequest request){
+        DepartmentDto response = departmentService.createDepartment(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

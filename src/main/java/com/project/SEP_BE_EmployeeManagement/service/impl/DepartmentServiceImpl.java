@@ -1,15 +1,21 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
+import com.project.SEP_BE_EmployeeManagement.dto.request.department.CreateDepartmentRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.department.DepartmentResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.model.mapper.DepartmentMapper;
 import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Date;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -31,5 +37,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         response.setLast(page.isLast());
 
         return response;
+    }
+
+    @Override
+    public DepartmentDto createDepartment(CreateDepartmentRequest request) {
+        Department department = new Department();
+        department.setName(request.getName());
+        department.setCreatedDate(Date.from(Instant.now()));
+        departmentRepository.save(department);
+        DepartmentDto dto = DepartmentMapper.toDto(department);
+        return dto;
     }
 }

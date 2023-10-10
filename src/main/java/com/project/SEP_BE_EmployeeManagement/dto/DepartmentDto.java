@@ -15,4 +15,5 @@ public class DepartmentDto {
     private Long id;
     private String name;
     private Date createdDate;
+    private Date updatedDate;
 }
