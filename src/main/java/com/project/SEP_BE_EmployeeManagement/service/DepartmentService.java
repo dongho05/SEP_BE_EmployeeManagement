@@ -4,6 +4,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.department.CreateDepartmentRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.department.DepartmentResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Department;
+import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ public interface DepartmentService {
     DepartmentResponse getData(String search, Integer pageNo, Integer pageSize);
 
     DepartmentDto createDepartment(CreateDepartmentRequest request);
+
+    DepartmentDto updateDearpartment(CreateDepartmentRequest request, long id) throws NotFoundException;
 
 
 

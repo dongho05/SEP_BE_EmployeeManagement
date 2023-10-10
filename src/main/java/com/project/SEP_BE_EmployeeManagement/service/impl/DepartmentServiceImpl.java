@@ -7,6 +7,7 @@ import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.model.mapper.DepartmentMapper;
 import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
+import javassist.NotFoundException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +45,16 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = new Department();
         department.setName(request.getName());
         department.setCreatedDate(Date.from(Instant.now()));
+        departmentRepository.save(department);
+        DepartmentDto dto = DepartmentMapper.toDto(department);
+        return dto;
+    }
+
+    @Override
+    public DepartmentDto updateDearpartment(CreateDepartmentRequest request, long id) throws NotFoundException {
+        Department department = departmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Department with id: " + id + " Not Found"));
+        department.setName(request.getName());
+        department.setUpdatedDate(Date.from(Instant.now()));
         departmentRepository.save(department);
         DepartmentDto dto = DepartmentMapper.toDto(department);
         return dto;

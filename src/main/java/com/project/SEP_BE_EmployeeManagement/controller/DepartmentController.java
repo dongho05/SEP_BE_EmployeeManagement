@@ -6,6 +6,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.response.department.DepartmentR
 import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,12 @@ public class DepartmentController {
     @PostMapping("/create")
     public ResponseEntity<DepartmentDto> createDepartment(@RequestBody CreateDepartmentRequest request){
         DepartmentDto response = departmentService.createDepartment(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<DepartmentDto> updateDepartment(@RequestBody CreateDepartmentRequest request, @PathVariable Integer id) throws NotFoundException {
+        DepartmentDto response = departmentService.updateDearpartment(request,id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
