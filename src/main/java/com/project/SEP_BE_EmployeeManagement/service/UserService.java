@@ -23,7 +23,7 @@ public interface UserService {
     Optional<User> GetPersonByUsername(String username);
     UserDto getUserById(long id) throws NotFoundException;
     UserDto updateUser(long id, UpdateUserRequest request) throws NotFoundException;
-    UserDto blockUser(long id) throws NotFoundException;
+//    UserDto blockUser(long id) throws NotFoundException;
     MessageResponse changeStatus(long id) throws NotFoundException;
     UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException;
     Optional<User> findByUsernameOrEmail(String email);
