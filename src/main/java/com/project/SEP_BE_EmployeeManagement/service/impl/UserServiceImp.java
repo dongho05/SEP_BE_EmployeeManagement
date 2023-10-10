@@ -6,6 +6,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UpdateUserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Contract;
 import com.project.SEP_BE_EmployeeManagement.model.Department;
 import com.project.SEP_BE_EmployeeManagement.model.Position;
@@ -99,16 +100,25 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public UserDto blockUser(long id) throws NotFoundException {
+    public MessageResponse changeStatus(long id) throws NotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
-        user.setStatus(0);
-        return UserMapper.toUserDto(userRepository.save(user));
+        String mess = "";
+        if(user.getStatus()==1) {
+            user.setStatus(0);
+            mess = "Vô hiệu hoá mã nhân viên "+user.getUserCode();
+        }
+        else if(user.getStatus()==0){
+            user.setStatus(1);
+            mess = "Mở mã nhân viên "+user.getUserCode();
+        }
+        userRepository.save(user);
+        return new MessageResponse(mess);
+//        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
     public UserDto updateProfile(ProfileRequest profileRequest, long id) throws NotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
-
         user.setFullName(profileRequest.getFullName());
         user.setPhone(profileRequest.getPhone());
         user.setAddress(profileRequest.getAddress());
@@ -142,19 +152,19 @@ public class UserServiceImp implements UserService {
         if (userRepository.existsByUsername(createUser.getUsername())) {
             throw new RuntimeException("Tài khoản đã tồn tại!");
         }
-        user.setUsername(createUser.getUsername());
+        user.setUsername(createUser.getUsername().trim());
 
         // set password
-        user.setPassword(encoder.encode(password));
+        user.setPassword(encoder.encode(password.trim()));
 //        user.setPassword(encoder.encode(createUser.getPassword()));
 
         // set user code
-        if (userRepository.existsByUserCode(createUser.getUserCode())) {
+        if (userRepository.existsByUserCode(createUser.getUserCode().trim())) {
             throw new RuntimeException("Mã nhân viên đã tồn tại!");
         }
         user.setUserCode(createUser.getUserCode());
 
-        if (userRepository.existsByEmail(createUser.getEmail())) {
+        if (userRepository.existsByEmail(createUser.getEmail().trim())) {
             throw new RuntimeException("Email đã tồn tại!");
         }
         user.setEmail(createUser.getEmail());
@@ -178,13 +188,13 @@ public class UserServiceImp implements UserService {
         user.setPosition(position.get());
 
         // common
-        user.setFullName(createUser.getFullName());
+        user.setFullName(createUser.getFullName().trim());
         user.setGender(createUser.getGender());
         user.setStartWork(createUser.getStartWork());
         user.setEndWork(createUser.getEndWork());
         user.setBirthDay(createUser.getBirthDay());
-        user.setPhone(createUser.getPhone());
-        user.setAddress(createUser.getAddress());
+        user.setPhone(createUser.getPhone().trim());
+        user.setAddress(createUser.getAddress().trim());
         user.setStatus(1);
         userRepository.save(user);
 
@@ -194,7 +204,8 @@ public class UserServiceImp implements UserService {
         String contractFile = fileManagerService.saveUserContract(createUser.getContractFile());
         contract.setFileName(contractFile);
         contract.setUser(user);
-        contract.setContractName(createUser.getContractName());
+//        contract.setContractName(createUser.getContractName());
+        contract.setContractName("Hợp đồng");
         contractRepository.save(contract);
 
         contracts.add(contract);
