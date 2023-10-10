@@ -76,7 +76,7 @@ public class FileController {
 
             // Trả về file PDF với HTTP header phù hợp
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=your-pdf-file.pdf")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+contractFile+".pdf")
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(resource);
         } catch (Exception e) {
