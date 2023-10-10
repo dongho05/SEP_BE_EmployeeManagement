@@ -84,8 +84,8 @@ public class HolidayServiceImpl implements HolidayService {
     public List<Integer> getListByDateDesc() {
         List<Holiday> holidays = holidayRepository.getListByDateDesc();
         List<Integer> holidayYears = new ArrayList<>();
-        int smallestYear = holidays.get(0).getStartDate().getYear() - 1;
-        int largestYear = holidays.get(holidays.size()-1).getStartDate().getYear() + 1;
+        int smallestYear = holidays.get(holidays.size()-1).getStartDate().getYear() - 1;
+        int largestYear = holidays.get(0).getStartDate().getYear() + 1;
         for (int i = smallestYear;i<= largestYear; i++){
             holidayYears.add(i);
         }

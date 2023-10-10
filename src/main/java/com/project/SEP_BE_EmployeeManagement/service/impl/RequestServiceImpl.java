@@ -53,7 +53,7 @@ public class RequestServiceImpl implements RequestService {
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
         obj.setRequestContent(request.getRequestContent());
-        obj.setStatus(request.isStatus());
+//        obj.setStatus(request.isStatus());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
 //        obj.setStartTime(request.getStartTime());
@@ -77,14 +77,14 @@ public class RequestServiceImpl implements RequestService {
 
         Request obj = requestRepository.findById(id);
         if(obj == null){
-            throw new RuntimeException("Không tìm thấy yê cầu");
+            throw new RuntimeException("Không tìm thấy yêu cầu");
         }
 
 
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
         obj.setRequestContent(request.getRequestContent());
-        obj.setStatus(request.isStatus());
+//        obj.setStatus(request.isStatus());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
 //        obj.setStartTime(request.getStartTime());
