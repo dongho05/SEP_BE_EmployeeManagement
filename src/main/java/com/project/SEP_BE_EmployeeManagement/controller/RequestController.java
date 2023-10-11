@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.UpdateStatusRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
@@ -26,9 +27,29 @@ public class RequestController {
 
     @PostMapping("/create-request")
     public ResponseEntity<?> createRequest(@RequestBody CreateRequestReq request){
-        Request obj =requestService.createRequest(request);
+        try {
+            Request entity =requestService.createRequest(request);
+            RequestRes dto = new RequestRes();
+            dto.setId(entity.getId());
+            dto.setRequestContent(entity.getRequestContent());
+            dto.setRequestTitle(entity.getRequestTitle());
+            dto.setCreatedBy(entity.getCreatedBy());
+            dto.setCreatedDate(entity.getCreatedDate());
+            dto.setEndDate(entity.getEndDate());
+            dto.setEndTime(entity.getEndTime());
+            dto.setRequestTypeId(entity.getRequestType().getId());
+            dto.setStartDate(entity.getStartDate());
+            dto.setStartTime(entity.getStartTime());
+            dto.setUpdatedBy(entity.getUpdatedBy());
+            dto.setUpdatedDate(entity.getUpdatedDate());
+            dto.setUserId(entity.getUser().getId());
+            return ResponseEntity.ok(dto);
 
-        return ResponseEntity.ok("Thêm mới yêu cầu thành công.");
+        }catch (Exception exception){
+            throw new RuntimeException(exception);
+        }
+
+//        return ResponseEntity.ok("Thêm mới yêu cầu thành công.");
     }
     @GetMapping("/get-list-request")
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
@@ -62,4 +83,13 @@ public class RequestController {
 
     //Là ADMIN, duyệt trạng thái đơn cho thằng nhân viên
 
+    @PostMapping ("update-status-request/{requestId}")
+    public ResponseEntity<?> updateSttRequest( @RequestBody UpdateStatusRequest statusRequest,@PathVariable long requestId){
+        try {
+            requestService.updateStatusRequest(requestId,statusRequest.getStatus());
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return ResponseEntity.ok("");
+    }
 }
