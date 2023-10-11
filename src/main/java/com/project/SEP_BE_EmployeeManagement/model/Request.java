@@ -45,7 +45,7 @@ public class Request extends BaseEntity {
     private LocalDate acceptAt;
 
     @Column(name = "status", nullable = false)
-    private boolean status;
+    private int status;
 
     @ManyToOne
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

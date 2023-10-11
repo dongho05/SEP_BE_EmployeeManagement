@@ -58,8 +58,7 @@ public class RequestServiceImpl implements RequestService {
         obj.setStartDate(request.getStartDate());
 //        obj.setStartTime(request.getStartTime());
 //        obj.setEndTime(request.getEndTime());
-        obj.setCreatedBy(userDetails.getId().toString());
-        obj.setCreatedDate(currentDate);
+        obj.setStatus(1);
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
 
@@ -69,9 +68,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request updateRequest(CreateRequestReq request, long id) {
-        LocalDate localDate = LocalDate.now();
-        Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -79,7 +75,6 @@ public class RequestServiceImpl implements RequestService {
         if(obj == null){
             throw new RuntimeException("Không tìm thấy yêu cầu");
         }
-
 
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
@@ -89,8 +84,6 @@ public class RequestServiceImpl implements RequestService {
         obj.setStartDate(request.getStartDate());
 //        obj.setStartTime(request.getStartTime());
 //        obj.setEndTime(request.getEndTime());
-        obj.setCreatedBy(userDetails.getId().toString());
-        obj.setCreatedDate(currentDate);
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
 
@@ -149,5 +142,21 @@ public class RequestServiceImpl implements RequestService {
             }
         });
         return  result;
+    }
+
+//    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
+    @Override
+    public void updateStatusRequest(long requestId, int statusRequest) {
+        LocalDate localDate = LocalDate.now();
+        Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Request obj = requestRepository.findById(requestId);
+        obj.setStatus(statusRequest);
+        obj.setAcceptBy(userDetails.getId());
+        obj.setAcceptAt(localDate);
+        requestRepository.save(obj);
     }
 }
