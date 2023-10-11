@@ -13,6 +13,7 @@ import javassist.NotFoundException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -31,17 +33,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     private UserRepository userRepository;
 
     @Override
-    public DepartmentResponse getData(String search, Integer pageNo, Integer pageSize) {
+    public Page<DepartmentDto> getData(String search, Integer pageNo, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNo-1,pageSize);
         Page<Department> page = departmentRepository.getDepartment(search,pageable);
 
-        DepartmentResponse response = new DepartmentResponse();
-        response.setContent(DepartmentMapper.toDtoList(page.getContent()));
-        response.setPageNo(page.getNumber()+1);
-        response.setPageSize(page.getSize());
-        response.setTotalPages(page.getTotalPages());
-        response.setTotalElements(page.getTotalElements());
-        response.setLast(page.isLast());
+        Page<DepartmentDto> response =  DepartmentMapper.toDtoPage(page);
 
         return response;
     }

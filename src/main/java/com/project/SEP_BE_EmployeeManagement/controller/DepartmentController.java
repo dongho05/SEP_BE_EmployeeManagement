@@ -8,6 +8,7 @@ import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +31,10 @@ public class DepartmentController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<DepartmentResponse> getDepartment(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
-                                                            @RequestParam(name = "pageSize", defaultValue = "30") int pageSize,
-                                                            @RequestParam(name = "search", required = false, defaultValue = "") String search) {
-        DepartmentResponse response = departmentService.getData(search, pageNo, pageSize);
+    public ResponseEntity<Page<DepartmentDto>> getDepartment(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
+                                                             @RequestParam(name = "pageSize", defaultValue = "30") int pageSize,
+                                                             @RequestParam(name = "search", required = false, defaultValue = "") String search) {
+        Page<DepartmentDto> response = departmentService.getData(search, pageNo, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

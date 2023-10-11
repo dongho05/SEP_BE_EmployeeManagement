@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface DepartmentService {
 
-    DepartmentResponse getData(String search, Integer pageNo, Integer pageSize);
+    Page<DepartmentDto> getData(String search, Integer pageNo, Integer pageSize);
 
     DepartmentDto createDepartment(CreateDepartmentRequest request);
 
