@@ -11,8 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface RequestRepository extends JpaRepository<Request,Integer> {
     @Query(value = "select * from request r " +
             " where (:search is null or :search = '' or r.request_title LIKE %:search% ) " +
+            " and (:userId is null or :userId ='' or r.user_id = :userId) " +
             " order by r.request_id",nativeQuery = true)
-    Page<Request> getList(String search, Pageable pageable);
+    Page<Request> getList(String search, Pageable pageable, Long userId);
     Boolean existsById(int id);
     Request findById(long id);
 }

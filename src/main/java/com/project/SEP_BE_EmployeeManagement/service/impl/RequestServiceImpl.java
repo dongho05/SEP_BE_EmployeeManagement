@@ -14,11 +14,13 @@ import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -113,10 +115,32 @@ public class RequestServiceImpl implements RequestService {
         return dto;
     }
 
+    public boolean hasRoleAdmin(Collection<? extends GrantedAuthority> authorities) {
+        for (GrantedAuthority authority : authorities) {
+            if ("ROLE_ADMIN".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public Page<RequestRes> getList(String searchInput, Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        Page<Request> list = requestRepository.getList( search,pageable);
+
+        Page<Request> list =null;
+
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        boolean isAdmin = hasRoleAdmin(authorities);
+//.contains("ROLE_ADMIN")
+        if(isAdmin){
+             list = requestRepository.getList( search,pageable,null);
+        }else{
+            list = requestRepository.getList( search,pageable,userDetails.getId());
+
+        }
 
         Page<RequestRes> result = list.map(new Function<Request, RequestRes>() {
             @Override
