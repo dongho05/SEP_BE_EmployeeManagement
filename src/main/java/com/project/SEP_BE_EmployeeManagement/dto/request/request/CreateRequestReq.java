@@ -23,8 +23,6 @@ public class CreateRequestReq {
     private LocalDate startDate;
 
     private LocalDate endDate;
-//
-//    private boolean status;
 
     private int requestTypeId;
 

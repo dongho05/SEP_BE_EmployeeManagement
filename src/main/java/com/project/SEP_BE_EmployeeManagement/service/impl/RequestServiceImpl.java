@@ -14,11 +14,13 @@ import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -58,8 +60,7 @@ public class RequestServiceImpl implements RequestService {
         obj.setStartDate(request.getStartDate());
 //        obj.setStartTime(request.getStartTime());
 //        obj.setEndTime(request.getEndTime());
-        obj.setCreatedBy(userDetails.getId().toString());
-        obj.setCreatedDate(currentDate);
+        obj.setStatus(1);
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
 
@@ -69,9 +70,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request updateRequest(CreateRequestReq request, long id) {
-        LocalDate localDate = LocalDate.now();
-        Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -79,7 +77,6 @@ public class RequestServiceImpl implements RequestService {
         if(obj == null){
             throw new RuntimeException("Không tìm thấy yêu cầu");
         }
-
 
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
@@ -89,8 +86,6 @@ public class RequestServiceImpl implements RequestService {
         obj.setStartDate(request.getStartDate());
 //        obj.setStartTime(request.getStartTime());
 //        obj.setEndTime(request.getEndTime());
-        obj.setCreatedBy(userDetails.getId().toString());
-        obj.setCreatedDate(currentDate);
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
 
@@ -120,10 +115,32 @@ public class RequestServiceImpl implements RequestService {
         return dto;
     }
 
+    public boolean hasRoleAdmin(Collection<? extends GrantedAuthority> authorities) {
+        for (GrantedAuthority authority : authorities) {
+            if ("ROLE_ADMIN".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public Page<RequestRes> getList(String searchInput, Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        Page<Request> list = requestRepository.getList( search,pageable);
+
+        Page<Request> list =null;
+
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        boolean isAdmin = hasRoleAdmin(authorities);
+//.contains("ROLE_ADMIN")
+        if(isAdmin){
+             list = requestRepository.getList( search,pageable,null);
+        }else{
+            list = requestRepository.getList( search,pageable,userDetails.getId());
+
+        }
 
         Page<RequestRes> result = list.map(new Function<Request, RequestRes>() {
             @Override
@@ -149,5 +166,21 @@ public class RequestServiceImpl implements RequestService {
             }
         });
         return  result;
+    }
+
+//    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
+    @Override
+    public void updateStatusRequest(long requestId, int statusRequest) {
+        LocalDate localDate = LocalDate.now();
+        Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Request obj = requestRepository.findById(requestId);
+        obj.setStatus(statusRequest);
+        obj.setAcceptBy(userDetails.getId());
+        obj.setAcceptAt(localDate);
+        requestRepository.save(obj);
     }
 }

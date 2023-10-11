@@ -14,4 +14,5 @@ public interface RequestService {
     Request updateRequest(CreateRequestReq request, long id);
     RequestRes findById(long id);
     Page<RequestRes> getList(String search, Pageable pageable);
+    void updateStatusRequest(long requestId, int statusRequest);
 }
