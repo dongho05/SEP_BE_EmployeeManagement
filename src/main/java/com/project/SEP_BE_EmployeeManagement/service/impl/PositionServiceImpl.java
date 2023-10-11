@@ -1,10 +1,12 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.PositionDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.department.CreateDepartmentRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.position.CreatePositionRequest;
 import com.project.SEP_BE_EmployeeManagement.model.Position;
 import com.project.SEP_BE_EmployeeManagement.model.Role;
 import com.project.SEP_BE_EmployeeManagement.model.User;
+import com.project.SEP_BE_EmployeeManagement.model.mapper.PositionMapper;
 import com.project.SEP_BE_EmployeeManagement.repository.PositionRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.RoleRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
@@ -37,10 +39,13 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public Page<Position> getData(String search, Integer pageNo, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+    public Page<PositionDto> getData(String search, Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Position> page = repository.getPosition(search, pageable);
-        return page;
+
+        Page<PositionDto> response = PositionMapper.toDtoPage(page);
+
+        return response;
     }
 
     @Override

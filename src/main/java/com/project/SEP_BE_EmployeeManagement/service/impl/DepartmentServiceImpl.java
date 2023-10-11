@@ -34,7 +34,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Page<DepartmentDto> getData(String search, Integer pageNo, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNo-1,pageSize);
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
         Page<Department> page = departmentRepository.getDepartment(search,pageable);
 
         Page<DepartmentDto> response =  DepartmentMapper.toDtoPage(page);

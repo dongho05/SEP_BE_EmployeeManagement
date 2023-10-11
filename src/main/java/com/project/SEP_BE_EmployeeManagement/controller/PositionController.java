@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.PositionDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.position.CreatePositionRequest;
 import com.project.SEP_BE_EmployeeManagement.model.Position;
 import com.project.SEP_BE_EmployeeManagement.service.PositionService;
@@ -22,10 +23,10 @@ public class PositionController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<Page<Position>> getPosition(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
+    public ResponseEntity<Page<PositionDto>> getPosition(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
                                                       @RequestParam(name = "pageSize", defaultValue = "30") int pageSize,
                                                       @RequestParam(name = "search", required = false, defaultValue = "") String search){
-        Page<Position> response = positionService.getData(search, pageNo, pageSize);
+        Page<PositionDto> response = positionService.getData(search, pageNo, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

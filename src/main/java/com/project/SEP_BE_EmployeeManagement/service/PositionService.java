@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.service;
 
 import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
+import com.project.SEP_BE_EmployeeManagement.dto.PositionDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.department.CreateDepartmentRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.position.CreatePositionRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.department.DepartmentResponse;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface PositionService {
     List<Position> GetAll();
 
-    Page<Position> getData(String search, Integer pageNo, Integer pageSize);
+    Page<PositionDto> getData(String search, Integer pageNo, Integer pageSize);
     Position createPosititon(CreatePositionRequest request) throws NotFoundException;
 
     Position updatePosition(CreatePositionRequest request, long id) throws NotFoundException;
