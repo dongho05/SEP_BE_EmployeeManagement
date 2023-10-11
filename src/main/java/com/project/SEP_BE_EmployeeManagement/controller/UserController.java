@@ -88,6 +88,12 @@ public class UserController {
         UserDto userDto = userService.updateUser(id, request);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
+    @PutMapping("/update_position")
+    public ResponseEntity<UserDto> updatePosition(@RequestParam(name = "userId", required = true) Integer userId,
+                                                  @RequestParam(name = "positionId", required = true) Integer positionId) throws NotFoundException {
+        UserDto userDto = userService.updatePosition(userId, positionId);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
 
     @GetMapping("/export_users")
     public ResponseEntity exportUser(@RequestParam(name = "departmentId", required = false, defaultValue = "") String departmentId,

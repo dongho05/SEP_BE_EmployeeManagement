@@ -22,6 +22,8 @@ public interface UserService {
 //    public List<UserResponse> GetAllPerson();
     Optional<User> GetPersonByUsername(String username);
     UserDto getUserById(long id) throws NotFoundException;
+
+    UserDto updatePosition(long userId, long positionId) throws NotFoundException;
     UserDto updateUser(long id, UpdateUserRequest request) throws NotFoundException;
 //    UserDto blockUser(long id) throws NotFoundException;
     MessageResponse changeStatus(long id) throws NotFoundException;

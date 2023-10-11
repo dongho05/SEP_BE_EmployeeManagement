@@ -60,6 +60,15 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public UserDto updatePosition(long userId, long positionId) throws NotFoundException {
+        User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
+        Position p = positionRepository.findById(positionId).orElseThrow(() -> new NotFoundException("Position with id: " + positionId + " Not Found"));
+        u.setPosition(p);
+        userRepository.save(u);
+        return UserMapper.toUserDto(u);
+    }
+
+    @Override
     public UserDto updateUser(long id, UpdateUserRequest updateUserRequest) throws NotFoundException {
         User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
         u.setFullName(updateUserRequest.getFullName());
