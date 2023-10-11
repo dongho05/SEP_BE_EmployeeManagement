@@ -30,6 +30,12 @@ public class PositionController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PositionDto> getPositionById( @PathVariable long id) throws NotFoundException {
+        PositionDto response = positionService.getPositionById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Position> createPosition(@RequestBody CreatePositionRequest request) throws NotFoundException {
         Position response = positionService.createPosititon(request);
@@ -43,12 +49,12 @@ public class PositionController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deletePosition(@PathVariable Integer id) throws NotFoundException {
+    public ResponseEntity<Integer> deletePosition(@PathVariable Integer id) throws NotFoundException {
         int result = positionService.deletePosition(id);
         if (result == 1) {
-            return ResponseEntity.ok("Delete Position successful!");
+            return new ResponseEntity<>(1, HttpStatus.OK);
         }
-        return ResponseEntity.ok("Can not delete Position!");
+        return new  ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -43,6 +43,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public DepartmentDto getDepartmentById(long id) throws NotFoundException {
+        DepartmentDto departmentDto = DepartmentMapper.toDto(departmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Department with id: " + id + " Not Found"))) ;
+        return departmentDto;
+    }
+
+    @Override
     public DepartmentDto createDepartment(CreateDepartmentRequest request) {
         Department department = new Department();
         department.setName(request.getName());

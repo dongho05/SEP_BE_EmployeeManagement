@@ -16,6 +16,8 @@ public interface PositionService {
     List<Position> GetAll();
 
     Page<PositionDto> getData(String search, Integer pageNo, Integer pageSize);
+
+    PositionDto getPositionById(long id) throws NotFoundException;
     Position createPosititon(CreatePositionRequest request) throws NotFoundException;
 
     Position updatePosition(CreatePositionRequest request, long id) throws NotFoundException;

@@ -38,6 +38,12 @@ public class DepartmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable Integer id) throws NotFoundException {
+        DepartmentDto response = departmentService.getDepartmentById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<DepartmentDto> createDepartment(@RequestBody CreateDepartmentRequest request) {
         DepartmentDto response = departmentService.createDepartment(request);
@@ -51,11 +57,11 @@ public class DepartmentController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteDepartment(@PathVariable Integer id) throws NotFoundException {
+    public ResponseEntity<Integer> deleteDepartment(@PathVariable Integer id) throws NotFoundException {
         int result = departmentService.deleteDepartment(id);
         if (result == 1) {
-            return ResponseEntity.ok("Delete Department successful!");
+            return new ResponseEntity<>(1, HttpStatus.OK);
         }
-        return ResponseEntity.ok("Can not delete Department!");
+        return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
     }
 }

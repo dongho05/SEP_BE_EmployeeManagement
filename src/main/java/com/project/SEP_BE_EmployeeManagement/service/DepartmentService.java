@@ -13,6 +13,8 @@ public interface DepartmentService {
 
     Page<DepartmentDto> getData(String search, Integer pageNo, Integer pageSize);
 
+    DepartmentDto getDepartmentById(long id) throws NotFoundException;
+
     DepartmentDto createDepartment(CreateDepartmentRequest request);
 
     DepartmentDto updateDearpartment(CreateDepartmentRequest request, long id) throws NotFoundException;

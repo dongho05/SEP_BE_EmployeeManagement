@@ -49,6 +49,12 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
+    public PositionDto getPositionById(long id) throws NotFoundException {
+        PositionDto positionDto = PositionMapper.toDto(repository.findById(id).orElseThrow(() -> new NotFoundException("Position with id: " + id + " Not Found")));
+        return positionDto;
+    }
+
+    @Override
     public Position createPosititon(CreatePositionRequest request) throws NotFoundException {
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new NotFoundException("Role with id: " + request.getRoleId() + " Not Found"));
         Set<Role> roleSet = new HashSet<>();
