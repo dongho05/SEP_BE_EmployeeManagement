@@ -13,6 +13,6 @@ public interface RequestService {
     Request createRequest(CreateRequestReq request);
     Request updateRequest(CreateRequestReq request, long id);
     RequestRes findById(long id);
-    Page<RequestRes> getList(String search, Pageable pageable);
+    Page<RequestRes> getList(String search, Pageable pageable, int statusReq);
     void updateStatusRequest(long requestId, int statusRequest);
 }

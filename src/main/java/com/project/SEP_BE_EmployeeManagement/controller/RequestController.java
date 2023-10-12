@@ -54,9 +54,10 @@ public class RequestController {
     @GetMapping("/get-list-request")
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
-                                     @RequestParam(name = "size", defaultValue = "30") int size){
+                                     @RequestParam(name = "size", defaultValue = "30") int size,
+                                     @RequestParam(name = "status",defaultValue = "0") int statusReq){
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestRes> pageRequests = requestService.getList(search, pageable);
+        Page<RequestRes> pageRequests = requestService.getList(search, pageable,statusReq);
         return ResponseEntity.ok(pageRequests);
     }
 
