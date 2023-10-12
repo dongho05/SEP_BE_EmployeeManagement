@@ -43,4 +43,8 @@ public class RequestRes {
     private Date updatedDate;
 
     private String updatedBy;
+
+    private int status;
+
+    private int departmentId;
 }
