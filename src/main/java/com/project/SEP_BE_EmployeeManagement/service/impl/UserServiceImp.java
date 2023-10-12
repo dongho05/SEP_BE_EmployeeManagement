@@ -84,17 +84,42 @@ public class UserServiceImp implements UserService {
         }
         u.setPosition(position.get());
 
-
+        if (updateUserRequest.getUserImage() != null && updateUserRequest.getUserImage().getSize() > 0) {
+            if(!u.getUserImage().equals("default.png"))
+                fileManagerService.delete(u.getUserImage());
+            String filename = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
+            u.setUserImage(filename);
+        }
         // set user Image
-        String userImage = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
-        u.setUserImage(userImage);
+//        String userImage = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
+//        u.setUserImage(userImage);
+        userRepository.save(u);
+
+
 
         //set contracts
-        Set<Contract> contracts = new HashSet<>();
-        Contract contract = new Contract();
-        String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
-        contract.setFileName(contractFile);
-        u.setContracts(contracts);
+        if(updateUserRequest.getContractFile() != null && updateUserRequest.getContractFile().getSize()  >0){
+            Set<Contract> contracts = new HashSet<>();
+            Contract contract = new Contract();
+            String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
+            contract.setFileName(contractFile);
+            contract.setUser(u);
+//        contract.setContractName(createUser.getContractName());
+            contract.setContractName("Hợp đồng");
+            contractRepository.save(contract);
+
+            contracts.add(contract);
+            u.setContracts(contracts);
+            userRepository.save(u);
+        }
+
+
+        //set contracts
+//        Set<Contract> contracts = new HashSet<>();
+//        Contract contract = new Contract();
+//        String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
+//        contract.setFileName(contractFile);
+//        u.setContracts(contracts);
 
         return UserMapper.toUserDto(userRepository.save(u));
     }
