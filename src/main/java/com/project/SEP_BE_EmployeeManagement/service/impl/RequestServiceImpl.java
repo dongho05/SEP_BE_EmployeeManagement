@@ -123,6 +123,16 @@ public class RequestServiceImpl implements RequestService {
         }
         return false;
     }
+
+    public boolean hasRoleMod(Collection<? extends GrantedAuthority> authorities) {
+        for (GrantedAuthority authority : authorities) {
+            if ("ROLE_MODERATOR".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public Page<RequestRes> getList(String searchInput, Pageable pageable) {
         UserDetailsImpl userDetails =
@@ -134,12 +144,14 @@ public class RequestServiceImpl implements RequestService {
 
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         boolean isAdmin = hasRoleAdmin(authorities);
-//.contains("ROLE_ADMIN")
+        boolean isMod = hasRoleMod(authorities);
         if(isAdmin){
-             list = requestRepository.getList( search,pageable,null);
-        }else{
-            list = requestRepository.getList( search,pageable,userDetails.getId());
-
+             list = requestRepository.getList( search,pageable,null,null);
+        }else if(isMod){
+            list = requestRepository.getList( search,pageable,userDetails.getId(),userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId());
+        }
+        else{
+            list = requestRepository.getList( search,pageable,userDetails.getId(),null);
         }
 
         Page<RequestRes> result = list.map(new Function<Request, RequestRes>() {
@@ -161,6 +173,8 @@ public class RequestServiceImpl implements RequestService {
                 dto.setUpdatedBy(entity.getUpdatedBy());
                 dto.setUpdatedDate(entity.getUpdatedDate());
                 dto.setUserId(entity.getUser().getId());
+                dto.setStatus(entity.getStatus());
+                dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
 
                 return dto;
             }
