@@ -18,6 +18,7 @@ public class PositionMapper {
         dto.setName(position.getPositionName());
         dto.setCreatedDate(position.getCreatedDate());
         dto.setUpdatedDate(position.getUpdatedDate());
+        dto.setRole(position.getRoles());
         return dto;
     }
 
