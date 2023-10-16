@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/request-type")
+@RequestMapping("/api/auth/request-type")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class RequestTypeController {
     @Autowired

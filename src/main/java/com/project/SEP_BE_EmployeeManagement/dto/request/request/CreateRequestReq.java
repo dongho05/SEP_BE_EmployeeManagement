@@ -16,9 +16,9 @@ public class CreateRequestReq {
 
     private String requestContent;
 
-//    private LocalTime startTime;
-//
-//    private LocalTime endTime;
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     private LocalDate startDate;
 

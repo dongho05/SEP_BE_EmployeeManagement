@@ -105,7 +105,7 @@ public class LoginController {
         return  ResponseEntity.ok("Email không tồn tại.");
 
     }
-    @PostMapping("/change-password")
+    @PostMapping("/auth/change-password")
     public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordReq request){
 
         Optional<User> user = userService.findByUsernameOrEmail(request.getEmail());

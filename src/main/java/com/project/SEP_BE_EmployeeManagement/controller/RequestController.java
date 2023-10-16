@@ -16,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/request")
+@RequestMapping("/api/auth/request")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class RequestController {
     @Autowired
@@ -27,6 +27,7 @@ public class RequestController {
 
     @PostMapping("/create-request")
     public ResponseEntity<?> createRequest(@RequestBody CreateRequestReq request){
+
         try {
             Request entity =requestService.createRequest(request);
             RequestRes dto = new RequestRes();
@@ -43,6 +44,8 @@ public class RequestController {
             dto.setUpdatedBy(entity.getUpdatedBy());
             dto.setUpdatedDate(entity.getUpdatedDate());
             dto.setUserId(entity.getUser().getId());
+
+
             return ResponseEntity.ok(dto);
 
         }catch (Exception exception){

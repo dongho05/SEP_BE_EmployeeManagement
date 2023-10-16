@@ -55,11 +55,10 @@ public class RequestServiceImpl implements RequestService {
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
         obj.setRequestContent(request.getRequestContent());
-//        obj.setStatus(request.isStatus());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
-//        obj.setStartTime(request.getStartTime());
-//        obj.setEndTime(request.getEndTime());
+        obj.setStartTime(request.getStartTime());
+        obj.setEndTime(request.getEndTime());
         obj.setStatus(1);
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
@@ -81,11 +80,10 @@ public class RequestServiceImpl implements RequestService {
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
         obj.setRequestContent(request.getRequestContent());
-//        obj.setStatus(request.isStatus());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
-//        obj.setStartTime(request.getStartTime());
-//        obj.setEndTime(request.getEndTime());
+        obj.setStartTime(request.getStartTime());
+        obj.setEndTime(request.getEndTime());
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
 

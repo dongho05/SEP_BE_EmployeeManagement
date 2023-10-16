@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/holiday")
+@RequestMapping("/api/auth/holiday")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class HolidayController {
     @Autowired
