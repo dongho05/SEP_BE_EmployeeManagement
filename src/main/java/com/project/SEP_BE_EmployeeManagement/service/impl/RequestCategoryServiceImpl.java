@@ -1,7 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestCategoryReq;
-import com.project.SEP_BE_EmployeeManagement.model.Request;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqCategoryRequest;
 import com.project.SEP_BE_EmployeeManagement.model.RequestCategory;
 import com.project.SEP_BE_EmployeeManagement.repository.RequestCategoryRepository;
 import com.project.SEP_BE_EmployeeManagement.service.RequestCategoryService;
@@ -15,7 +14,7 @@ public class RequestCategoryServiceImpl implements RequestCategoryService {
     @Autowired
     RequestCategoryRepository requestCategoryRepository;
     @Override
-    public RequestCategory createRequestCategory(CreateRequestCategoryReq request) {
+    public RequestCategory createRequestCategory(CreateReqCategoryRequest request) {
         RequestCategory obj = new RequestCategory();
         obj.setRequestCategoryName(request.getRequestCategoryName());
         requestCategoryRepository.save(obj);
@@ -23,7 +22,7 @@ public class RequestCategoryServiceImpl implements RequestCategoryService {
     }
 
     @Override
-    public RequestCategory updateRequestCategory(CreateRequestCategoryReq request, int id) {
+    public RequestCategory updateRequestCategory(CreateReqCategoryRequest request, int id) {
         RequestCategory rc = requestCategoryRepository.findById(id);
         if(rc != null){
             rc.setRequestCategoryName(request.getRequestCategoryName());

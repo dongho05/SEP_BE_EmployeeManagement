@@ -1,15 +1,9 @@
 package com.project.SEP_BE_EmployeeManagement.dto.response.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
@@ -17,7 +11,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestRes {
+public class RequestResponse {
     private Long id;
 
     private String requestTitle;

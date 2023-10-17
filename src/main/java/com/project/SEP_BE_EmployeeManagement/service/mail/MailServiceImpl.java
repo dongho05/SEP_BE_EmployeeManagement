@@ -1,6 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service.mail;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.mail.MailReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +51,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public String sendPassword(ResetPasswordReq request) {
+    public String sendPassword(ResetPasswordRequest request) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 

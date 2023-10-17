@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestCategoryReq {
+public class CreateReqCategoryRequest {
     private String requestCategoryName;
 }

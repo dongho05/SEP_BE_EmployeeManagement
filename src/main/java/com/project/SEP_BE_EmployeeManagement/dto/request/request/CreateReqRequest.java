@@ -1,6 +1,5 @@
 package com.project.SEP_BE_EmployeeManagement.dto.request.request;
 
-import com.project.SEP_BE_EmployeeManagement.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestReq {
+public class CreateReqRequest {
     private String requestTitle;
 
     private String requestContent;

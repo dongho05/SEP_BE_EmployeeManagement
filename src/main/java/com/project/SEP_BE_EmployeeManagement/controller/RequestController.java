@@ -1,8 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.request.UpdateStatusRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
+import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.RequestService;
@@ -26,11 +26,11 @@ public class RequestController {
     UserService userService;
 
     @PostMapping("/create-request")
-    public ResponseEntity<?> createRequest(@RequestBody CreateRequestReq request){
+    public ResponseEntity<?> createRequest(@RequestBody CreateReqRequest request){
 
         try {
             Request entity =requestService.createRequest(request);
-            RequestRes dto = new RequestRes();
+            RequestResponse dto = new RequestResponse();
             dto.setId(entity.getId());
             dto.setRequestContent(entity.getRequestContent());
             dto.setRequestTitle(entity.getRequestTitle());
@@ -60,12 +60,12 @@ public class RequestController {
                                      @RequestParam(name = "size", defaultValue = "30") int size,
                                      @RequestParam(name = "status",defaultValue = "0") int statusReq){
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestRes> pageRequests = requestService.getList(search, pageable,statusReq);
+        Page<RequestResponse> pageRequests = requestService.getList(search, pageable,statusReq);
         return ResponseEntity.ok(pageRequests);
     }
 
     @PutMapping("/update-request/{id}")
-    public ResponseEntity<?> updateRequest(@RequestBody CreateRequestReq request, @PathVariable int id){
+    public ResponseEntity<?> updateRequest(@RequestBody CreateReqRequest request, @PathVariable int id){
         Request obj = requestService.updateRequest(request,id);
         return ResponseEntity.ok("Cập nhật yêu cầu thành công.");
     }

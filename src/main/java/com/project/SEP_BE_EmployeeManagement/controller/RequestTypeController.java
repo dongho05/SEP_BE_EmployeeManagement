@@ -1,7 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestCategoryReq;
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestTypeReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqTypeRequest;
 import com.project.SEP_BE_EmployeeManagement.model.RequestType;
 import com.project.SEP_BE_EmployeeManagement.service.RequestTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class RequestTypeController {
         return ResponseEntity.ok(pageRequests);
     }
     @PostMapping("/create-request-type")
-    public ResponseEntity<?> createRequestType(@RequestBody CreateRequestTypeReq request){
+    public ResponseEntity<?> createRequestType(@RequestBody CreateReqTypeRequest request){
         try {
             requestTypeService.createRequestType(request);
         }catch (Exception e){
@@ -46,7 +45,7 @@ public class RequestTypeController {
         return ResponseEntity.ok("Xóa thành công.");
     }
     @PutMapping("/update-request-type/{id}")
-    public ResponseEntity<?> updateRequestType(@RequestBody CreateRequestTypeReq request, @PathVariable int id){
+    public ResponseEntity<?> updateRequestType(@RequestBody CreateReqTypeRequest request, @PathVariable int id){
         try {
             requestTypeService.updateRequestType(request,id);
         }catch (Exception e){

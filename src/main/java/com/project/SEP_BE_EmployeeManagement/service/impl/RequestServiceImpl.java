@@ -1,9 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestReq;
-import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
-import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
-import com.project.SEP_BE_EmployeeManagement.model.Holiday;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.repository.RequestRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
@@ -24,8 +22,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 @Service
 public class RequestServiceImpl implements RequestService {
     @Autowired
@@ -42,7 +38,7 @@ public class RequestServiceImpl implements RequestService {
 
 
     @Override
-    public Request createRequest(CreateRequestReq request) {
+    public Request createRequest(CreateReqRequest request) {
 
 //        parse localDate to date
         LocalDate localDate = LocalDate.now();
@@ -68,7 +64,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request updateRequest(CreateRequestReq request, long id) {
+    public Request updateRequest(CreateReqRequest request, long id) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -92,9 +88,9 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public RequestRes findById(long id) {
+    public RequestResponse findById(long id) {
         Request entity = requestRepository.findById(id);
-        RequestRes dto = new RequestRes();
+        RequestResponse dto = new RequestResponse();
         dto.setId(entity.getId());
         dto.setRequestContent(entity.getRequestContent());
         dto.setRequestTitle(entity.getRequestTitle());
@@ -132,7 +128,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestRes> getList(String searchInput, Pageable pageable, int statusReq) {
+    public Page<RequestResponse> getList(String searchInput, Pageable pageable, int statusReq) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -152,11 +148,11 @@ public class RequestServiceImpl implements RequestService {
             list = requestRepository.getList( search,pageable,userDetails.getId(),null,statusReq);
         }
 
-        Page<RequestRes> result = list.map(new Function<Request, RequestRes>() {
+        Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
             @Override
-            public RequestRes apply(Request entity) {
+            public RequestResponse apply(Request entity) {
 
-                RequestRes dto = new RequestRes();
+                RequestResponse dto = new RequestResponse();
                 // Conversion logic
                 dto.setId(entity.getId());
                 dto.setRequestContent(entity.getRequestContent());

@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestTypeReq {
+public class CreateReqTypeRequest {
     private String requestTypeName;
     private int requestCategoryId;
     private String replacementPerson;
