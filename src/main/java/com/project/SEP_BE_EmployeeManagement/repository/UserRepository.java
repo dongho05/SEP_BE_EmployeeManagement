@@ -21,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
 
+    User findByUserCode(String code);
+
 
     @Query(value = "select u from User u " +
             " join u.department d " +

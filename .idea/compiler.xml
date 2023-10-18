@@ -9,6 +9,17 @@
         <outputRelativeToContentRoot value="true" />
         <module name="SEP_BE_EmployeeManagement" />
       </profile>
+      <profile name="Annotation profile for ConnectAPI" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.4.2.Final/mapstruct-processor-1.4.2.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.4.2.Final/mapstruct-1.4.2.Final.jar" />
+        </processorPath>
+        <module name="ConnectAPI" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ConnectAPI" target="16" />
@@ -16,6 +27,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ConnectAPI" options="-parameters" />
       <module name="SEP_BE_EmployeeManagement" options="-parameters" />
     </option>
   </component>

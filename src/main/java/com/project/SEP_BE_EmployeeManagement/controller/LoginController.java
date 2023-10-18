@@ -72,7 +72,10 @@ public class LoginController {
                 roles,
                 user.get().getUserCode(),
                 user.get().getDepartment().getId(),
-                user.get().getFullName()));
+                user.get().getDepartment().getName(),
+                user.get().getFullName(),
+                user.get().getUserImage()
+                ));
     }
 
 

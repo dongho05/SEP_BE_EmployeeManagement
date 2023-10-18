@@ -72,7 +72,7 @@ public class UserServiceImp implements UserService {
     public UserDto updateUser(long id, UpdateUserRequest updateUserRequest) throws NotFoundException {
         User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
         u.setFullName(updateUserRequest.getFullName());
-        u.setUserCode(updateUserRequest.getUserCode());
+        u.setUserCode("FPT_"+updateUserRequest.getUserCode());
         u.setGender(updateUserRequest.getGender());
         u.setAddress(updateUserRequest.getAddress());
         u.setEmail(updateUserRequest.getEmail());
@@ -93,17 +93,42 @@ public class UserServiceImp implements UserService {
         }
         u.setPosition(position.get());
 
-
+        if (updateUserRequest.getUserImage() != null && updateUserRequest.getUserImage().getSize() > 0) {
+            if(!u.getUserImage().equals("default.png"))
+                fileManagerService.delete(u.getUserImage());
+            String filename = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
+            u.setUserImage(filename);
+        }
         // set user Image
-        String userImage = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
-        u.setUserImage(userImage);
+//        String userImage = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
+//        u.setUserImage(userImage);
+        userRepository.save(u);
+
+
 
         //set contracts
-        Set<Contract> contracts = new HashSet<>();
-        Contract contract = new Contract();
-        String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
-        contract.setFileName(contractFile);
-        u.setContracts(contracts);
+        if(updateUserRequest.getContractFile() != null && updateUserRequest.getContractFile().getSize()  >0){
+            Set<Contract> contracts = new HashSet<>();
+            Contract contract = new Contract();
+            String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
+            contract.setFileName(contractFile);
+            contract.setUser(u);
+//        contract.setContractName(createUser.getContractName());
+            contract.setContractName("Hợp đồng");
+            contractRepository.save(contract);
+
+            contracts.add(contract);
+            u.setContracts(contracts);
+            userRepository.save(u);
+        }
+
+
+        //set contracts
+//        Set<Contract> contracts = new HashSet<>();
+//        Contract contract = new Contract();
+//        String contractFile = fileManagerService.saveUserContract(updateUserRequest.getContractFile());
+//        contract.setFileName(contractFile);
+//        u.setContracts(contracts);
 
         return UserMapper.toUserDto(userRepository.save(u));
     }
@@ -171,7 +196,7 @@ public class UserServiceImp implements UserService {
         if (userRepository.existsByUserCode(createUser.getUserCode().trim())) {
             throw new RuntimeException("Mã nhân viên đã tồn tại!");
         }
-        user.setUserCode(createUser.getUserCode());
+        user.setUserCode("FPT_"+createUser.getUserCode());
 
         if (userRepository.existsByEmail(createUser.getEmail().trim())) {
             throw new RuntimeException("Email đã tồn tại!");
