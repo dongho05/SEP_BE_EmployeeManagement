@@ -63,7 +63,7 @@ public class UserServiceImp implements UserService {
     public UserDto updateUser(long id, UpdateUserRequest updateUserRequest) throws NotFoundException {
         User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with id: " + id + " Not Found"));
         u.setFullName(updateUserRequest.getFullName());
-        u.setUserCode(updateUserRequest.getUserCode());
+        u.setUserCode("FPT_"+updateUserRequest.getUserCode());
         u.setGender(updateUserRequest.getGender());
         u.setAddress(updateUserRequest.getAddress());
         u.setEmail(updateUserRequest.getEmail());
@@ -187,7 +187,7 @@ public class UserServiceImp implements UserService {
         if (userRepository.existsByUserCode(createUser.getUserCode().trim())) {
             throw new RuntimeException("Mã nhân viên đã tồn tại!");
         }
-        user.setUserCode(createUser.getUserCode());
+        user.setUserCode("FPT_"+createUser.getUserCode());
 
         if (userRepository.existsByEmail(createUser.getEmail().trim())) {
             throw new RuntimeException("Email đã tồn tại!");
