@@ -38,7 +38,7 @@ public class Request extends BaseEntity {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @Column(name = "accept_by", nullable = false)
+    @Column(name = "accept_by")
     private long acceptBy;
 
     @Column(name = "accept_at")

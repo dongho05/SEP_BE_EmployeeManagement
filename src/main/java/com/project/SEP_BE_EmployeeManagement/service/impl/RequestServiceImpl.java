@@ -57,7 +57,6 @@ public class RequestServiceImpl implements RequestService {
         Request obj = new Request();
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
-        obj.setRequestContent(request.getRequestContent());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
         obj.setStartTime(request.getStartTime());
@@ -82,7 +81,6 @@ public class RequestServiceImpl implements RequestService {
 
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
-        obj.setRequestContent(request.getRequestContent());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
         obj.setStartTime(request.getStartTime());

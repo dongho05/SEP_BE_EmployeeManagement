@@ -101,8 +101,8 @@ public class RequestController {
 
     //Là ADMIN, duyệt trạng thái đơn cho thằng nhân viên
 
-    @PostMapping ("update-status-request/{requestId}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
+    @PostMapping ("/update-status-request/{requestId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> updateSttRequest( @RequestBody UpdateStatusRequest statusRequest,@PathVariable long requestId){
         try {
             requestService.updateStatusRequest(requestId,statusRequest.getStatus());
