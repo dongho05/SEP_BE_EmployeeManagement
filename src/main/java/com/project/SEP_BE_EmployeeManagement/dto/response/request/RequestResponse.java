@@ -50,4 +50,6 @@ public class RequestResponse {
     private User user;
 
     private RequestType requestType;
+
+    private long numberOfDays;
 }

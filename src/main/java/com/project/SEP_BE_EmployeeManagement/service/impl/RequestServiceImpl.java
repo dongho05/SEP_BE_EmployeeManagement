@@ -17,11 +17,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -112,6 +115,7 @@ public class RequestServiceImpl implements RequestService {
         dto.setDepartment(entity.getUser().getDepartment());
         dto.setUser(entity.getUser());
         dto.setRequestType(entity.getRequestType());
+        dto.setNumberOfDays(DAYS.between(entity.getStartDate(),entity.getEndDate()) + 1);
 
         return dto;
     }
