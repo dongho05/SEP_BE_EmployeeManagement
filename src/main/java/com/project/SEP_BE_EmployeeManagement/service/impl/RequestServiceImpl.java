@@ -6,6 +6,7 @@ import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.repository.RequestRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
+import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
 import com.project.SEP_BE_EmployeeManagement.service.RequestService;
 import com.project.SEP_BE_EmployeeManagement.service.RequestTypeService;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
@@ -35,6 +36,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    DepartmentService departmentService;
 
 
     @Override
@@ -104,7 +108,10 @@ public class RequestServiceImpl implements RequestService {
         dto.setUpdatedBy(entity.getUpdatedBy());
         dto.setUpdatedDate(entity.getUpdatedDate());
         dto.setUserId(entity.getUser().getId());
-
+        dto.setStatus(entity.getStatus());
+        dto.setDepartment(entity.getUser().getDepartment());
+        dto.setUser(entity.getUser());
+        dto.setRequestType(entity.getRequestType());
 
         return dto;
     }
@@ -169,6 +176,8 @@ public class RequestServiceImpl implements RequestService {
                 dto.setUserId(entity.getUser().getId());
                 dto.setStatus(entity.getStatus());
                 dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
+                dto.setDepartment(entity.getUser().getDepartment());
+                dto.setUser(entity.getUser());
 
                 return dto;
             }

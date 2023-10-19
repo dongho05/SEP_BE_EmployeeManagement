@@ -1,5 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.dto.response.request;
 
+import com.project.SEP_BE_EmployeeManagement.model.Department;
+import com.project.SEP_BE_EmployeeManagement.model.RequestType;
+import com.project.SEP_BE_EmployeeManagement.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,4 +44,10 @@ public class RequestResponse {
     private int status;
 
     private int departmentId;
+
+    private Department department;
+
+    private User user;
+
+    private RequestType requestType;
 }
