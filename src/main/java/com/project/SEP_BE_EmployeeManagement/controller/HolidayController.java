@@ -1,6 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Holiday;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
@@ -10,17 +10,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/holiday")
+@RequestMapping("/api/auth/holiday")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class HolidayController {
     @Autowired
     HolidayService holidayService;
 
     @PostMapping("/create-holiday")
-    public ResponseEntity<?> createHoliday(@RequestBody HolidayReq request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> createHoliday(@RequestBody HolidayRequest request) {
+        if(request.getHolidayName() == null || request.getHolidayName().matches("\\s+") || request.getHolidayName().equals("")){
+            return ResponseEntity.internalServerError().body("Hãy nhập tên của ngày nghỉ muốn tạo.");
+        }
+        if (request.getStartDate().isAfter(request.getEndDate()) == true) {
+            return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
+        }
+
         holidayService.createHoliday(request);
         return ResponseEntity.ok("Tạo mới thành công.");
     }
@@ -36,9 +45,10 @@ public class HolidayController {
     }
 
     @PutMapping("/update-holiday/{id}")
-    public ResponseEntity<?> updateHoliday(@RequestBody HolidayReq request, @PathVariable int id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateHoliday(@RequestBody HolidayRequest request, @PathVariable int id) {
         if (request.getStartDate().isAfter(request.getEndDate()) == true) {
-            throw new RuntimeException("Hãy chọn ngày bắt đầu nhở hơn ngày kết thúc.");
+            return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
         }
         try {
             holidayService.updateHoliday(request, id);
@@ -49,16 +59,18 @@ public class HolidayController {
     }
 
     @DeleteMapping("/delete-holiday/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteHoliday(@PathVariable int id) {
         try {
             holidayService.deleteHoliday(id);
 
         } catch (Exception e) {
-
+            return ResponseEntity.internalServerError().body("Không được phép xóa ngày nghỉ này.");
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("/holiday-details/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findById(@PathVariable int id){
         Holiday obj= holidayService.detailHoliday(id);
         return ResponseEntity.ok(obj);

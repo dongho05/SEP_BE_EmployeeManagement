@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRequestCategoryReq {
-    private String requestCategoryName;
+public class CreateReqTypeRequest {
+    private String requestTypeName;
+    private int requestCategoryId;
+    private String replacementPerson;
+    private String replacementWork;
 }

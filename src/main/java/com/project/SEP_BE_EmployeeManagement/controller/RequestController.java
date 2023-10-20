@@ -1,8 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.request.UpdateStatusRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
+import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.RequestService;
@@ -12,11 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/request")
+@RequestMapping("/api/auth/request")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class RequestController {
     @Autowired
@@ -26,10 +27,16 @@ public class RequestController {
     UserService userService;
 
     @PostMapping("/create-request")
-    public ResponseEntity<?> createRequest(@RequestBody CreateRequestReq request){
+    public ResponseEntity<?> createRequest(@RequestBody CreateReqRequest request){
+        if (request.getStartDate().isAfter(request.getEndDate()) == true) {
+            return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
+        }
+        if(request.getStartTime().isAfter(request.getEndTime()) == true){
+            return ResponseEntity.internalServerError().body("Hãy chọn giờ bắt đầu nhỏ hơn giờ kết thúc.");
+        }
         try {
             Request entity =requestService.createRequest(request);
-            RequestRes dto = new RequestRes();
+            RequestResponse dto = new RequestResponse();
             dto.setId(entity.getId());
             dto.setRequestContent(entity.getRequestContent());
             dto.setRequestTitle(entity.getRequestTitle());
@@ -43,6 +50,8 @@ public class RequestController {
             dto.setUpdatedBy(entity.getUpdatedBy());
             dto.setUpdatedDate(entity.getUpdatedDate());
             dto.setUserId(entity.getUser().getId());
+
+
             return ResponseEntity.ok(dto);
 
         }catch (Exception exception){
@@ -57,12 +66,20 @@ public class RequestController {
                                      @RequestParam(name = "size", defaultValue = "30") int size,
                                      @RequestParam(name = "status",defaultValue = "0") int statusReq){
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestRes> pageRequests = requestService.getList(search, pageable,statusReq);
+        Page<RequestResponse> pageRequests = requestService.getList(search, pageable,statusReq);
         return ResponseEntity.ok(pageRequests);
     }
 
     @PutMapping("/update-request/{id}")
-    public ResponseEntity<?> updateRequest(@RequestBody CreateRequestReq request, @PathVariable int id){
+    public ResponseEntity<?> updateRequest(@RequestBody CreateReqRequest request, @PathVariable int id){
+
+        if (request.getStartDate().isAfter(request.getEndDate()) == true) {
+            return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
+        }
+        if(request.getStartTime().isAfter(request.getEndTime()) == true){
+            return ResponseEntity.internalServerError().body("Hãy chọn giờ bắt đầu nhỏ hơn giờ kết thúc.");
+        }
+
         Request obj = requestService.updateRequest(request,id);
         return ResponseEntity.ok("Cập nhật yêu cầu thành công.");
     }
@@ -84,7 +101,8 @@ public class RequestController {
 
     //Là ADMIN, duyệt trạng thái đơn cho thằng nhân viên
 
-    @PostMapping ("update-status-request/{requestId}")
+    @PostMapping ("/update-status-request/{requestId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> updateSttRequest( @RequestBody UpdateStatusRequest statusRequest,@PathVariable long requestId){
         try {
             requestService.updateStatusRequest(requestId,statusRequest.getStatus());

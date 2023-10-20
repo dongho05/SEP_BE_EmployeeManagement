@@ -1,7 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestCategoryReq;
-import com.project.SEP_BE_EmployeeManagement.model.Request;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqCategoryRequest;
 import com.project.SEP_BE_EmployeeManagement.model.RequestCategory;
 import com.project.SEP_BE_EmployeeManagement.service.RequestCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/request-category")
+@RequestMapping("/api/auth/request-category")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class RequestCategoryController {
     @Autowired
@@ -27,7 +26,7 @@ public class RequestCategoryController {
         return ResponseEntity.ok(pageRequests);
     }
     @PostMapping("/create-request-category")
-    public ResponseEntity<?> createRequestCategory(@RequestBody CreateRequestCategoryReq request){
+    public ResponseEntity<?> createRequestCategory(@RequestBody CreateReqCategoryRequest request){
         try {
             requestCategoryService.createRequestCategory(request);
         }catch (Exception e){
@@ -45,7 +44,7 @@ public class RequestCategoryController {
         return ResponseEntity.ok("Xóa thành công.");
     }
     @PutMapping("/update-request-category/{id}")
-    public ResponseEntity<?> updateRequestCategory(@RequestBody CreateRequestCategoryReq request, @PathVariable int id){
+    public ResponseEntity<?> updateRequestCategory(@RequestBody CreateReqCategoryRequest request, @PathVariable int id){
         try {
             requestCategoryService.updateRequestCategory(request,id);
         }catch (Exception e){

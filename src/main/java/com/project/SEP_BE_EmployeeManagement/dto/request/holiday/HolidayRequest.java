@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HolidayReq {
+public class HolidayRequest {
     private String holidayName;
 
     private LocalDate startDate;

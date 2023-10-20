@@ -1,13 +1,12 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestReq;
-import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
-import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
-import com.project.SEP_BE_EmployeeManagement.model.Holiday;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.repository.RequestRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
+import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
 import com.project.SEP_BE_EmployeeManagement.service.RequestService;
 import com.project.SEP_BE_EmployeeManagement.service.RequestTypeService;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
@@ -18,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
@@ -40,9 +40,12 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    DepartmentService departmentService;
+
 
     @Override
-    public Request createRequest(CreateRequestReq request) {
+    public Request createRequest(CreateReqRequest request) {
 
 //        parse localDate to date
         LocalDate localDate = LocalDate.now();
@@ -54,12 +57,10 @@ public class RequestServiceImpl implements RequestService {
         Request obj = new Request();
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
-        obj.setRequestContent(request.getRequestContent());
-//        obj.setStatus(request.isStatus());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
-//        obj.setStartTime(request.getStartTime());
-//        obj.setEndTime(request.getEndTime());
+        obj.setStartTime(request.getStartTime());
+        obj.setEndTime(request.getEndTime());
         obj.setStatus(1);
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
@@ -69,7 +70,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request updateRequest(CreateRequestReq request, long id) {
+    public Request updateRequest(CreateReqRequest request, long id) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -80,12 +81,10 @@ public class RequestServiceImpl implements RequestService {
 
         obj.setRequestContent(request.getRequestContent());
         obj.setRequestTitle(request.getRequestTitle());
-        obj.setRequestContent(request.getRequestContent());
-//        obj.setStatus(request.isStatus());
         obj.setEndDate(request.getEndDate());
         obj.setStartDate(request.getStartDate());
-//        obj.setStartTime(request.getStartTime());
-//        obj.setEndTime(request.getEndTime());
+        obj.setStartTime(request.getStartTime());
+        obj.setEndTime(request.getEndTime());
         obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
         obj.setUser(userRepository.findById(userDetails.getId()).get());
 
@@ -94,9 +93,9 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public RequestRes findById(long id) {
+    public RequestResponse findById(long id) {
         Request entity = requestRepository.findById(id);
-        RequestRes dto = new RequestRes();
+        RequestResponse dto = new RequestResponse();
         dto.setId(entity.getId());
         dto.setRequestContent(entity.getRequestContent());
         dto.setRequestTitle(entity.getRequestTitle());
@@ -110,7 +109,11 @@ public class RequestServiceImpl implements RequestService {
         dto.setUpdatedBy(entity.getUpdatedBy());
         dto.setUpdatedDate(entity.getUpdatedDate());
         dto.setUserId(entity.getUser().getId());
-
+        dto.setStatus(entity.getStatus());
+        dto.setDepartment(entity.getUser().getDepartment());
+        dto.setUser(entity.getUser());
+        dto.setRequestType(entity.getRequestType());
+        dto.setNumberOfDays(DAYS.between(entity.getStartDate(),entity.getEndDate()) + 1);
 
         return dto;
     }
@@ -134,7 +137,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestRes> getList(String searchInput, Pageable pageable, int statusReq) {
+    public Page<RequestResponse> getList(String searchInput, Pageable pageable, int statusReq) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -154,11 +157,11 @@ public class RequestServiceImpl implements RequestService {
             list = requestRepository.getList( search,pageable,userDetails.getId(),null,statusReq);
         }
 
-        Page<RequestRes> result = list.map(new Function<Request, RequestRes>() {
+        Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
             @Override
-            public RequestRes apply(Request entity) {
+            public RequestResponse apply(Request entity) {
 
-                RequestRes dto = new RequestRes();
+                RequestResponse dto = new RequestResponse();
                 // Conversion logic
                 dto.setId(entity.getId());
                 dto.setRequestContent(entity.getRequestContent());
@@ -175,6 +178,8 @@ public class RequestServiceImpl implements RequestService {
                 dto.setUserId(entity.getUser().getId());
                 dto.setStatus(entity.getStatus());
                 dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
+                dto.setDepartment(entity.getUser().getDepartment());
+                dto.setUser(entity.getUser());
 
                 return dto;
             }

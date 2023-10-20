@@ -87,6 +87,18 @@ public class User extends BaseEntity{
     private Department department;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private Set<Request> requests;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<LogDetail> logDetails= new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<LogCheckInOut> logCheckInOuts= new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<LogInLateOutEarly> logInLateOutEarlies= new HashSet<>();
 }

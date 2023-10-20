@@ -1,6 +1,5 @@
 package com.project.SEP_BE_EmployeeManagement.repository;
 
-import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestRes;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

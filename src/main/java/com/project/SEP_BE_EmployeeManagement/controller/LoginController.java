@@ -1,9 +1,9 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.PasswordReq;
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordReq;
-import com.project.SEP_BE_EmployeeManagement.dto.request.login.UpdatePasswordReq;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.PasswordRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.ResetPasswordRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.login.UpdatePasswordRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.JwtResponse;
 import com.project.SEP_BE_EmployeeManagement.extensions.Utilities;
 import com.project.SEP_BE_EmployeeManagement.model.User;
@@ -72,7 +72,10 @@ public class LoginController {
                 roles,
                 user.get().getUserCode(),
                 user.get().getDepartment().getId(),
-                user.get().getFullName()));
+                user.get().getDepartment().getName(),
+                user.get().getFullName(),
+                user.get().getUserImage()
+                ));
     }
 
 
@@ -85,7 +88,7 @@ public class LoginController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> ForgotPassword(@RequestBody PasswordReq request) {
+    public ResponseEntity<?> ForgotPassword(@RequestBody PasswordRequest request) {
         int length = 8 + generator.nextInt(12);
         String randomPassword = Utilities.alphaNumericString(length);
         String hashedPassword = encoder.encode(randomPassword);
@@ -93,7 +96,7 @@ public class LoginController {
 
 
         if(userService.existsByEmail(request.getEmail())==true){
-            mailService.sendPassword(new ResetPasswordReq(request.getEmail(),
+            mailService.sendPassword(new ResetPasswordRequest(request.getEmail(),
                     "Reset password",
                     "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
             try {
@@ -105,8 +108,8 @@ public class LoginController {
         return  ResponseEntity.ok("Email không tồn tại.");
 
     }
-    @PostMapping("/change-password")
-    public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordReq request){
+    @PostMapping("/auth/change-password")
+    public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordRequest request){
 
         Optional<User> user = userService.findByUsernameOrEmail(request.getEmail());
         if(!encoder.matches(request.getOldPassword(), user.get().getPassword())){

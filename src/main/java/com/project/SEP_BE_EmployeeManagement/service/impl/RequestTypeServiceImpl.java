@@ -1,7 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateRequestTypeReq;
-import com.project.SEP_BE_EmployeeManagement.model.RequestCategory;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqTypeRequest;
 import com.project.SEP_BE_EmployeeManagement.model.RequestType;
 import com.project.SEP_BE_EmployeeManagement.repository.RequestTypeRepository;
 import com.project.SEP_BE_EmployeeManagement.service.RequestCategoryService;
@@ -18,7 +17,7 @@ public class RequestTypeServiceImpl implements RequestTypeService {
     @Autowired
     RequestCategoryService requestCategoryService;
     @Override
-    public RequestType createRequestType(CreateRequestTypeReq request) {
+    public RequestType createRequestType(CreateReqTypeRequest request) {
         RequestType obj = new RequestType();
         obj.setRequestTypeName(request.getRequestTypeName());
         obj.setReplacementPerson(request.getReplacementPerson());
@@ -30,7 +29,7 @@ public class RequestTypeServiceImpl implements RequestTypeService {
     }
 
     @Override
-    public RequestType updateRequestType(CreateRequestTypeReq request, int id) {
+    public RequestType updateRequestType(CreateReqTypeRequest request, int id) {
         RequestType obj = requestTypeRepository.findById(id);
         if(obj == null){
             throw new RuntimeException("Không tồn tại loại yêu cầu này.");
