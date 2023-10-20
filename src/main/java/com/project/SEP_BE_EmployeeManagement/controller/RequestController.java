@@ -75,6 +75,18 @@ public class RequestController {
         return ResponseEntity.ok(pageRequests);
     }
 
+    @GetMapping("/get-list-request-by-user-id")
+    public ResponseEntity<?> getListByUserId(@RequestParam(name = "search", required = false, defaultValue = "") String search,
+                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                     @RequestParam(name = "size", defaultValue = "30") int size,
+                                     @RequestParam(name = "status", defaultValue = "0") int statusReq,
+                                     @RequestParam(name = "from", defaultValue = "",required = false) String fromDate,
+                                     @RequestParam(name = "to", defaultValue = "",required = false) String toDate) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RequestResponse> pageRequests = requestService.getListByUserId(search, pageable, statusReq, fromDate, toDate);
+        return ResponseEntity.ok(pageRequests);
+    }
+
     @PutMapping("/update-request/{id}")
     public ResponseEntity<?> updateRequest(@RequestBody CreateReqRequest request, @PathVariable int id) {
 

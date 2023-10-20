@@ -192,6 +192,47 @@ public class RequestServiceImpl implements RequestService {
         return result;
     }
 
+    @Override
+    public Page<RequestResponse> getListByUserId(String searchInput, Pageable pageable, int statusReq, String fromDate, String toDate) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        LocalDate from = fromDate == null || fromDate.equals("") ? null : LocalDate.parse(fromDate);
+        LocalDate to = toDate == null || toDate.equals("") ? null : LocalDate.parse(toDate);
+
+        Page<Request> list = requestRepository.getList(search, pageable, userDetails.getId(), null, statusReq, from, to);
+
+        Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
+            @Override
+            public RequestResponse apply(Request entity) {
+
+                RequestResponse dto = new RequestResponse();
+                // Conversion logic
+                dto.setId(entity.getId());
+                dto.setRequestContent(entity.getRequestContent());
+                dto.setRequestTitle(entity.getRequestTitle());
+                dto.setCreatedBy(entity.getCreatedBy());
+                dto.setCreatedDate(entity.getCreatedDate());
+                dto.setEndDate(entity.getEndDate());
+                dto.setEndTime(entity.getEndTime());
+                dto.setRequestTypeId(entity.getRequestType().getId());
+                dto.setStartDate(entity.getStartDate());
+                dto.setStartTime(entity.getStartTime());
+                dto.setUpdatedBy(entity.getUpdatedBy());
+                dto.setUpdatedDate(entity.getUpdatedDate());
+                dto.setUserId(entity.getUser().getId());
+                dto.setStatus(entity.getStatus());
+                dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
+                dto.setDepartment(entity.getUser().getDepartment());
+                dto.setUser(entity.getUser());
+
+                return dto;
+            }
+        });
+        return result;
+    }
+
     //    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
     @Override
     public void updateStatusRequest(long requestId, int statusRequest) {

@@ -16,5 +16,6 @@ public interface RequestService {
     Request updateRequest(CreateReqRequest request, long id);
     RequestResponse findById(long id);
     Page<RequestResponse> getList(String search, Pageable pageable, int statusReq, String fromDate, String toDate);
+    Page<RequestResponse> getListByUserId(String search, Pageable pageable, int statusReq, String fromDate, String toDate);
     void updateStatusRequest(long requestId, int statusRequest);
 }

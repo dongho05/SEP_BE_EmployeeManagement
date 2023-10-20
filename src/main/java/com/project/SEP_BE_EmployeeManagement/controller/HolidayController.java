@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/auth/holiday")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,6 +25,9 @@ public class HolidayController {
     @PostMapping("/create-holiday")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createHoliday(@RequestBody HolidayRequest request) {
+        if (request.getStartDate().isBefore(LocalDate.now())) {
+            return ResponseEntity.internalServerError().body("Không thể chọn ngày bắt đầu đã qua.");
+        }
         if(request.getHolidayName() == null || request.getHolidayName().matches("\\s+") || request.getHolidayName().equals("")){
             return ResponseEntity.internalServerError().body("Hãy nhập tên của ngày nghỉ muốn tạo.");
         }
