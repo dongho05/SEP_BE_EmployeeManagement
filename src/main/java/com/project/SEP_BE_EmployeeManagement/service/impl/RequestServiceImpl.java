@@ -75,7 +75,7 @@ public class RequestServiceImpl implements RequestService {
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Request obj = requestRepository.findById(id);
-        if(obj == null){
+        if (obj == null) {
             throw new RuntimeException("Không tìm thấy yêu cầu");
         }
 
@@ -113,7 +113,7 @@ public class RequestServiceImpl implements RequestService {
         dto.setDepartment(entity.getUser().getDepartment());
         dto.setUser(entity.getUser());
         dto.setRequestType(entity.getRequestType());
-        dto.setNumberOfDays(DAYS.between(entity.getStartDate(),entity.getEndDate()) + 1);
+        dto.setNumberOfDays(DAYS.between(entity.getStartDate(), entity.getEndDate()) + 1);
 
         return dto;
     }
@@ -137,24 +137,29 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getList(String searchInput, Pageable pageable, int statusReq) {
+    public Page<RequestResponse> getList(String searchInput, Pageable pageable, int statusReq, String fromDate, String toDate) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        LocalDate from = fromDate == null || fromDate.equals("") ? null : LocalDate.parse(fromDate);
+        LocalDate to = toDate == null || toDate.equals("") ? null : LocalDate.parse(toDate);
 
-        Page<Request> list =null;
+        Page<Request> list = null;
 
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         boolean isAdmin = hasRoleAdmin(authorities);
         boolean isMod = hasRoleMod(authorities);
-        if(isAdmin){
-             list = requestRepository.getList( search,pageable,null,null,statusReq);
-        }else if(isMod){
-            list = requestRepository.getList( search,pageable,userDetails.getId(),userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId(),statusReq);
-        }
-        else{
-            list = requestRepository.getList( search,pageable,userDetails.getId(),null,statusReq);
+        if (isAdmin) {
+            list = requestRepository.getList(search, pageable, null, null, statusReq, from, to);
+        } else if (isMod) {
+            list = requestRepository.getList(search, pageable, userDetails.getId()
+                    , userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId()
+                    , statusReq
+                    , from
+                    , to);
+        } else {
+            list = requestRepository.getList(search, pageable, userDetails.getId(), null, statusReq, from, to);
         }
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
@@ -184,10 +189,10 @@ public class RequestServiceImpl implements RequestService {
                 return dto;
             }
         });
-        return  result;
+        return result;
     }
 
-//    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
+    //    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
     @Override
     public void updateStatusRequest(long requestId, int statusRequest) {
         LocalDate localDate = LocalDate.now();

@@ -16,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/auth/request")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -27,15 +29,15 @@ public class RequestController {
     UserService userService;
 
     @PostMapping("/create-request")
-    public ResponseEntity<?> createRequest(@RequestBody CreateReqRequest request){
+    public ResponseEntity<?> createRequest(@RequestBody CreateReqRequest request) {
         if (request.getStartDate().isAfter(request.getEndDate()) == true) {
             return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
         }
-        if(request.getStartTime().isAfter(request.getEndTime()) == true){
+        if (request.getStartTime().isAfter(request.getEndTime()) == true) {
             return ResponseEntity.internalServerError().body("Hãy chọn giờ bắt đầu nhỏ hơn giờ kết thúc.");
         }
         try {
-            Request entity =requestService.createRequest(request);
+            Request entity = requestService.createRequest(request);
             RequestResponse dto = new RequestResponse();
             dto.setId(entity.getId());
             dto.setRequestContent(entity.getRequestContent());
@@ -54,43 +56,46 @@ public class RequestController {
 
             return ResponseEntity.ok(dto);
 
-        }catch (Exception exception){
+        } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
 
 //        return ResponseEntity.ok("Thêm mới yêu cầu thành công.");
     }
+
     @GetMapping("/get-list-request")
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "30") int size,
-                                     @RequestParam(name = "status",defaultValue = "0") int statusReq){
+                                     @RequestParam(name = "status", defaultValue = "0") int statusReq,
+                                     @RequestParam(name = "from", defaultValue = "",required = false) String fromDate,
+                                     @RequestParam(name = "to", defaultValue = "",required = false) String toDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestResponse> pageRequests = requestService.getList(search, pageable,statusReq);
+        Page<RequestResponse> pageRequests = requestService.getList(search, pageable, statusReq, fromDate, toDate);
         return ResponseEntity.ok(pageRequests);
     }
 
     @PutMapping("/update-request/{id}")
-    public ResponseEntity<?> updateRequest(@RequestBody CreateReqRequest request, @PathVariable int id){
+    public ResponseEntity<?> updateRequest(@RequestBody CreateReqRequest request, @PathVariable int id) {
 
         if (request.getStartDate().isAfter(request.getEndDate()) == true) {
             return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
         }
-        if(request.getStartTime().isAfter(request.getEndTime()) == true){
+        if (request.getStartTime().isAfter(request.getEndTime()) == true) {
             return ResponseEntity.internalServerError().body("Hãy chọn giờ bắt đầu nhỏ hơn giờ kết thúc.");
         }
 
-        Request obj = requestService.updateRequest(request,id);
+        Request obj = requestService.updateRequest(request, id);
         return ResponseEntity.ok("Cập nhật yêu cầu thành công.");
     }
 
     @GetMapping("/get-request-by-id/{id}")
-    public ResponseEntity<?> findById(@PathVariable long id){
+    public ResponseEntity<?> findById(@PathVariable long id) {
         return ResponseEntity.ok(requestService.findById(id));
     }
 
     @GetMapping("/get-current-user")
-    public ResponseEntity<?> getCurrentUser(){
+    public ResponseEntity<?> getCurrentUser() {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
@@ -101,12 +106,12 @@ public class RequestController {
 
     //Là ADMIN, duyệt trạng thái đơn cho thằng nhân viên
 
-    @PostMapping ("/update-status-request/{requestId}")
+    @PostMapping("/update-status-request/{requestId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<?> updateSttRequest( @RequestBody UpdateStatusRequest statusRequest,@PathVariable long requestId){
+    public ResponseEntity<?> updateSttRequest(@RequestBody UpdateStatusRequest statusRequest, @PathVariable long requestId) {
         try {
-            requestService.updateStatusRequest(requestId,statusRequest.getStatus());
-        }catch (Exception e){
+            requestService.updateStatusRequest(requestId, statusRequest.getStatus());
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
         return ResponseEntity.ok("");
