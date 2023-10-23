@@ -137,11 +137,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getList(String searchInput, Pageable pageable, int statusReq, String fromDate, String toDate) {
+    public Page<RequestResponse> getList(String searchInput, Pageable pageable,String departmentId, int statusReq, String fromDate, String toDate) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
         LocalDate from = fromDate == null || fromDate.equals("") ? null : LocalDate.parse(fromDate);
         LocalDate to = toDate == null || toDate.equals("") ? null : LocalDate.parse(toDate);
 
@@ -151,10 +152,12 @@ public class RequestServiceImpl implements RequestService {
         boolean isAdmin = hasRoleAdmin(authorities);
         boolean isMod = hasRoleMod(authorities);
         if (isAdmin) {
-            list = requestRepository.getList(search, pageable, null, null, statusReq, from, to);
+            list = requestRepository.getList(search, pageable, null, did, statusReq, from, to);
         } else if (isMod) {
-            list = requestRepository.getList(search, pageable, userDetails.getId()
-                    , userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId()
+            list = requestRepository.getList(search
+                    , pageable
+                    , userDetails.getId()
+                    , userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId().toString()
                     , statusReq
                     , from
                     , to);
