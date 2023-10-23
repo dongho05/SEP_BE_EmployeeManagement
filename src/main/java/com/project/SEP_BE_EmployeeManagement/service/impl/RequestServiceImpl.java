@@ -143,8 +143,8 @@ public class RequestServiceImpl implements RequestService {
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
         String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
-        LocalDate from = fromDate == null || fromDate.equals("") ? null : LocalDate.parse(fromDate);
-        LocalDate to = toDate == null || toDate.equals("") ? null : LocalDate.parse(toDate);
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
 
         Page<Request> list = null;
 
@@ -201,8 +201,8 @@ public class RequestServiceImpl implements RequestService {
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
-        LocalDate from = fromDate == null || fromDate.equals("") ? null : LocalDate.parse(fromDate);
-        LocalDate to = toDate == null || toDate.equals("") ? null : LocalDate.parse(toDate);
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
 
         Page<Request> list = requestRepository.getList(search, pageable, userDetails.getId(), null, statusReq, from, to);
 

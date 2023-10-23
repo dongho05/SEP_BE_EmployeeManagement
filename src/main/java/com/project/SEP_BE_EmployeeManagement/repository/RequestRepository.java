@@ -17,10 +17,10 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             " and (:departmentId is null or :departmentId ='' or u.department_id = :departmentId) " +
             " and (:statusReq is null or :statusReq = 0 or r.status = :statusReq) "+
             " and (:userId is null or :userId ='' or r.user_id = :userId) " +
-            " and (:fromDate is null or :fromDate='' or r.start_date >= :fromDate) " +
-            " and (:toDate is null or :toDate='' or r.start_date <= :toDate) " +
+            " and (:fromDate is null or :fromDate='' or r.create_date >= :fromDate) " +
+            " and (:toDate is null or :toDate='' or r.create_date <= :toDate) " +
             " order by r.request_id",nativeQuery = true)
-    Page<Request> getList(String search, Pageable pageable, Long userId, String departmentId, int statusReq, LocalDate fromDate, LocalDate toDate);
+    Page<Request> getList(String search, Pageable pageable, Long userId, String departmentId, int statusReq, String fromDate, String toDate);
     Boolean existsById(int id);
     Request findById(long id);
 
