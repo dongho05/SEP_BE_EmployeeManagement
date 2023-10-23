@@ -52,4 +52,6 @@ public class RequestResponse {
     private RequestType requestType;
 
     private long numberOfDays;
+
+    private String note;
 }

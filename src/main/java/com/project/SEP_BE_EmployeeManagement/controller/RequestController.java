@@ -123,7 +123,8 @@ public class RequestController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> updateSttRequest(@RequestBody UpdateStatusRequest statusRequest, @PathVariable long requestId) {
         try {
-            requestService.updateStatusRequest(requestId, statusRequest.getStatus());
+            requestService.updateStatusRequest(requestId, statusRequest.getStatus(),statusRequest.getNote());
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

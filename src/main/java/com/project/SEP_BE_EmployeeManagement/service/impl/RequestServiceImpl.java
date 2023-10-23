@@ -188,6 +188,7 @@ public class RequestServiceImpl implements RequestService {
                 dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
                 dto.setDepartment(entity.getUser().getDepartment());
                 dto.setUser(entity.getUser());
+                dto.setNote(entity.getNote());
 
                 return dto;
             }
@@ -229,6 +230,7 @@ public class RequestServiceImpl implements RequestService {
                 dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
                 dto.setDepartment(entity.getUser().getDepartment());
                 dto.setUser(entity.getUser());
+                dto.setNote(entity.getNote());
 
                 return dto;
             }
@@ -238,7 +240,7 @@ public class RequestServiceImpl implements RequestService {
 
     //    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
     @Override
-    public void updateStatusRequest(long requestId, int statusRequest) {
+    public void updateStatusRequest(long requestId, int statusRequest, String note) {
         LocalDate localDate = LocalDate.now();
         Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
@@ -249,6 +251,7 @@ public class RequestServiceImpl implements RequestService {
         obj.setStatus(statusRequest);
         obj.setAcceptBy(userDetails.getId());
         obj.setAcceptAt(localDate);
+        obj.setNote(note);
         requestRepository.save(obj);
     }
 }
