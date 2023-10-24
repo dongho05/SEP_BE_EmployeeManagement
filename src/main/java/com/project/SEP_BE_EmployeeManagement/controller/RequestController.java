@@ -72,7 +72,7 @@ public class RequestController {
                                      @RequestParam(name = "from", defaultValue = "",required = false) String fromDate,
                                      @RequestParam(name = "to", defaultValue = "",required = false) String toDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestResponse> pageRequests = requestService.getList(search, pageable, departmentId,statusReq, fromDate, toDate);
+        Page<RequestResponse> pageRequests = requestService.getList(search, departmentId,statusReq, fromDate, toDate, pageable);
         return ResponseEntity.ok(pageRequests);
     }
 
@@ -84,7 +84,7 @@ public class RequestController {
                                      @RequestParam(name = "from", defaultValue = "",required = false) String fromDate,
                                      @RequestParam(name = "to", defaultValue = "",required = false) String toDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestResponse> pageRequests = requestService.getListByUserId(search, pageable, statusReq, fromDate, toDate);
+        Page<RequestResponse> pageRequests = requestService.getListByUserId(search, statusReq, fromDate, toDate, pageable);
         return ResponseEntity.ok(pageRequests);
     }
 

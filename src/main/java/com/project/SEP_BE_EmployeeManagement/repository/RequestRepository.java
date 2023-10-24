@@ -20,7 +20,7 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             " and (:fromDate is null or :fromDate='' or r.create_date >= :fromDate) " +
             " and (:toDate is null or :toDate='' or r.create_date <= :toDate) " +
             " order by r.request_id",nativeQuery = true)
-    Page<Request> getList(String search, Pageable pageable, Long userId, String departmentId, int statusReq, String fromDate, String toDate);
+    Page<Request> getList(String search, String departmentId, int statusReq, Long userId, String fromDate, String toDate, Pageable pageable);
     Boolean existsById(int id);
     Request findById(long id);
 
