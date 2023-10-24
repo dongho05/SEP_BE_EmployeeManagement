@@ -95,6 +95,10 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestResponse findById(long id) {
         Request entity = requestRepository.findById(id);
+
+        String handlerName = entity.getAcceptBy() == 0 ? "Chưa xử lý" : userRepository.findById(entity.getAcceptBy()).get().getFullName();
+        String handlerPosition = entity.getAcceptBy() == 0 ? "Chưa xử lý" : userRepository.findById(entity.getAcceptBy()).get().getPosition().getPositionName();
+
         RequestResponse dto = new RequestResponse();
         dto.setId(entity.getId());
         dto.setRequestContent(entity.getRequestContent());
@@ -114,6 +118,9 @@ public class RequestServiceImpl implements RequestService {
         dto.setUser(entity.getUser());
         dto.setRequestType(entity.getRequestType());
         dto.setNumberOfDays(DAYS.between(entity.getStartDate(), entity.getEndDate()) + 1);
+        dto.setNote(entity.getNote());
+        dto.setHandlerName(handlerName);
+        dto.setHandlerPosition(handlerPosition);
 
         return dto;
     }

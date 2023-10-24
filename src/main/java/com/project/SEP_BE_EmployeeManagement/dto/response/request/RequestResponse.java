@@ -54,4 +54,8 @@ public class RequestResponse {
     private long numberOfDays;
 
     private String note;
+
+    private String handlerName;
+
+    private String handlerPosition;
 }
