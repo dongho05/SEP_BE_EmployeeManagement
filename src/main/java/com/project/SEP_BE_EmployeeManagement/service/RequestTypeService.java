@@ -13,4 +13,5 @@ public interface RequestTypeService {
     RequestType findById(int id);
     Page<RequestType> getList(String search, Pageable pageable);
     void deleteRequestType(int id);
+    Page<RequestType> getListByCategoryRequestId(String search, Pageable pageable, String categoryId);
 }

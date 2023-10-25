@@ -63,4 +63,12 @@ public class RequestTypeServiceImpl implements RequestTypeService {
         }
         requestTypeRepository.delete(obj);
     }
+
+    @Override
+    public Page<RequestType> getListByCategoryRequestId(String searchInput, Pageable pageable, String categoryId) {
+        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String cid = categoryId == null || categoryId.toString() == "" ? "" : categoryId;
+        Page<RequestType> list = requestTypeRepository.getListByCategoryRequestId( search,pageable,cid);
+        return  list;
+    }
 }

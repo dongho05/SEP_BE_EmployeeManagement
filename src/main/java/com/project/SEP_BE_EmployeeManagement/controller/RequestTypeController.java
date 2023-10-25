@@ -26,6 +26,17 @@ public class RequestTypeController {
         Page<RequestType> pageRequests = requestTypeService.getList(search, pageable);
         return ResponseEntity.ok(pageRequests);
     }
+
+    @GetMapping("/get-list-request-type-by-category-id")
+    public ResponseEntity<?> getListByCategoryRequestId(@RequestParam(name = "search", required = false, defaultValue = "") String search,
+                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                     @RequestParam(name = "categoryId", defaultValue = "0") String categoryId,
+                                     @RequestParam(name = "size", defaultValue = "30") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RequestType> pageRequests = requestTypeService.getListByCategoryRequestId(search, pageable,categoryId);
+        return ResponseEntity.ok(pageRequests);
+    }
+
     @PostMapping("/create-request-type")
     public ResponseEntity<?> createRequestType(@RequestBody CreateReqTypeRequest request){
         try {

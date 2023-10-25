@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateStatusRequest {
     private int status;
+    private String note;
 }

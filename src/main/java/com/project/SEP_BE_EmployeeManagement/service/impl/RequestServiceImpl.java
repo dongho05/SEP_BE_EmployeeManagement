@@ -75,7 +75,7 @@ public class RequestServiceImpl implements RequestService {
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Request obj = requestRepository.findById(id);
-        if(obj == null){
+        if (obj == null) {
             throw new RuntimeException("Không tìm thấy yêu cầu");
         }
 
@@ -95,6 +95,10 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestResponse findById(long id) {
         Request entity = requestRepository.findById(id);
+
+        String handlerName = entity.getAcceptBy() == 0 ? "Chưa xử lý" : userRepository.findById(entity.getAcceptBy()).get().getFullName();
+        String handlerPosition = entity.getAcceptBy() == 0 ? "Chưa xử lý" : userRepository.findById(entity.getAcceptBy()).get().getPosition().getPositionName();
+
         RequestResponse dto = new RequestResponse();
         dto.setId(entity.getId());
         dto.setRequestContent(entity.getRequestContent());
@@ -113,7 +117,10 @@ public class RequestServiceImpl implements RequestService {
         dto.setDepartment(entity.getUser().getDepartment());
         dto.setUser(entity.getUser());
         dto.setRequestType(entity.getRequestType());
-        dto.setNumberOfDays(DAYS.between(entity.getStartDate(),entity.getEndDate()) + 1);
+        dto.setNumberOfDays(DAYS.between(entity.getStartDate(), entity.getEndDate()) + 1);
+        dto.setNote(entity.getNote());
+        dto.setHandlerName(handlerName);
+        dto.setHandlerPosition(handlerPosition);
 
         return dto;
     }
@@ -137,24 +144,38 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getList(String searchInput, Pageable pageable, int statusReq) {
+    public Page<RequestResponse> getList(String searchInput, String departmentId, int statusReq, String fromDate, String toDate, Pageable pageable) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
 
-        Page<Request> list =null;
+        Page<Request> list = null;
 
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         boolean isAdmin = hasRoleAdmin(authorities);
         boolean isMod = hasRoleMod(authorities);
-        if(isAdmin){
-             list = requestRepository.getList( search,pageable,null,null,statusReq);
-        }else if(isMod){
-            list = requestRepository.getList( search,pageable,userDetails.getId(),userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId(),statusReq);
-        }
-        else{
-            list = requestRepository.getList( search,pageable,userDetails.getId(),null,statusReq);
+        if (isAdmin) {
+            list = requestRepository.getList(search
+                    , did
+                    , statusReq
+                    , null
+                    , from
+                    , to
+                    , pageable);
+        } else if (isMod) {
+            list = requestRepository.getList(search
+                    , userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId().toString()
+                    , statusReq
+                    , null
+                    , from
+                    , to
+                    , pageable);
+        } else {
+            list = requestRepository.getList(search, null, statusReq, userDetails.getId(), from, to, pageable);
         }
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
@@ -180,16 +201,59 @@ public class RequestServiceImpl implements RequestService {
                 dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
                 dto.setDepartment(entity.getUser().getDepartment());
                 dto.setUser(entity.getUser());
+                dto.setNote(entity.getNote());
 
                 return dto;
             }
         });
-        return  result;
+        return result;
     }
 
-//    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
     @Override
-    public void updateStatusRequest(long requestId, int statusRequest) {
+    public Page<RequestResponse> getListByUserId(String searchInput, int statusReq, String fromDate, String toDate, Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
+
+        Page<Request> list = requestRepository.getList(search, null, statusReq, userDetails.getId(), from, to, pageable);
+
+        Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
+            @Override
+            public RequestResponse apply(Request entity) {
+
+                RequestResponse dto = new RequestResponse();
+                // Conversion logic
+                dto.setId(entity.getId());
+                dto.setRequestContent(entity.getRequestContent());
+                dto.setRequestTitle(entity.getRequestTitle());
+                dto.setCreatedBy(entity.getCreatedBy());
+                dto.setCreatedDate(entity.getCreatedDate());
+                dto.setEndDate(entity.getEndDate());
+                dto.setEndTime(entity.getEndTime());
+                dto.setRequestTypeId(entity.getRequestType().getId());
+                dto.setStartDate(entity.getStartDate());
+                dto.setStartTime(entity.getStartTime());
+                dto.setUpdatedBy(entity.getUpdatedBy());
+                dto.setUpdatedDate(entity.getUpdatedDate());
+                dto.setUserId(entity.getUser().getId());
+                dto.setStatus(entity.getStatus());
+                dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
+                dto.setDepartment(entity.getUser().getDepartment());
+                dto.setUser(entity.getUser());
+                dto.setNote(entity.getNote());
+
+                return dto;
+            }
+        });
+        return result;
+    }
+
+    //    1: Đang xử lý, 2: Chấp nhận, 3: Từ chối
+    @Override
+    public void updateStatusRequest(long requestId, int statusRequest, String note) {
         LocalDate localDate = LocalDate.now();
         Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
@@ -200,6 +264,7 @@ public class RequestServiceImpl implements RequestService {
         obj.setStatus(statusRequest);
         obj.setAcceptBy(userDetails.getId());
         obj.setAcceptAt(localDate);
+        obj.setNote(note);
         requestRepository.save(obj);
     }
 }

@@ -52,4 +52,10 @@ public class RequestResponse {
     private RequestType requestType;
 
     private long numberOfDays;
+
+    private String note;
+
+    private String handlerName;
+
+    private String handlerPosition;
 }

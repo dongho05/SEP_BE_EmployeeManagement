@@ -46,6 +46,8 @@ public class Request extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     private int status;
+    @Column(name = "note")
+    private String note;
 
     @ManyToOne
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

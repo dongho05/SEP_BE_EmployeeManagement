@@ -15,4 +15,10 @@ public interface RequestTypeRepository extends JpaRepository<RequestType,Integer
     Page<RequestType> getList(String search, Pageable pageable);
     Boolean existsById(int id);
     RequestType findById(int id);
+
+    @Query(value = "select * from request_type r " +
+            " where (:search is null or :search = '' or r.request_type_name LIKE %:search% ) " +
+            " and (:categoryId is null or :categoryId ='' or r.request_category_id = :categoryId) "+
+            " order by r.request_type_id",nativeQuery = true)
+    Page<RequestType> getListByCategoryRequestId(String search, Pageable pageable,String categoryId);
 }
