@@ -23,7 +23,7 @@ public class RequestType {
 
     @ManyToOne
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "request_department_id", nullable = false)
+    @JoinColumn(name = "request_category_id", nullable = false)
     private RequestCategory requestCategory;
 
     @OneToMany(mappedBy = "requestType",cascade = CascadeType.ALL)
