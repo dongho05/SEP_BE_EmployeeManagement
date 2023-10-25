@@ -52,6 +52,10 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> Login(@RequestBody LoginRequest loginRequest) {
+        if(loginRequest.getUsername()== null || loginRequest.getUsername().matches("\\s")){
+            return ResponseEntity.internalServerError().body("Hãy nhập tên tài khoản.");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -105,7 +109,7 @@ public class LoginController {
             }
             return ResponseEntity.ok("Mật khẩu mới đã được gửi hòm thư của bạn.");
         }
-        return  ResponseEntity.ok("Email không tồn tại.");
+        return  ResponseEntity.internalServerError().body("Email không tồn tại.");
 
     }
     @PostMapping("/auth/change-password")

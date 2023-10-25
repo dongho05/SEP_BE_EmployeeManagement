@@ -55,6 +55,10 @@ public class HolidayController {
         if (request.getStartDate().isAfter(request.getEndDate()) == true) {
             return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
         }
+        if(request.getHolidayName().equals("")||request.getHolidayName().matches("\\s")){
+            return ResponseEntity.internalServerError().body("Hãy nhập tên ngày nghỉ thích hợp.");
+        }
+
         try {
             holidayService.updateHoliday(request, id);
         } catch (Exception e) {
