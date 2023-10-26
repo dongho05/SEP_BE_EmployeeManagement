@@ -27,7 +27,7 @@ public class LogInLateOutEarly extends BaseEntity {
 
     @Column(name = "date_check")
     private LocalDate dateCheck;
-    @Column(name = "date_start")
+    @Column(name = "time_start")
     private LocalTime timeStart;
     @Column(name = "time_end")
     private LocalTime timeEnd;

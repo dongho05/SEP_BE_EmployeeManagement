@@ -948,27 +948,27 @@
       <Host>localhost</Host>
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <table id="301" parent="291" name="contract">
+    <table id="301" parent="291" name="attendance">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="302" parent="291" name="department">
+    <table id="302" parent="291" name="contract">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="303" parent="291" name="hibernate_sequence">
+    <table id="303" parent="291" name="department">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="304" parent="291" name="holiday">
+    <table id="304" parent="291" name="hibernate_sequence">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="305" parent="291" name="log_check_in_out">
+    <table id="305" parent="291" name="holiday">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="306" parent="291" name="log_detail">
+    <table id="306" parent="291" name="log_check_in_out">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
@@ -1008,8 +1008,7 @@
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <column id="316" parent="301" name="id">
-      <AutoIncrement>9</AutoIncrement>
+    <column id="316" parent="301" name="attendance_id">
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -1030,245 +1029,246 @@
       <DasType>datetime(6)|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="321" parent="301" name="contract_name">
-      <DasType>varchar(200)|0s</DasType>
-      <NotNull>1</NotNull>
+    <column id="321" parent="301" name="date_log">
+      <DasType>date|0s</DasType>
       <Position>6</Position>
     </column>
-    <column id="322" parent="301" name="file_name">
+    <column id="322" parent="301" name="leave_status">
       <DasType>varchar(255)|0s</DasType>
-      <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="323" parent="301" name="user_id">
-      <DasType>bigint|0s</DasType>
+    <column id="323" parent="301" name="over_time">
+      <DasType>time|0s</DasType>
       <Position>8</Position>
     </column>
-    <foreign-key id="324" parent="301" name="FKi6rphdb5rpnqnrp5twyk83jao">
+    <column id="324" parent="301" name="regular_hour">
+      <DasType>time|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="325" parent="301" name="request_active">
+      <DasType>tinyint(1)|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>10</Position>
+    </column>
+    <column id="326" parent="301" name="time_in">
+      <DasType>time|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="327" parent="301" name="time_out">
+      <DasType>time|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="328" parent="301" name="total_work">
+      <DasType>time|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="329" parent="301" name="signs_id">
+      <DasType>bigint|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="330" parent="301" name="user_id">
+      <DasType>bigint|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <foreign-key id="331" parent="301" name="FKmrksvah1c131dhkb8g4wyx4hi">
+      <ColNames>signs_id</ColNames>
+      <RefColNames>sign_id</RefColNames>
+      <RefTableName>sign</RefTableName>
+    </foreign-key>
+    <foreign-key id="332" parent="301" name="FKjcaqd29v2qy723owsdah2t8vx">
       <ColNames>user_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>users</RefTableName>
     </foreign-key>
-    <index id="325" parent="301" name="PRIMARY">
-      <ColNames>id</ColNames>
+    <index id="333" parent="301" name="PRIMARY">
+      <ColNames>attendance_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="326" parent="301" name="FKi6rphdb5rpnqnrp5twyk83jao">
+    <index id="334" parent="301" name="FKmrksvah1c131dhkb8g4wyx4hi">
+      <ColNames>signs_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="335" parent="301" name="FKjcaqd29v2qy723owsdah2t8vx">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="327" parent="301" name="PRIMARY">
+    <key id="336" parent="301" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="328" parent="302" name="department_id">
+    <column id="337" parent="302" name="id">
+      <AutoIncrement>11</AutoIncrement>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="329" parent="302" name="created_by">
+    <column id="338" parent="302" name="created_by">
       <DasType>varchar(255)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="330" parent="302" name="create_date">
+    <column id="339" parent="302" name="create_date">
       <DasType>datetime(6)|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="331" parent="302" name="updated_by">
+    <column id="340" parent="302" name="updated_by">
       <DasType>varchar(255)|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="332" parent="302" name="updated_date">
+    <column id="341" parent="302" name="updated_date">
       <DasType>datetime(6)|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="333" parent="302" name="department_name">
-      <DasType>varchar(255)|0s</DasType>
+    <column id="342" parent="302" name="contract_name">
+      <DasType>varchar(200)|0s</DasType>
+      <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <index id="334" parent="302" name="PRIMARY">
-      <ColNames>department_id</ColNames>
+    <column id="343" parent="302" name="file_name">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <column id="344" parent="302" name="user_id">
+      <DasType>bigint|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <foreign-key id="345" parent="302" name="FKi6rphdb5rpnqnrp5twyk83jao">
+      <ColNames>user_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>users</RefTableName>
+    </foreign-key>
+    <index id="346" parent="302" name="PRIMARY">
+      <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="335" parent="302" name="PRIMARY">
+    <index id="347" parent="302" name="FKi6rphdb5rpnqnrp5twyk83jao">
+      <ColNames>user_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="348" parent="302" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="336" parent="303" name="next_val">
+    <column id="349" parent="303" name="department_id">
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="350" parent="303" name="created_by">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="351" parent="303" name="create_date">
+      <DasType>datetime(6)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="352" parent="303" name="updated_by">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="353" parent="303" name="updated_date">
+      <DasType>datetime(6)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="354" parent="303" name="department_name">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <index id="355" parent="303" name="PRIMARY">
+      <ColNames>department_id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="356" parent="303" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="357" parent="304" name="next_val">
       <DasType>bigint|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="337" parent="304" name="holiday_id">
+    <column id="358" parent="305" name="holiday_id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="338" parent="304" name="end_date">
+    <column id="359" parent="305" name="end_date">
       <DasType>date|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="339" parent="304" name="holiday_name">
+    <column id="360" parent="305" name="holiday_name">
       <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="340" parent="304" name="start_date">
+    <column id="361" parent="305" name="start_date">
       <DasType>date|0s</DasType>
       <Position>4</Position>
     </column>
-    <index id="341" parent="304" name="PRIMARY">
+    <index id="362" parent="305" name="PRIMARY">
       <ColNames>holiday_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="342" parent="304" name="PRIMARY">
+    <key id="363" parent="305" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="343" parent="305" name="log_checkInOut_id">
+    <column id="364" parent="306" name="log_checkInOut_id">
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="344" parent="305" name="created_by">
+    <column id="365" parent="306" name="created_by">
       <DasType>varchar(255)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="345" parent="305" name="create_date">
+    <column id="366" parent="306" name="create_date">
       <DasType>datetime(6)|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="346" parent="305" name="updated_by">
+    <column id="367" parent="306" name="updated_by">
       <DasType>varchar(255)|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="347" parent="305" name="updated_date">
+    <column id="368" parent="306" name="updated_date">
       <DasType>datetime(6)|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="348" parent="305" name="badge_number">
+    <column id="369" parent="306" name="badge_number">
       <DasType>varchar(255)|0s</DasType>
       <Position>6</Position>
     </column>
-    <column id="349" parent="305" name="date_check">
+    <column id="370" parent="306" name="date_check">
       <DasType>date|0s</DasType>
       <Position>7</Position>
     </column>
-    <column id="350" parent="305" name="time_check">
+    <column id="371" parent="306" name="time_check">
       <DasType>time|0s</DasType>
       <Position>8</Position>
     </column>
-    <column id="351" parent="305" name="user_id">
+    <column id="372" parent="306" name="user_id">
       <DasType>bigint|0s</DasType>
       <Position>9</Position>
     </column>
-    <foreign-key id="352" parent="305" name="FK3348gbb1ck4uksbe3hj0cnf5d">
+    <foreign-key id="373" parent="306" name="FK3348gbb1ck4uksbe3hj0cnf5d">
       <ColNames>user_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>users</RefTableName>
     </foreign-key>
-    <index id="353" parent="305" name="PRIMARY">
+    <index id="374" parent="306" name="PRIMARY">
       <ColNames>log_checkInOut_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="354" parent="305" name="FK3348gbb1ck4uksbe3hj0cnf5d">
-      <ColNames>user_id</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="355" parent="305" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
-    </key>
-    <column id="356" parent="306" name="log_id">
-      <DasType>bigint|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="357" parent="306" name="created_by">
-      <DasType>varchar(255)|0s</DasType>
-      <Position>2</Position>
-    </column>
-    <column id="358" parent="306" name="create_date">
-      <DasType>datetime(6)|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="359" parent="306" name="updated_by">
-      <DasType>varchar(255)|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <column id="360" parent="306" name="updated_date">
-      <DasType>datetime(6)|0s</DasType>
-      <Position>5</Position>
-    </column>
-    <column id="361" parent="306" name="date_log">
-      <DasType>date|0s</DasType>
-      <Position>6</Position>
-    </column>
-    <column id="362" parent="306" name="leave_status">
-      <DasType>varchar(255)|0s</DasType>
-      <Position>7</Position>
-    </column>
-    <column id="363" parent="306" name="over_time">
-      <DasType>time|0s</DasType>
-      <Position>8</Position>
-    </column>
-    <column id="364" parent="306" name="regular_hour">
-      <DasType>time|0s</DasType>
-      <Position>9</Position>
-    </column>
-    <column id="365" parent="306" name="request_active">
-      <DasType>tinyint(1)|0s</DasType>
-      <DefaultExpression>0</DefaultExpression>
-      <Position>10</Position>
-    </column>
-    <column id="366" parent="306" name="time_in">
-      <DasType>time|0s</DasType>
-      <Position>11</Position>
-    </column>
-    <column id="367" parent="306" name="time_out">
-      <DasType>time|0s</DasType>
-      <Position>12</Position>
-    </column>
-    <column id="368" parent="306" name="total_work">
-      <DasType>time|0s</DasType>
-      <Position>13</Position>
-    </column>
-    <column id="369" parent="306" name="signs_id">
-      <DasType>bigint|0s</DasType>
-      <Position>14</Position>
-    </column>
-    <column id="370" parent="306" name="user_id">
-      <DasType>bigint|0s</DasType>
-      <Position>15</Position>
-    </column>
-    <foreign-key id="371" parent="306" name="FK3iiq8947j4a3fa3tiubexxkvv">
-      <ColNames>signs_id</ColNames>
-      <RefColNames>sign_id</RefColNames>
-      <RefTableName>sign</RefTableName>
-    </foreign-key>
-    <foreign-key id="372" parent="306" name="FKgkrbx8j2w9ocau7tak8uaavo">
-      <ColNames>user_id</ColNames>
-      <RefColNames>id</RefColNames>
-      <RefTableName>users</RefTableName>
-    </foreign-key>
-    <index id="373" parent="306" name="PRIMARY">
-      <ColNames>log_id</ColNames>
-      <Type>btree</Type>
-      <Unique>1</Unique>
-    </index>
-    <index id="374" parent="306" name="FK3iiq8947j4a3fa3tiubexxkvv">
-      <ColNames>signs_id</ColNames>
-      <Type>btree</Type>
-    </index>
-    <index id="375" parent="306" name="FKgkrbx8j2w9ocau7tak8uaavo">
+    <index id="375" parent="306" name="FK3348gbb1ck4uksbe3hj0cnf5d">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
@@ -1322,7 +1322,7 @@
       <DasType>time|0s</DasType>
       <Position>11</Position>
     </column>
-    <column id="388" parent="307" name="date_start">
+    <column id="388" parent="307" name="time_start">
       <DasType>time|0s</DasType>
       <Position>12</Position>
     </column>
@@ -1626,7 +1626,7 @@ role_id</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="452" parent="315" name="id">
-      <AutoIncrement>35</AutoIncrement>
+      <AutoIncrement>36</AutoIncrement>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>

@@ -1,13 +1,11 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -15,11 +13,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "log_detail")
-public class LogDetail extends BaseEntity {
+@Table(name = "attendance")
+public class Attendance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "log_id", nullable = false)
+    @Column(name = "attendance_id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -57,7 +55,7 @@ public class LogDetail extends BaseEntity {
     @Column(name = "request_active",columnDefinition = "boolean default false")
     private boolean requestActive;
 
-    public LogDetail(User user, LocalDate dateLog) {
+    public Attendance(User user, LocalDate dateLog) {
         this.user = user;
         this.dateLog = dateLog;
     }
