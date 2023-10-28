@@ -26,7 +26,7 @@ public class Sign {
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "signs")
     @JsonIgnore
-    private Set<LogDetail> logDetails = new HashSet<>();
+    private Set<Attendance> attendances = new HashSet<>();
 
 
     public Sign(ESign nt) {
