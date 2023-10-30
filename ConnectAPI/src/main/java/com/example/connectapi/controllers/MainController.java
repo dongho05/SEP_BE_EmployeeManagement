@@ -29,7 +29,7 @@ public class MainController {
     public List<TmpCheckInOut> listCheckInOutByDate () {
         LocalDate currentDate = LocalDate.now();
         LocalDate yesterday = currentDate.minusDays(1);
-        List<TmpCheckInOut> list = tmpCheckInOutService.findByDate(yesterday);
+        List<TmpCheckInOut> list = tmpCheckInOutService.findByDate(currentDate);
         return list ;
     }
 

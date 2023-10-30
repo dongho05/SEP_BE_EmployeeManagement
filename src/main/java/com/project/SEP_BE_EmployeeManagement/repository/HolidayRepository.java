@@ -28,4 +28,8 @@ public interface HolidayRepository extends JpaRepository<Holiday,Integer> {
     @Query(value = "select * from holiday h " +
             " order by h.start_date desc",nativeQuery = true)
     List<Holiday> getListByDateDesc();
+
+    @Query(value = "SELECT * FROM holiday h \n" +
+            "where h.date_from <= ?1 "+" and h.date_to >= ?1 ",nativeQuery = true)
+    Holiday findExecuteAttendanceDate(String date);
 }
