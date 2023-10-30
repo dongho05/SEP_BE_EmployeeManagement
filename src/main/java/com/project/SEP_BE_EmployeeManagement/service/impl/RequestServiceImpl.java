@@ -202,6 +202,7 @@ public class RequestServiceImpl implements RequestService {
                 dto.setDepartment(entity.getUser().getDepartment());
                 dto.setUser(entity.getUser());
                 dto.setNote(entity.getNote());
+                dto.setRequestType(entity.getRequestType());
 
                 return dto;
             }
@@ -244,6 +245,7 @@ public class RequestServiceImpl implements RequestService {
                 dto.setDepartment(entity.getUser().getDepartment());
                 dto.setUser(entity.getUser());
                 dto.setNote(entity.getNote());
+                dto.setRequestType(entity.getRequestType());
 
                 return dto;
             }
