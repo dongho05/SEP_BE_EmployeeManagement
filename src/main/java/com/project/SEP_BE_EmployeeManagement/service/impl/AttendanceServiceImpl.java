@@ -144,4 +144,11 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         return attendanceList;
     }
+
+    @Override
+    public List<Attendance> findAttendancesForUserInMonth(int year, int month) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return attendanceRepository.findAttendancesForUserInMonth(userDetails.getId(), year, month);
+    }
 }

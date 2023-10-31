@@ -10,4 +10,6 @@ import java.util.List;
 @Service
 public interface AttendanceService {
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException;
+
+    public List<Attendance> findAttendancesForUserInMonth(int year, int month);
 }
