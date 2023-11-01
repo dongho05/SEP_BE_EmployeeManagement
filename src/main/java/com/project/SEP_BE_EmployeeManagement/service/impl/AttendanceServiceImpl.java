@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.response.Attendance.AttendanceStatistics;
 import com.project.SEP_BE_EmployeeManagement.model.*;
 import com.project.SEP_BE_EmployeeManagement.repository.*;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
@@ -195,5 +196,25 @@ public class AttendanceServiceImpl implements AttendanceService {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return attendanceRepository.findAttendancesForUserInMonth(userDetails.getId(), year, month);
+    }
+
+    @Override
+    public List<AttendanceStatistics> getAttendanceStatisticsOnMonth(int month, int year) {
+        List<AttendanceStatistics> result = new ArrayList<>();
+        List<User> userList = userRepository.findAll();
+        for(User u : userList){
+            int workingDay = 0;
+            int salaryDay = 0;
+            List<Attendance> attendanceList = attendanceRepository.findAttendancesForUserInMonth(u.getId(), year, month);
+            for(Attendance a : attendanceList){
+                if(a.getSigns().equals(ESign.H) || a.getSigns().equals(ESign.H_P) || a.getSigns().equals(ESign.CĐ)){
+                    workingDay++;
+                    salaryDay++;
+                }
+            }
+            AttendanceStatistics attendanceStatistics = new AttendanceStatistics(u, attendanceList, workingDay, salaryDay);
+            result.add(attendanceStatistics);
+        }
+        return result;
     }
 }

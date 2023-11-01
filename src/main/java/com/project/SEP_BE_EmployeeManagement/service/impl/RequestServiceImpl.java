@@ -13,6 +13,7 @@ import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -268,5 +269,16 @@ public class RequestServiceImpl implements RequestService {
         obj.setAcceptAt(localDate);
         obj.setNote(note);
         requestRepository.save(obj);
+    }
+
+    @Override
+    @Scheduled(cron = "0 45 23 * * ?") // process Request vào 23h45 hàng ngày
+    public void processRequestOnDate() {
+        LocalDate date = LocalDate.of(2023, 10, 30);
+//        LocalDate date = LocalDate.now();
+        // lấy danh sách tất cả các request được accept theo date
+        // duyệt danh sách request
+        // lấy attendance có date check trong khoảng từ start time đến end time
+        // cập nhật lại attendace
     }
 }
