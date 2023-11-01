@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/role")
+@RequestMapping("/api/auth/role")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class RoleController {
 

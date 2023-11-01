@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.repository;
 
 import com.project.SEP_BE_EmployeeManagement.model.LogCheckInOut;
+import com.project.SEP_BE_EmployeeManagement.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,11 @@ public interface LogCheckInOutRepository extends JpaRepository<LogCheckInOut, Lo
     @Query(value = "select l from LogCheckInOut l\n" +
             " where l.dateCheck = ?1 and l.timeCheck = ?2 and l.user.id = ?3 ")
     Optional<LogCheckInOut> checkExist(LocalDate date, LocalTime time, Long userId);
+
+    @Query(value = "select l from LogCheckInOut l\n" +
+            " where l.dateCheck = ?2 and l.user.id = ?1 order by l.timeCheck asc")
+    List<LogCheckInOut> findByUserAndDateCheck(Long userId, LocalDate dateCheck);
+
+    @Query("SELECT DISTINCT lc.user.id FROM LogCheckInOut lc WHERE lc.dateCheck = :date")
+    List<Long> findDistinctUserIdByDateCheck(LocalDate date);
 }

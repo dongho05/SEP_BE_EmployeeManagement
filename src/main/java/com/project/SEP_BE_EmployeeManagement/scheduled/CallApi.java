@@ -80,6 +80,7 @@ public class CallApi {
                 if (length == 5) userCode = "FPT_" + checkInOut.getBadgeNumber();
                 User user = userRepository.findByUserCode(userCode);
                 if (user != null) {
+                    System.out.println("tim tha user");
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(checkInOut.getCheckTime());
 
@@ -100,6 +101,7 @@ public class CallApi {
                         logCheckInOut.setBadgeNumber(checkInOut.getBadgeNumber());
                         logCheckInOut.setUser(user);
                         logCheckInOutRepository.save(logCheckInOut);
+                        System.out.println("save thanh cong");
                     }
                 }
 
