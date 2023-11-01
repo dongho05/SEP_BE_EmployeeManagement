@@ -1,13 +1,19 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
+import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.model.*;
 import com.project.SEP_BE_EmployeeManagement.repository.*;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
+import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +21,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
@@ -37,6 +45,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private HolidayService holidayService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
@@ -195,5 +206,72 @@ public class AttendanceServiceImpl implements AttendanceService {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return attendanceRepository.findAttendancesForUserInMonth(userDetails.getId(), year, month);
+    }
+
+    public boolean hasRoleAdmin(Collection<? extends GrantedAuthority> authorities) {
+        for (GrantedAuthority authority : authorities) {
+            if ("ROLE_ADMIN".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasRoleMod(Collection<? extends GrantedAuthority> authorities) {
+        for (GrantedAuthority authority : authorities) {
+            if ("ROLE_MODERATOR".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    @Override
+    public Page<AttendanceResponse> getList(String departmentId, String fromDate, String toDate, Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
+
+        Page<Attendance> list = null;
+
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        boolean isAdmin = hasRoleAdmin(authorities);
+        boolean isMod = hasRoleMod(authorities);
+        if (isAdmin) {
+            list = attendanceRepository.getList(
+                    did
+                    , null
+                    , from
+                    , to
+                    , pageable);
+        } else if (isMod) {
+            list = attendanceRepository.getList(
+                    userService.findByUsernameOrEmail(userDetails.getUsername()).get().getDepartment().getId().toString()
+                    , null
+                    , from
+                    , to
+                    , pageable);
+        } else {
+            list = attendanceRepository.getList( null, userDetails.getId().toString(), from, to, pageable);
+        }
+        Page<AttendanceResponse> result = list.map(new Function<Attendance, AttendanceResponse>() {
+            @Override
+            public AttendanceResponse apply(Attendance entity) {
+
+                AttendanceResponse dto = new AttendanceResponse();
+                // Conversion logic
+                dto.setId(entity.getId());
+                dto.setDepartment(entity.getUser().getDepartment().getName());
+                dto.setEmployeeCode(entity.getUser().getUserCode());
+                dto.setEmployeeName(entity.getUser().getFullName());
+                dto.setDateLog(entity.getDateLog());
+                dto.setTimeIn(entity.getTimeIn());
+                dto.setTimeOut(entity.getTimeOut());
+                return dto;
+            }
+        });
+        return result;
     }
 }
