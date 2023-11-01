@@ -28,4 +28,7 @@ public interface HolidayRepository extends JpaRepository<Holiday,Integer> {
     @Query(value = "select * from holiday h " +
             " order by h.start_date desc",nativeQuery = true)
     List<Holiday> getListByDateDesc();
+
+    @Query("SELECT COUNT(h) > 0 FROM Holiday h WHERE :date BETWEEN h.startDate AND h.endDate")
+    boolean isDateHoliday(LocalDate date);
 }

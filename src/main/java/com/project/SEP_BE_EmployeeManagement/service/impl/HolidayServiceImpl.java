@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -90,5 +91,10 @@ public class HolidayServiceImpl implements HolidayService {
             holidayYears.add(i);
         }
         return holidayYears;
+    }
+
+    @Override
+    public boolean isDateHoliday(LocalDate date) {
+        return holidayRepository.isDateHoliday(date);
     }
 }

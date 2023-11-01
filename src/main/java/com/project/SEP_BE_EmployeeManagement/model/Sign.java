@@ -20,11 +20,12 @@ public class Sign {
     @Column(name = "sign_id", nullable = false)
     private Long id;
 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "sign_name",length = 20)
     private ESign name;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "signs")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "signs")
     @JsonIgnore
     private Set<Attendance> attendances = new HashSet<>();
 

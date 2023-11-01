@@ -44,13 +44,12 @@ public class Attendance extends BaseEntity {
     @Column(name = "total_work")
     private LocalTime totalWork;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "signs_id")
     private Sign signs ;
 
     @Column(name = "leave_status")
     private String leaveStatus;
-
 
     @Column(name = "request_active",columnDefinition = "boolean default false")
     private boolean requestActive;
