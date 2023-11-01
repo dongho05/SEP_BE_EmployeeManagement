@@ -17,4 +17,5 @@ public interface AttendanceService {
     public List<Attendance> findAttendancesForUserInMonth(int year, int month);
 
     Page<AttendanceResponse> getList(String departmentId, String fromDate, String toDate, Pageable pageable);
+    Page<AttendanceResponse> getListByUserId(String fromDate, String toDate, Pageable pageable);
 }

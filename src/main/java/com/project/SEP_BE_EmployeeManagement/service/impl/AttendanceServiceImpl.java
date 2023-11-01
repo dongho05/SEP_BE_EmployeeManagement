@@ -274,4 +274,32 @@ public class AttendanceServiceImpl implements AttendanceService {
         });
         return result;
     }
+
+    @Override
+    public Page<AttendanceResponse> getListByUserId(String fromDate, String toDate, Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
+
+        Page<Attendance> list = attendanceRepository.getList( null, userDetails.getId().toString(), from, to, pageable);
+        Page<AttendanceResponse> result = list.map(new Function<Attendance, AttendanceResponse>() {
+            @Override
+            public AttendanceResponse apply(Attendance entity) {
+
+                AttendanceResponse dto = new AttendanceResponse();
+                // Conversion logic
+                dto.setId(entity.getId());
+                dto.setDepartment(entity.getUser().getDepartment().getName());
+                dto.setEmployeeCode(entity.getUser().getUserCode());
+                dto.setEmployeeName(entity.getUser().getFullName());
+                dto.setDateLog(entity.getDateLog());
+                dto.setTimeIn(entity.getTimeIn());
+                dto.setTimeOut(entity.getTimeOut());
+                return dto;
+            }
+        });
+        return result;
+    }
 }
