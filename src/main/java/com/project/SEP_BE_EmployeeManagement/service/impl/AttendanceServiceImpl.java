@@ -37,7 +37,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException {
 
-        LocalDate date = LocalDate.of(2023, 10, 30);
+        LocalDate date = LocalDate.of(2023, 10, 27);
 
 //        LocalDate date = LocalDate.now();
 

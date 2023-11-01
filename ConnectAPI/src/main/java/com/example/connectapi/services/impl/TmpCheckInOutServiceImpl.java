@@ -47,7 +47,7 @@ public class TmpCheckInOutServiceImpl implements TmpCheckInOutService {
     public List<TmpCheckInOut> findByDate(LocalDate checkDate) {
         Integer year = 2023;
         Integer month = 10;
-        Integer day = 30;
+        Integer day = 1;
 
 //        LocalDate date = checkDate.minusDays(0);
 //        Integer year = checkDate.getYear();
