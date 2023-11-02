@@ -26,4 +26,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             " order by a.attendance_id",nativeQuery = true)
     Page<Attendance> getList(String departmentId, String userId, String fromDate, String toDate, Pageable pageable);
 
+
 }

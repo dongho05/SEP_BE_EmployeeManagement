@@ -1,6 +1,8 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.UpdateSignInAttendanceRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
+import com.project.SEP_BE_EmployeeManagement.model.Attendance;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,5 +38,15 @@ public class AttendanceController {
         Pageable pageable = PageRequest.of(page, size);
         Page<AttendanceResponse> pageRequests = attendanceService.getListByUserId(fromDate, toDate, pageable);
         return ResponseEntity.ok(pageRequests);
+    }
+
+    @PutMapping("/update-signs/{attendanceId}")
+    public ResponseEntity<?> updateSigns(@RequestBody UpdateSignInAttendanceRequest request, @PathVariable Long attendanceId){
+        Attendance obj = attendanceService.getByAttendanceId(attendanceId);
+        if(obj == null){
+            return ResponseEntity.internalServerError().body("Đã xảy ra lỗi: Không tồn tại chấm công này.");
+        }
+        attendanceService.updateSigns(request.getSign(), attendanceId, request.getReason());
+        return ResponseEntity.ok(obj);
     }
 }

@@ -7,6 +7,7 @@ import com.project.SEP_BE_EmployeeManagement.repository.*;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
+import com.project.SEP_BE_EmployeeManagement.service.LogAttendanceHistoryService;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
@@ -49,6 +53,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LogAttendanceHistoryService logAttendanceHistoryService;
+
     @Override
     @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException {
@@ -61,18 +68,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // kiểm tra ngày hôm đó có phải là ngày cuối tuần hay không
         DayOfWeek dayOfWeek = date.getDayOfWeek();
-        if(dayOfWeek == DayOfWeek.SUNDAY || dayOfWeek == DayOfWeek.SATURDAY){
+        if (dayOfWeek == DayOfWeek.SUNDAY || dayOfWeek == DayOfWeek.SATURDAY) {
             List<User> userList = userRepository.findAll();
             // kiểm tra ngày cuối tuần đó có phải là ngày nghỉ lễ hay không
-            if(holidayService.isDateHoliday(date)){
-                for(User u : userList){
+            if (holidayService.isDateHoliday(date)) {
+                for (User u : userList) {
                     Attendance attendance = new Attendance(u, date);
                     attendance.setSigns(new Sign(ESign.L));
                     attendanceRepository.save(attendance);
                     attendanceList.add(attendance);
                 }
-            }else{
-                for(User u : userList){
+            } else {
+                for (User u : userList) {
                     Attendance attendance = new Attendance(u, date);
                     attendance.setSigns(new Sign(ESign.NT));
                     attendanceRepository.save(attendance);
@@ -81,9 +88,9 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         }
         // kiểm tra ngày hôm đó có phải là ngày nghỉ lễ hay không
-        else if(holidayService.isDateHoliday(date)){
+        else if (holidayService.isDateHoliday(date)) {
             List<User> userList = userRepository.findAll();
-            for(User u : userList){
+            for (User u : userList) {
                 Attendance attendance = new Attendance(u, date);
                 attendance.setSigns(new Sign(ESign.L));
                 attendanceRepository.save(attendance);
@@ -91,11 +98,11 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         }
         // trường hợp không phải là ngày cuối tuần và ngày lễ
-        else{
+        else {
             List<Long> listUserId = logCheckInOutRepository.findDistinctUserIdByDateCheck(date);
             WorkingTime morningShift = workingTimeRepository.findByWorkingTimeName(EWorkingTime.MORNING_SHIFT).orElseThrow();
             WorkingTime afternoonShift = workingTimeRepository.findByWorkingTimeName(EWorkingTime.AFTERNOON_SHIFT).orElseThrow();
-            for(Long i : listUserId){
+            for (Long i : listUserId) {
                 User user = userRepository.findById(i).orElseThrow();
                 List<LogCheckInOut> checkInOutRecords = logCheckInOutRepository.findByUserAndDateCheck(i, date);
                 if (checkInOutRecords.size() > 0) {
@@ -105,33 +112,32 @@ public class AttendanceServiceImpl implements AttendanceService {
                     Attendance attendance = new Attendance(user, date);
                     // set timein timeout
                     // nếu checkin trước giờ checkin mặc định thì giờ checkin = giờ checkin mặc định
-                    if(earliestCheckIn.isBefore(morningShift.getStartTime())){
+                    if (earliestCheckIn.isBefore(morningShift.getStartTime())) {
                         attendance.setTimeIn(morningShift.getStartTime());
                     }
                     // nếu checkin sau giờ checkout ca sáng và trước giờ checkin ca chiều thì giờ checkin = giờ checkin mặc định ca chiều
-                    else if(earliestCheckIn.isAfter(morningShift.getEndTime()) && earliestCheckIn.isBefore(afternoonShift.getStartTime())){
+                    else if (earliestCheckIn.isAfter(morningShift.getEndTime()) && earliestCheckIn.isBefore(afternoonShift.getStartTime())) {
                         attendance.setTimeIn(afternoonShift.getStartTime());
                     }
                     // nếu checkin sau giờ checkout ca chiều thì giờ checkin = giờ checkout ca chiều
-                    else if(earliestCheckIn.isAfter(afternoonShift.getEndTime())){
+                    else if (earliestCheckIn.isAfter(afternoonShift.getEndTime())) {
                         attendance.setTimeIn(afternoonShift.getEndTime());
-                    }
-                    else {
+                    } else {
                         attendance.setTimeIn(earliestCheckIn);
                     }
                     // nếu checkout sau giờ checkout mặc định thì giờ checkout = giờ checkout mặc định
-                    if(latestCheckOut.isAfter(afternoonShift.getEndTime())){
+                    if (latestCheckOut.isAfter(afternoonShift.getEndTime())) {
                         attendance.setTimeOut(afternoonShift.getEndTime());
                     }
                     // nếu checkout sau giờ checkout ca sáng và trước giờ checkin ca chiều thì giờ checkout = giờ checkout mặc định ca sáng
-                    else if(!latestCheckOut.isBefore(morningShift.getEndTime()) && latestCheckOut.isBefore(afternoonShift.getStartTime())){
+                    else if (!latestCheckOut.isBefore(morningShift.getEndTime()) && latestCheckOut.isBefore(afternoonShift.getStartTime())) {
                         attendance.setTimeOut(morningShift.getEndTime());
-                    }else{
+                    } else {
                         attendance.setTimeOut(latestCheckOut);
                     }
                     // set RegularHour
                     // nếu checkin trong giờ làm ca sáng thì RegularHour phải trừ thời gian nghỉ trưa
-                    if(attendance.getTimeIn().isBefore(morningShift.getEndTime())){
+                    if (attendance.getTimeIn().isBefore(morningShift.getEndTime())) {
                         LocalTime morning = morningShift.getEndTime()
                                 .minusHours(attendance.getTimeIn().getHour())
                                 .minusMinutes(attendance.getTimeIn().getMinute())
@@ -147,7 +153,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                         attendance.setSigns(new Sign(ESign.H));
                     }
                     // nếu checkin trong giờ làm ca chiều thì RegularHour không phải trừ thời gian nghỉ trưa
-                    if(!attendance.getTimeOut().isAfter(afternoonShift.getStartTime())){
+                    if (!attendance.getTimeOut().isAfter(afternoonShift.getStartTime())) {
                         LocalTime regularHour = attendance.getTimeOut()
                                 .minusHours(attendance.getTimeIn().getHour())
                                 .minusMinutes(attendance.getTimeIn().getMinute())
@@ -155,9 +161,9 @@ public class AttendanceServiceImpl implements AttendanceService {
                         attendance.setRegularHour(regularHour);
                         attendance.setSigns(new Sign(ESign.H_P));
                     }
-                    if(attendance.getOverTime() == null){
+                    if (attendance.getOverTime() == null) {
                         attendance.setTotalWork(attendance.getRegularHour());
-                    }else{
+                    } else {
                         attendance.setTotalWork(attendance.getRegularHour()
                                 .plusHours(attendance.getOverTime().getHour())
                                 .plusMinutes(attendance.getOverTime().getMinute())
@@ -167,7 +173,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     attendanceList.add(attendance);
 
                     // lưu vào LogInLateOutEarly
-                    if(attendance.getTimeIn().isAfter(morningShift.getStartTime())){
+                    if (attendance.getTimeIn().isAfter(morningShift.getStartTime())) {
                         LogInLateOutEarly logInLateOutEarly = new LogInLateOutEarly();
                         logInLateOutEarly.setUser(user);
                         logInLateOutEarly.setDateCheck(date);
@@ -181,7 +187,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                         logInLateOutEarly.setDuration(duration);
                         logInLateOutEarlyRepository.save(logInLateOutEarly);
                     }
-                    if(attendance.getTimeOut().isBefore(afternoonShift.getEndTime())){
+                    if (attendance.getTimeOut().isBefore(afternoonShift.getEndTime())) {
                         LogInLateOutEarly logInLateOutEarly = new LogInLateOutEarly();
                         logInLateOutEarly.setUser(user);
                         logInLateOutEarly.setDateCheck(date);
@@ -225,6 +231,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         return false;
     }
+
     @Override
     public Page<AttendanceResponse> getList(String departmentId, String fromDate, String toDate, Pageable pageable) {
         UserDetailsImpl userDetails =
@@ -254,7 +261,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     , to
                     , pageable);
         } else {
-            list = attendanceRepository.getList( null, userDetails.getId().toString(), from, to, pageable);
+            list = attendanceRepository.getList(null, userDetails.getId().toString(), from, to, pageable);
         }
         Page<AttendanceResponse> result = list.map(new Function<Attendance, AttendanceResponse>() {
             @Override
@@ -283,7 +290,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         String from = fromDate == null || fromDate.equals("") ? null : fromDate;
         String to = toDate == null || toDate.equals("") ? null : toDate;
 
-        Page<Attendance> list = attendanceRepository.getList( null, userDetails.getId().toString(), from, to, pageable);
+        Page<Attendance> list = attendanceRepository.getList(null, userDetails.getId().toString(), from, to, pageable);
         Page<AttendanceResponse> result = list.map(new Function<Attendance, AttendanceResponse>() {
             @Override
             public AttendanceResponse apply(Attendance entity) {
@@ -301,5 +308,36 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         });
         return result;
+    }
+
+    @Override
+    public Attendance getByAttendanceId(Long id) {
+        Attendance obj = attendanceRepository.findById(id).get();
+        return obj;
+    }
+
+    @Override
+    public Attendance updateSigns(ESign signId, Long attendanceId, String reason) {
+        Attendance obj = attendanceRepository.findById(attendanceId).get();
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+
+        LogAttendanceHistory log = new LogAttendanceHistory();
+        log.setOldSign(obj.getSigns());
+
+        obj.setSigns(new Sign(signId));
+        User user = userRepository.findById(userDetails.getId()).get();
+
+        log.setAttendance(attendanceRepository.findById(attendanceId).get());
+        log.setNewSign(new Sign(signId));
+        log.setReason(reason);
+        log.setUpdatedBy(user.getFullName() + "-" + user.getPosition().getPositionName());
+        log.setUpdatedDate(dateFormat.format(date));
+
+        logAttendanceHistoryService.save(log);
+
+        return obj;
     }
 }
