@@ -1,4 +1,4 @@
-package com.project.SEP_BE_EmployeeManagement.dto.response.Attendance;
+package com.project.SEP_BE_EmployeeManagement.dto.response.attendance;
 
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
 import com.project.SEP_BE_EmployeeManagement.model.User;

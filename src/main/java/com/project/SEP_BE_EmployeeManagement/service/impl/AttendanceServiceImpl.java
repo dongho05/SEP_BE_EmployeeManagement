@@ -1,8 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
-import com.project.SEP_BE_EmployeeManagement.dto.response.Attendance.AttendanceStatistics;
+import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceStatistics;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
-import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.model.*;
 import com.project.SEP_BE_EmployeeManagement.repository.*;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
@@ -12,6 +11,7 @@ import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
@@ -105,34 +105,39 @@ public class AttendanceServiceImpl implements AttendanceService {
                     LocalTime latestCheckOut = checkInOutRecords.get(checkInOutRecords.size() - 1).getTimeCheck();
                     Attendance attendance = new Attendance(user, date);
                     // set timein timeout
-                    // nếu checkin trước giờ checkin mặc định thì giờ checkin = giờ checkin mặc định
-                    if(earliestCheckIn.isBefore(morningShift.getStartTime())){
-                        attendance.setTimeIn(morningShift.getStartTime());
-                    }
-                    // nếu checkin sau giờ checkout ca sáng và trước giờ checkin ca chiều thì giờ checkin = giờ checkin mặc định ca chiều
-                    else if(earliestCheckIn.isAfter(morningShift.getEndTime()) && earliestCheckIn.isBefore(afternoonShift.getStartTime())){
-                        attendance.setTimeIn(afternoonShift.getStartTime());
-                    }
-                    // nếu checkin sau giờ checkout ca chiều thì giờ checkin = giờ checkout ca chiều
-                    else if(earliestCheckIn.isAfter(afternoonShift.getEndTime())){
-                        attendance.setTimeIn(afternoonShift.getEndTime());
-                    }
-                    else {
-                        attendance.setTimeIn(earliestCheckIn);
-                    }
-                    // nếu checkout sau giờ checkout mặc định thì giờ checkout = giờ checkout mặc định
-                    if(latestCheckOut.isAfter(afternoonShift.getEndTime())){
-                        attendance.setTimeOut(afternoonShift.getEndTime());
-                    }
-                    // nếu checkout sau giờ checkout ca sáng và trước giờ checkin ca chiều thì giờ checkout = giờ checkout mặc định ca sáng
-                    else if(!latestCheckOut.isBefore(morningShift.getEndTime()) && latestCheckOut.isBefore(afternoonShift.getStartTime())){
-                        attendance.setTimeOut(morningShift.getEndTime());
-                    }else{
-                        attendance.setTimeOut(latestCheckOut);
-                    }
+                    attendance.setTimeIn(earliestCheckIn);
+                    attendance.setTimeOut(latestCheckOut);
+
+//                    // nếu checkin trước giờ checkin mặc định thì giờ checkin = giờ checkin mặc định
+//                    if(earliestCheckIn.isBefore(morningShift.getStartTime())){
+//                        attendance.setTimeIn(morningShift.getStartTime());
+//                    }
+//                    // nếu checkin sau giờ checkout ca sáng và trước giờ checkin ca chiều thì giờ checkin = giờ checkin mặc định ca chiều
+//                    else if(earliestCheckIn.isAfter(morningShift.getEndTime()) && earliestCheckIn.isBefore(afternoonShift.getStartTime())){
+//                        attendance.setTimeIn(afternoonShift.getStartTime());
+//                    }
+//                    // nếu checkin sau giờ checkout ca chiều thì giờ checkin = giờ checkout ca chiều
+//                    else if(earliestCheckIn.isAfter(afternoonShift.getEndTime())){
+//                        attendance.setTimeIn(afternoonShift.getEndTime());
+//                    }
+//                    else {
+//                        attendance.setTimeIn(earliestCheckIn);
+//                    }
+//                    // nếu checkout sau giờ checkout mặc định thì giờ checkout = giờ checkout mặc định
+//                    if(latestCheckOut.isAfter(afternoonShift.getEndTime())){
+//                        attendance.setTimeOut(afternoonShift.getEndTime());
+//                    }
+//                    // nếu checkout sau giờ checkout ca sáng và trước giờ checkin ca chiều thì giờ checkout = giờ checkout mặc định ca sáng
+//                    else if(!latestCheckOut.isBefore(morningShift.getEndTime()) && latestCheckOut.isBefore(afternoonShift.getStartTime())){
+//                        attendance.setTimeOut(morningShift.getEndTime());
+//                    }else{
+//                        attendance.setTimeOut(latestCheckOut);
+//                    }
+
                     // set RegularHour
-                    // nếu checkin trong giờ làm ca sáng thì RegularHour phải trừ thời gian nghỉ trưa
-                    if(attendance.getTimeIn().isBefore(morningShift.getEndTime())){
+                    // nếu checkin trong giờ làm ca sáng và checkout trong giờ làm ca chiều thì RegularHour phải trừ thời gian nghỉ trưa
+
+                    if(attendance.getTimeIn().isBefore(morningShift.getEndTime()) && attendance.getTimeOut().isAfter(afternoonShift.getStartTime())){
                         LocalTime morning = morningShift.getEndTime()
                                 .minusHours(attendance.getTimeIn().getHour())
                                 .minusMinutes(attendance.getTimeIn().getMinute())
@@ -147,7 +152,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                         attendance.setRegularHour(regularHour);
                         attendance.setSigns(new Sign(ESign.H));
                     }
-                    // nếu checkin trong giờ làm ca chiều thì RegularHour không phải trừ thời gian nghỉ trưa
+                    // nếu checkin và checkout trong giờ làm ca sáng hoặc checkin và checkout trong giờ làm ca chiều thì RegularHour không phải trừ thời gian nghỉ trưa
                     if(!attendance.getTimeOut().isAfter(afternoonShift.getStartTime())){
                         LocalTime regularHour = attendance.getTimeOut()
                                 .minusHours(attendance.getTimeIn().getHour())
@@ -210,22 +215,45 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<AttendanceStatistics> getAttendanceStatisticsOnMonth(int month, int year) {
-        List<AttendanceStatistics> result = new ArrayList<>();
+    public Page<AttendanceStatistics> getAttendanceStatisticsOnMonth(int month, int year, Pageable pageable) {
+        List<AttendanceStatistics> attendanceStatisticsList = new ArrayList<>();
         List<User> userList = userRepository.findAll();
-        for(User u : userList){
+        for (User u : userList) {
             int workingDay = 0;
             int salaryDay = 0;
             List<Attendance> attendanceList = attendanceRepository.findAttendancesForUserInMonth(u.getId(), year, month);
-            for(Attendance a : attendanceList){
-                if(a.getSigns().equals(ESign.H) || a.getSigns().equals(ESign.H_P) || a.getSigns().equals(ESign.CĐ)){
-                    workingDay++;
-                    salaryDay++;
+            for (Attendance a : attendanceList) {
+                if(a.getSigns().getName().equals(ESign.H)){
+                    workingDay+=1;
+                    salaryDay+=1;
+                }
+                else if(a.getSigns().getName().equals(ESign.L) || a.getSigns().getName().equals(ESign.CĐ) ||
+                        a.getSigns().getName().equals(ESign.TC) || a.getSigns().getName().equals(ESign.P)) {
+                    salaryDay+=1;
+                }
+                else if(a.getSigns().getName().equals(ESign.P_KL) || a.getSigns().getName().equals(ESign.KL_P)){
+                    salaryDay+= 0.5;
+                }
+                else if(a.getSigns().getName().equals(ESign.P_H) || a.getSigns().getName().equals(ESign.H_P)){
+                    workingDay+=0.5;
+                    salaryDay+=1;
+                }
+                else if(a.getSigns().getName().equals(ESign.H_KL) || a.getSigns().getName().equals(ESign.KL_H)){
+                    workingDay+=0.5;
+                    salaryDay+=0.5;
                 }
             }
             AttendanceStatistics attendanceStatistics = new AttendanceStatistics(u, attendanceList, workingDay, salaryDay);
-            result.add(attendanceStatistics);
+            attendanceStatisticsList.add(attendanceStatistics);
+
         }
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), attendanceStatisticsList.size());
+        List<AttendanceStatistics> subList = attendanceStatisticsList.subList(start, end);
+        Page<AttendanceStatistics> result = new PageImpl<>(subList, pageable, attendanceStatisticsList.size());
+        return result;
+    }
+
     public boolean hasRoleAdmin(Collection<? extends GrantedAuthority> authorities) {
         for (GrantedAuthority authority : authorities) {
             if ("ROLE_ADMIN".equals(authority.getAuthority())) {
