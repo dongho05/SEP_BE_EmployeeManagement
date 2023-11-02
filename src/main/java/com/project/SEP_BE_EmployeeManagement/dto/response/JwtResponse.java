@@ -17,9 +17,10 @@ public class JwtResponse {
     private String departmentName;
     private String fullName;
     private String userImage;
+    private Integer dayoff;
 
     public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String userCode,
-                       Long departmentId, String departmentName, String fullName,String userImage) {
+                       Long departmentId, String departmentName, String fullName,String userImage, Integer dayoff) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
@@ -30,5 +31,6 @@ public class JwtResponse {
         this.departmentName = departmentName;
         this.fullName = fullName;
         this.userImage = userImage;
+        this.dayoff = dayoff;
     }
 }
