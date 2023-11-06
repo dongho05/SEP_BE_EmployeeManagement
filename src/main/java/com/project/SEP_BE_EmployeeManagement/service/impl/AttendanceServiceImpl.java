@@ -7,6 +7,7 @@ import com.project.SEP_BE_EmployeeManagement.repository.*;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
+import com.project.SEP_BE_EmployeeManagement.service.LogAttendanceHistoryService;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
 import javassist.NotFoundException;
 import net.bytebuddy.asm.Advice;
@@ -19,11 +20,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
@@ -50,6 +54,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LogAttendanceHistoryService logAttendanceHistoryService;
 
     @Override
     @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
@@ -313,5 +320,64 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         });
         return result;
+    }
+
+    @Override
+    public Page<AttendanceResponse> getListByUserId(String fromDate, String toDate, Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String to = toDate == null || toDate.equals("") ? null : toDate;
+
+        Page<Attendance> list = attendanceRepository.getList(null, userDetails.getId().toString(), from, to, pageable);
+        Page<AttendanceResponse> result = list.map(new Function<Attendance, AttendanceResponse>() {
+            @Override
+            public AttendanceResponse apply(Attendance entity) {
+
+                AttendanceResponse dto = new AttendanceResponse();
+                // Conversion logic
+                dto.setId(entity.getId());
+                dto.setDepartment(entity.getUser().getDepartment().getName());
+                dto.setEmployeeCode(entity.getUser().getUserCode());
+                dto.setEmployeeName(entity.getUser().getFullName());
+                dto.setDateLog(entity.getDateLog());
+                dto.setTimeIn(entity.getTimeIn());
+                dto.setTimeOut(entity.getTimeOut());
+                return dto;
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public Attendance getByAttendanceId(Long id) {
+        Attendance obj = attendanceRepository.findById(id).get();
+        return obj;
+    }
+
+    @Override
+    public Attendance updateSigns(ESign signId, Long attendanceId, String reason) {
+        Attendance obj = attendanceRepository.findById(attendanceId).get();
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+
+        LogAttendanceHistory log = new LogAttendanceHistory();
+        log.setOldSign(obj.getSigns());
+
+        obj.setSigns(new Sign(signId));
+        User user = userRepository.findById(userDetails.getId()).get();
+
+        log.setAttendance(attendanceRepository.findById(attendanceId).get());
+        log.setNewSign(new Sign(signId));
+        log.setReason(reason);
+        log.setUpdatedBy(user.getFullName() + "-" + user.getPosition().getPositionName());
+        log.setUpdatedDate(dateFormat.format(date));
+
+        logAttendanceHistoryService.save(log);
+
+        return obj;
     }
 }

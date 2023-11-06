@@ -60,6 +60,9 @@ public class User extends BaseEntity{
     @Column(name = "gender")
     private Integer gender;// 1 nam; 0 nu
 
+//    Số ngày nghỉ phép trong 1 năm
+    @Column(name = "day_off")
+    private Integer dayoff;
 
 
     // Many to One Có nhiều người ở 1 contract.

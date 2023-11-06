@@ -78,7 +78,8 @@ public class LoginController {
                 user.get().getDepartment().getId(),
                 user.get().getDepartment().getName(),
                 user.get().getFullName(),
-                user.get().getUserImage()
+                user.get().getUserImage(),
+                user.get().getDayoff()
                 ));
     }
 
