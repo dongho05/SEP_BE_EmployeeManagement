@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -276,8 +277,16 @@ public class RequestServiceImpl implements RequestService {
     public void processRequestOnDate() {
         LocalDate date = LocalDate.of(2023, 10, 30);
 //        LocalDate date = LocalDate.now();
+
         // lấy danh sách tất cả các request được accept theo date
-        // duyệt danh sách request
+        List<Request> requestList = requestRepository.findRequestsAcceptedOnDate(date);
+        if(requestList.size() > 0){
+            // duyệt danh sách request
+            for (Request i : requestList){
+
+            }
+        }
+
         // lấy attendance có date check trong khoảng từ start time đến end time
         // cập nhật lại attendace
     }
