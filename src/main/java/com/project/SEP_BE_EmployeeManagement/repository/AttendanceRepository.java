@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -25,6 +26,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             " and (:toDate is null or :toDate='' or a.date_log <= :toDate) " +
             " order by a.attendance_id",nativeQuery = true)
     Page<Attendance> getList(String departmentId, String userId, String fromDate, String toDate, Pageable pageable);
+
+    @Query("SELECT a FROM Attendance a WHERE a.user.id = :userId AND a.dateLog = :targetDate")
+    Attendance findAttendanceByUserAndDate(Long userId, LocalDate targetDate);
 
 
 }

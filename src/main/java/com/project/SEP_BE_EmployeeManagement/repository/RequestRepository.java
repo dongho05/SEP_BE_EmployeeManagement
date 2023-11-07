@@ -25,7 +25,12 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
     Boolean existsById(int id);
     Request findById(long id);
 
-    @Query("SELECT r FROM Request r WHERE r.acceptAt = :targetDate AND r.status = 2")
-    List<Request> findRequestsAcceptedOnDate(LocalDate targetDate);
+    @Query("SELECT r FROM Request r " +
+            "WHERE MONTH(r.startDate) = MONTH(:date) " +
+            "AND YEAR(r.startDate) = YEAR(:date) " +
+            "AND MONTH(r.endDate) = MONTH(:date) " +
+            "AND YEAR(r.endDate) = YEAR(:date) " +
+            "AND r.status = 2")
+    List<Request> findRequestsAcceptedInCurrentMonth(LocalDate date);
 
 }
