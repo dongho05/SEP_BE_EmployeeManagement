@@ -1,32 +1,26 @@
 version: '3'
 services:
+  db:
+      image: 'postgres:16-alpine'
+      container_name: db
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=ems
+      volumes:
+        - ./initdata:/docker-entrypoint-initdb.d/
   app:
     image: 'dongho01/sep-java-springboot-docker:v1.1.1'
     build:
       context: .
     container_name: app
-    depends_on:
-      - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/EmployeeManagementSystem
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ems
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - 8080:2000
-  db:
-    image: 'postgres:16-alpine'
-    container_name: db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=EmployeeManagementSystem
-    volumes:
-      - ./initdata:/docker-entrypoint-initdb.d/
-#    volumes:
-#      - ./DATA:/var/opt/mssql
-#  backend:
-#    image: 'dongho01/springboot-docker:v1.0.0'
-#    restart: 'always'
-#    ports:
-#      - '8090:8080'
+
+
+

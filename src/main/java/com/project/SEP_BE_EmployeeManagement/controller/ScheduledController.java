@@ -4,8 +4,10 @@ import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceS
 import com.project.SEP_BE_EmployeeManagement.dto.response.connector.TblInLateOutEarly;
 import com.project.SEP_BE_EmployeeManagement.dto.response.connector.TmpCheckInOut;
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
+import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.scheduled.CallApi;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
+import com.project.SEP_BE_EmployeeManagement.service.RequestService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,9 @@ public class ScheduledController {
 
     @Autowired
     private AttendanceService attendanceService;
+
+    @Autowired
+    private RequestService requestService;
 
 
     @GetMapping("getCheckInOut")
@@ -63,7 +68,7 @@ public class ScheduledController {
         return new ResponseEntity<>(attendanceList, HttpStatus.OK);
     }
 
-    @GetMapping("/attendanceStatistics")
+    @GetMapping("attendanceStatistics")
     public ResponseEntity<Page<AttendanceStatistics>> getAttendanceStatistics(@RequestParam(name = "year", defaultValue = "0") int year,
                                                                               @RequestParam(name = "month", defaultValue = "0") int month,
                                                                               @RequestParam(name = "page", defaultValue = "0") int page,
@@ -77,5 +82,11 @@ public class ScheduledController {
         }
         Page<AttendanceStatistics> rerult = attendanceService.getAttendanceStatisticsOnMonth(month, year, pageable);
         return new ResponseEntity<>(rerult, HttpStatus.OK);
+    }
+
+    @GetMapping("processRequest")
+    public ResponseEntity<List<Request>> processRequestOnMonth() throws NotFoundException {
+        List<Request> requestList = requestService.processRequestOnMonth();
+        return new ResponseEntity<>(requestList, HttpStatus.OK);
     }
 }
