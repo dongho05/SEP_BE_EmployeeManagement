@@ -51,7 +51,7 @@ public class Attendance extends BaseEntity {
     @Column(name = "leave_status")
     private String leaveStatus;
 
-    @Column(name = "request_active",columnDefinition = "boolean default false")
+    @Column(name = "request_active")
     private boolean requestActive;
 
     public Attendance(User user, LocalDate dateLog) {
