@@ -15,11 +15,11 @@
       <jdbc-url>jdbc:mysql://localhost:3306/sep</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="postgres@localhost" uuid="e7203770-2e29-4dfd-9f95-dfca30a25c8f">
+    <data-source source="LOCAL" name="ems@localhost" uuid="e7203770-2e29-4dfd-9f95-dfca30a25c8f">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/ems</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
