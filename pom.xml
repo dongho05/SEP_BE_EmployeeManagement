@@ -150,28 +150,30 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-					<mainClass>com.project.SEP_BE_EmployeeManagement.SepBeEmployeeManagementApplication</mainClass>
-					<layout>JAR</layout>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix></classpathPrefix>
+							<mainClass>com.project.SEP_BE_EmployeeManagement.SepBeEmployeeManagementApplication</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>../resources/</Class-Path>
+						</manifestEntries>
+					</archive>
+					<outputDirectory>${basedir}/deployment/lib</outputDirectory>
+					<finalName>application-api-admin</finalName>
+					<excludes>
+						<exclude>**/*.xml</exclude>
+						<exclude>**/*.properties</exclude>
+						<exclude>**/*.txt</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 		<finalName>sep-java-springboot-docker</finalName>

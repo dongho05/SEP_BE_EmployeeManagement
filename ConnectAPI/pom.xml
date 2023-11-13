@@ -170,6 +170,30 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix></classpathPrefix>
+							<mainClass>com.example.connectapi.ConnectApiApplication</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>../resources/</Class-Path>
+						</manifestEntries>
+					</archive>
+					<outputDirectory>${basedir}/deployment/lib</outputDirectory>
+					<finalName>application-api-admin</finalName>
+					<excludes>
+						<exclude>**/*.xml</exclude>
+						<exclude>**/*.properties</exclude>
+						<exclude>**/*.txt</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
