@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.UserAttendance;
 import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.UpdateSignInAttendanceRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
