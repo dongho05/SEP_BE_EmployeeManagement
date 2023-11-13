@@ -42,9 +42,11 @@ public class ScheduledController {
 
 
     @GetMapping("getCheckInOut")
-    public List<TmpCheckInOut> getCheckInOut(){
+    public List<TmpCheckInOut> getCheckInOut(@RequestParam(name = "day", required = false) Integer day,
+                                             @RequestParam(name = "month", required = false) Integer month,
+                                             @RequestParam(name = "year",required = false) Integer year){
         List<TmpCheckInOut> tmpCheckInOutList =
-                callApi.getLogCheckInOut();
+                callApi.getLogCheckInOut(day, month, year);
         return tmpCheckInOutList;
     }
 
@@ -97,8 +99,10 @@ public class ScheduledController {
     }
 
     @GetMapping("executeAttendance")
-    public void executeAttendance(){
-        executeAttendance.ExecuteAttendance();
+    public void executeAttendance(@RequestParam(name = "day", required = false) Integer day,
+                                  @RequestParam(name = "month", required = false) Integer month,
+                                  @RequestParam(name = "year",required = false) Integer year){
+        executeAttendance.ExecuteAttendance(day, month, year);
     }
 
 

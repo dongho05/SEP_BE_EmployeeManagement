@@ -26,11 +26,15 @@ public class MainController {
     }
 
     @GetMapping("logCheckInOutByToday")
-    public List<TmpCheckInOut> listCheckInOutByDate () {
+    public List<TmpCheckInOut> listCheckInOutByDate (@RequestParam(name = "day", required = false) Integer day,
+                                                     @RequestParam(name = "month", required = false) Integer month,
+                                                     @RequestParam(name = "year",required = false) Integer year) {
         LocalDate currentDate = LocalDate.now();
-        List<TmpCheckInOut> list = tmpCheckInOutService.findByDate(currentDate);
+        List<TmpCheckInOut> list = tmpCheckInOutService.findByDate(currentDate, day, month, year);
         return list ;
     }
+
+
 
     @GetMapping("logInLateOutEarlyByToday")
     public List<TblInLateOutEarly> logInLateOutEarlyByToday () {

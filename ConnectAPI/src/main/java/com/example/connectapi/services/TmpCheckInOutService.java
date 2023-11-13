@@ -8,5 +8,5 @@ import java.util.List;
 @Service
 public interface TmpCheckInOutService {
     List<TmpCheckInOut> findByBadgeNumber(String badgeNumber);
-    List<TmpCheckInOut> findByDate(LocalDate checkDate);
+    List<TmpCheckInOut> findByDate(LocalDate checkDate, Integer day, Integer month, Integer year);
 }
