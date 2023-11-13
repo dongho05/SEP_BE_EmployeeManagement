@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-231.8109.175">
+  <component name="dataSourceStorageLocal" created-in="IU-232.8660.185">
     <data-source name="EmployeeManagementSystem@localhost" uuid="ec034be2-bb55-4ff1-9f95-7f283263a2f3">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MSSQL" exact-version="0" />
       <schema-mapping />
@@ -19,7 +19,12 @@
       </schema-mapping>
     </data-source>
     <data-source name="ems@localhost" uuid="e7203770-2e29-4dfd-9f95-dfca30a25c8f">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>postgres</user-name>
       <schema-mapping />
     </data-source>
   </component>
