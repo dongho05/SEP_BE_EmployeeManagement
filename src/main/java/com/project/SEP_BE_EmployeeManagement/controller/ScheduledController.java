@@ -6,6 +6,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.response.connector.TmpCheckInOu
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
 import com.project.SEP_BE_EmployeeManagement.model.Request;
 import com.project.SEP_BE_EmployeeManagement.scheduled.CallApi;
+import com.project.SEP_BE_EmployeeManagement.scheduled.ExecuteAttendance;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import com.project.SEP_BE_EmployeeManagement.service.RequestService;
 import javassist.NotFoundException;
@@ -18,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/scheduled/")
@@ -27,6 +30,9 @@ public class ScheduledController {
 
     @Autowired
     CallApi callApi;
+
+    @Autowired
+    ExecuteAttendance executeAttendance;
 
     @Autowired
     private AttendanceService attendanceService;
@@ -89,4 +95,11 @@ public class ScheduledController {
         List<Request> requestList = requestService.processRequestOnMonth();
         return new ResponseEntity<>(requestList, HttpStatus.OK);
     }
+
+    @GetMapping("executeAttendance")
+    public void executeAttendance(){
+        executeAttendance.ExecuteAttendance();
+    }
+
+
 }

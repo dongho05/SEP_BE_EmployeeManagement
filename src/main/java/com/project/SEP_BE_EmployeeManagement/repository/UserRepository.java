@@ -52,4 +52,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select u from User u where u.position.id = ?1")
     List<User> getUserByPosition(long id);
 
+    List<User> findAllByDepartmentId(long id);
 }

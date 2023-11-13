@@ -1064,7 +1064,7 @@ INSERT INTO public.role VALUES (3, 'ROLE_USER');
 -- Data for Name: position_roles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.position_roles VALUES (1, 1);
+INSERT INTO public.position_roles VALUES (1, 2);
 
 
 --

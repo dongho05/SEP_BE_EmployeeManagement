@@ -45,14 +45,14 @@ public class TmpCheckInOutServiceImpl implements TmpCheckInOutService {
 
     @Override
     public List<TmpCheckInOut> findByDate(LocalDate checkDate) {
-        Integer year = 2023;
-        Integer month = 10;
-        Integer day = 1;
+//        Integer year = 2023;
+//        Integer month = 9;
+//        Integer day = 26;
 
-//        LocalDate date = checkDate.minusDays(0);
-//        Integer year = checkDate.getYear();
-//        Integer month = checkDate.getMonthValue();
-//        Integer day = checkDate.getDayOfMonth();
+        LocalDate date = checkDate.minusDays(1);
+        Integer year = date.getYear();
+        Integer month = date.getMonthValue();
+        Integer day = date.getDayOfMonth();
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
                 preparedStatement.setInt(1, year); // Đặt giá trị của tham số
