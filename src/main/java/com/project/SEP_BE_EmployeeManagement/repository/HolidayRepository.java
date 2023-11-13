@@ -30,6 +30,6 @@ public interface HolidayRepository extends JpaRepository<Holiday,Integer> {
     List<Holiday> getListByDateDesc();
 
     @Query(value = "SELECT * FROM holiday h \n" +
-            "where h.date_from <= ?1 "+" and h.date_to >= ?1 ",nativeQuery = true)
+            "            where h.start_date <= ?1  and h.end_date >= ?1",nativeQuery = true)
     Holiday findExecuteAttendanceDate(String date);
 }

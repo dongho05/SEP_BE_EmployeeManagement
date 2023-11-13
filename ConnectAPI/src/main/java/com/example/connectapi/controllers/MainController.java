@@ -28,7 +28,6 @@ public class MainController {
     @GetMapping("logCheckInOutByToday")
     public List<TmpCheckInOut> listCheckInOutByDate () {
         LocalDate currentDate = LocalDate.now();
-        LocalDate yesterday = currentDate.minusDays(1);
         List<TmpCheckInOut> list = tmpCheckInOutService.findByDate(currentDate);
         return list ;
     }
@@ -36,8 +35,7 @@ public class MainController {
     @GetMapping("logInLateOutEarlyByToday")
     public List<TblInLateOutEarly> logInLateOutEarlyByToday () {
         LocalDate currentDate = LocalDate.now();
-        LocalDate yesterday = currentDate.minusDays(1);
-        List<TblInLateOutEarly> list = tblInLateOutEarlyService.findByDate(yesterday);
+        List<TblInLateOutEarly> list = tblInLateOutEarlyService.findByDate(currentDate);
         return list ;
     }
 }
