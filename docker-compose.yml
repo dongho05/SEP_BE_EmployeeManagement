@@ -1,6 +1,6 @@
 version: '3'
 services:
-  db:
+  mysqldb:
 #      image: 'postgres:16-alpine'
 #      container_name: db
 #      environment:
@@ -12,25 +12,43 @@ services:
       environment:
         MYSQL_ROOT_PASSWORD: Abc@123456
         MYSQL_DATABASE: sep
+      networks:
+        - spring-mysql
 
       volumes:
         - ./initdata:/docker-entrypoint-initdb.d/
+#  maildev:
+#    image: maildev/maildev
+#    restart: always
+#    ports:
+#      - "587:587"
   app:
     image: 'dongho01/sep-java-springboot-docker:v1.1.1'
-    build:
-      context: .
     container_name: app
+    depends_on:
+      - mysqldb
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/sep
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/sep?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=Abc@123456
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_USERNAME=hophuongdong25052001@gmail.com
+      - SPRING_MAIL_PASSWORD=efxx uzga abuy kpyc
+      - SPRING_MAIL_PORT=587
+    networks:
+      - spring-mysql
     ports:
-      - 8080:2000
-#  frontend:
-#    image: 'dongho01/sep-fe-docker:v1.0.0'
-#    container_name: frontend
-#    ports:
-#      - 8090:80
+      - 8080:8080
 
+  frontend:
+    image: 'dongho01/sep-fe-docker:v1.0.0'
+    container_name: frontend
+    ports:
+      - 8090:80
+    networks:
+      - spring-mysql
+networks:
+  spring-mysql:
 
