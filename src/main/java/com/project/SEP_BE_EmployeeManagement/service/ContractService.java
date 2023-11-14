@@ -16,8 +16,7 @@ public interface ContractService {
     List<Contract> GetAll();
     Page<ContractDto> getData(String search, Integer pageNo, Integer pageSize);
 
-//    Contract createContract(CreateContractRequest request) throws NotFoundException;
     Contract createContract(CreateContractRequest request) throws NotFoundException;
 
-    ContractDto updateContract(long contractId, UpdateContractRequest request) throws NotFoundException;
+    Contract updateContract(Long contractId, CreateContractRequest updateContractRequest) throws NotFoundException;
 }

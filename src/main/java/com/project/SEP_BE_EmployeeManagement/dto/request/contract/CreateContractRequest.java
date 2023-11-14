@@ -16,7 +16,6 @@ import java.security.PrivateKey;
 public class CreateContractRequest {
     private String contractName;
     private MultipartFile contractFile;
-//    private User userId;
     private Long userId;
     public Long getUserId() {
         return userId;

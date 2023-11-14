@@ -62,16 +62,6 @@ public class ContractServiceImpl implements ContractService {
         return response;
     }
 
-//    @Override
-//    public Contract createContract(CreateContractRequest createContract) {
-//          Contract contract = new Contract();
-//          contract.setContractName(createContract.getContractName());
-//          String contractFile = fileManagerService.saveUserContract(createContract.getContractFile());
-//          contract.setFileName(contractFile);
-//          contract.setUser(createContract.getUserId());
-//          contractRepository.save(contract);
-//          return contract;
-//    }
     @Override
     public Contract createContract(CreateContractRequest createContract) throws NotFoundException {
         Contract contract = new Contract();
@@ -85,36 +75,28 @@ public class ContractServiceImpl implements ContractService {
         return contract;
     }
 
+//    @Override
+//    public ContractDto updateContract( long contractId, UpdateContractRequest updateContractRequest) throws NotFoundException {
+//        Contract c = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Position with id: " + contractId + " Not Found"));
+//        c.setContractName(updateContractRequest.getContractName());
+//        String contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
+//        c.setContractName(contractFile);
+//        contractRepository.save(c);
+//        return ContractMapper.toDto(contractRepository.save(c));
+//    }
     @Override
-    public ContractDto updateContract( long contractId, UpdateContractRequest updateContractRequest) throws NotFoundException {
-        Contract c = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Position with id: " + contractId + " Not Found"));
-        c.setContractName(updateContractRequest.getContractName());
+    public Contract updateContract(Long contractId, CreateContractRequest updateContractRequest) throws NotFoundException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
+        contract.setContractName(updateContractRequest.getContractName());
         String contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
-        c.setContractName(contractFile);
-        contractRepository.save(c);
-        return ContractMapper.toDto(contractRepository.save(c));
+        contract.setFileName(contractFile);
+
+        Long userId = updateContractRequest.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
+        contract.setUser(user);
+
+        contractRepository.save(contract);
+        return contract;
     }
-//    @Override
-//    public Contract createContract(CreateContractRequest request) throws NotFoundException {
-//        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new NotFoundException("User with id: " + request.getUserId() + " Not Found"));
-//        Department department = departmentRepository.findById(request.getDepartmentId()).orElseThrow(() -> new NotFoundException("Department with id: " + request.getDepartmentId() + " Not Found"));
-//
-//        Contract contract = new Contract();
-//        contract.setNameContract(request.getNameContract());
-//        contract.setFileContract(request.getFileContract());
-//        contract.setCreatedDate(request.getCreatedDate());
-//        contract.setUpdatedDate(request.getUpdatedDate());
-//        contract.setUser(user);
-//        contract.getUser().setDepartment(department);
-//
-//        repository.save(contract);
-//
-//        return contract;
-//    }
-//    @Override
-//    public Contract createContract(ContractDto contractDto){
-//        Contract contract = ContractMapper.toEntity(contractDto);
-//        Contract createdContract = contractRepository.save(contract);
-//        return createdContract;
-//    }
+
 }

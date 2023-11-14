@@ -52,16 +52,6 @@ public class ContractController {
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 
-//    @PostMapping(value = "create")
-//    public MessageResponse createContract(@Valid @ModelAttribute CreateContractRequest createContract) throws MessagingException, UnsupportedEncodingException, NotFoundException {
-//
-////            for(CreateUser s : createUser){
-////                userService.createUser(s);
-////            }
-//        contractService.createContract(createContract);
-//        return new MessageResponse("Thêm hợp đồng thành công");
-//
-//    }
     @PostMapping(value = "create")
     public MessageResponse createContract(@Valid @ModelAttribute CreateContractRequest createContract) throws MessagingException, UnsupportedEncodingException, NotFoundException {
         Long userId = createContract.getUserId();
@@ -71,20 +61,15 @@ public class ContractController {
         return new MessageResponse("Thêm hợp đồng thành công");
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ContractDto> updateContract( @PathVariable long contractId, @ModelAttribute UpdateContractRequest request) throws NotFoundException {
-        ContractDto contractDto = contractService.updateContract(contractId, request);
-        return new ResponseEntity<>(contractDto, HttpStatus.OK);
-
-//    @PostMapping("/create")
-//    public ResponseEntity<Contract> createContract(@RequestBody ContractDto contractDto) {
-//        Contract createdContract = contractService.createContract(contractDto);
-//        return new ResponseEntity<>(createdContract, HttpStatus.OK);
-//    }
-//    @PostMapping("/create")
-//    public ResponseEntity<Contract> createContract(@RequestBody CreateContractRequest request) throws NotFoundException {
-//        Contract response = contractService.createContract(request);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
+    @PutMapping("/update/{contractId}")
+    public MessageResponse updateContract(@PathVariable Long contractId, @Valid @ModelAttribute CreateContractRequest updateContractRequest) throws NotFoundException {
+        Long userId = updateContractRequest.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
+        contractService.updateContract(contractId, updateContractRequest);
+        return new MessageResponse("Cập nhật hợp đồng thành công");
     }
+//    public ResponseEntity<ContractDto> updateContract( @PathVariable long contractId, @ModelAttribute UpdateContractRequest request) throws NotFoundException {
+//        ContractDto contractDto = contractService.updateContract(contractId, request);
+//        return new ResponseEntity<>(contractDto, HttpStatus.OK);
+//    }
 }
