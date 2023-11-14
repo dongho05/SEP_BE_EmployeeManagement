@@ -11,6 +11,17 @@ import org.springframework.data.domain.PageRequest;
 import java.util.stream.Collectors;
 
 public class ContractMapper {
+//    public static Contract toEntity(ContractDto contractDto) {
+//        Contract contract = new Contract();
+//        contract.setId(contractDto.getId());
+//        contract.setContractName(contractDto.getNameContract());
+//        contract.setFileName(contractDto.getFileContract());
+//        contract.setCreatedDate(contractDto.getCreatedDate());
+//        contract.setUpdatedDate(contractDto.getUpdatedDate());
+//        contract.setUser(contractDto.getUser());
+//        contract.getUser().setDepartment(contractDto.getDepartment());
+//        return contract;
+//    }
 
     public static ContractDto toDto(Contract contract) {
         ContractDto dto = new ContractDto();
