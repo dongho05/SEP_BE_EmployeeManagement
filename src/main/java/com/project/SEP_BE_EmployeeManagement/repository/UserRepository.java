@@ -43,9 +43,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserCode(String userCode);
 
-    @Query(value = "update users set [password]= :newPassword where email = :email",nativeQuery = true)
-    void UpdatePassword(String email, String newPassword);
-
     @Query(value = "select u from User u where u.department.id = ?1")
     List<User> getUserByDepartment(long id);
 

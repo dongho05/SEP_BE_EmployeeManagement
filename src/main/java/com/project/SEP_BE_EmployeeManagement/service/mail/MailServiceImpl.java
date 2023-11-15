@@ -12,9 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.internet.MimeMessage;
 
+
 @Service
 public class MailServiceImpl implements MailService {
-    @Value("${spring.mail.username}")
+    @Value("hophuongdong25052001@gmail.com")
     private String fromEmail;
 
     @Autowired
