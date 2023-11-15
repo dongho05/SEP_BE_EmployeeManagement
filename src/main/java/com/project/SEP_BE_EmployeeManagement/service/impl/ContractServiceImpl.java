@@ -99,4 +99,9 @@ public class ContractServiceImpl implements ContractService {
         return contract;
     }
 
+    @Override
+    public void deleteContract(Long contractId) throws NotFoundException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
+        contractRepository.delete(contract);
+    }
 }

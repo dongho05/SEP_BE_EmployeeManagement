@@ -13,6 +13,7 @@ import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.ContractService;
 import javassist.NotFoundException;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -68,8 +69,10 @@ public class ContractController {
         contractService.updateContract(contractId, updateContractRequest);
         return new MessageResponse("Cập nhật hợp đồng thành công");
     }
-//    public ResponseEntity<ContractDto> updateContract( @PathVariable long contractId, @ModelAttribute UpdateContractRequest request) throws NotFoundException {
-//        ContractDto contractDto = contractService.updateContract(contractId, request);
-//        return new ResponseEntity<>(contractDto, HttpStatus.OK);
-//    }
+
+    @DeleteMapping(value = "delete/{contractId}")
+    public MessageResponse deleteContract(@PathVariable("contractId") Long contractId) throws NotFoundException {
+        contractService.deleteContract(contractId);
+        return new MessageResponse("Xóa hợp đồng thành công");
+    }
 }

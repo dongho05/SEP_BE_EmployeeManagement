@@ -19,4 +19,6 @@ public interface ContractService {
     Contract createContract(CreateContractRequest request) throws NotFoundException;
 
     Contract updateContract(Long contractId, CreateContractRequest updateContractRequest) throws NotFoundException;
+
+    void deleteContract(Long contractId) throws NotFoundException;
 }
