@@ -19,8 +19,10 @@ import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -75,9 +77,22 @@ public class ContractController {
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/create")
-    public MessageResponse createContract( @ModelAttribute CreateContractRequest createContract) throws MessagingException, UnsupportedEncodingException, NotFoundException {
+    @PostMapping("/create")
+    public MessageResponse createContract(@RequestPart("createContractRequest") CreateContractRequest createContract
+            , @RequestPart(value = "contractFile",required = false) MultipartFile contractFileR  ) throws NotFoundException {
+        System.out.println("file nhan duoc la");
+        System.out.println(contractFileR );
+
+        System.out.println(createContract.getContractName());
+        System.out.println(createContract.getUserId());
+
+
+
         Long userId = createContract.getUserId();
+        if(contractFileR != null){
+            System.out.println("da nhan file");
+            createContract.setContractFile(contractFileR);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
         contractService.createContract(createContract);
