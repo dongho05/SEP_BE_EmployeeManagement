@@ -8,6 +8,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.response.JwtResponse;
 import com.project.SEP_BE_EmployeeManagement.extensions.Utilities;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.RoleRepository;
+import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.JwtUtils;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
 import com.project.SEP_BE_EmployeeManagement.service.UserService;
@@ -33,6 +34,10 @@ import java.util.stream.Collectors;
 public class LoginController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -98,6 +103,7 @@ public class LoginController {
         String randomPassword = Utilities.alphaNumericString(length);
         String hashedPassword = encoder.encode(randomPassword);
 
+        Optional<User> user = userService.findByUsernameOrEmail(request.getEmail());
 
 
         if(userService.existsByEmail(request.getEmail())==true){
@@ -105,7 +111,8 @@ public class LoginController {
                     "Reset password",
                     "This is new password: " + randomPassword + ". \nLogin with this password, and change password"));
             try {
-                userService.UpdatePassword(request.getEmail(), hashedPassword);
+                user.get().setPassword(hashedPassword);
+                userRepository.save(user.get());
             }catch (Exception e){
             }
             return ResponseEntity.ok("Mật khẩu mới đã được gửi hòm thư của bạn.");
@@ -113,7 +120,7 @@ public class LoginController {
         return  ResponseEntity.internalServerError().body("Email không tồn tại.");
 
     }
-    @PostMapping("/auth/change-password")
+    @PutMapping("/auth/change-password")
     public ResponseEntity<?> ChangePassword(@RequestBody UpdatePasswordRequest request){
 
         Optional<User> user = userService.findByUsernameOrEmail(request.getEmail());
@@ -125,7 +132,8 @@ public class LoginController {
         }
         String hashPassword = encoder.encode(request.getNewPassword1());
         try {
-            userService.UpdatePassword(request.getEmail(), hashPassword);
+            user.get().setPassword(hashPassword);
+            userRepository.save(user.get());
 
         }catch (Exception e){
 

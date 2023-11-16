@@ -59,8 +59,11 @@ public class HolidayServiceImpl implements HolidayService {
         if(!holidayRepository.existsById(id)){
             throw new RuntimeException("Ngày nghỉ không tồn tại");
         }
-        holidayRepository.updateHoliday(request.getHolidayName(), request.getStartDate(),request.getEndDate(),id);
         Holiday obj = holidayRepository.findById(id);
+        obj.setHolidayName(request.getHolidayName());
+        obj.setStartDate(request.getStartDate());
+        obj.setEndDate(request.getEndDate());
+        holidayRepository.save(obj);
         return obj;
     }
 

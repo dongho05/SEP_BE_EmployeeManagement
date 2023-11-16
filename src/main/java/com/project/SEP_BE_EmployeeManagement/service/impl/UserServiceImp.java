@@ -166,17 +166,6 @@ public class UserServiceImp implements UserService {
         return userRepository.findByUsernameOrEmail(email);
     }
 
-    @Override
-    public User CreateNewPerson(User user) {
-        User u = userRepository.save(user);
-        return u;
-    }
-
-    @Override
-    public User UpdatePerson(UserRequest user) {
-        User u = UserMapper.toUser(user);
-        return null;
-    }
 
     @Override
     public User createUser(CreateUser createUser) {
@@ -263,10 +252,10 @@ public class UserServiceImp implements UserService {
         return list;
     }
 
-    @Override
-    public void UpdatePassword(String email, String newPassword) {
-        userRepository.UpdatePassword(email,newPassword);
-    }
+//    @Override
+//    public void UpdatePassword(String email, String newPassword) {
+//        userRepository.UpdatePassword(email,newPassword);
+//    }
 
     @Override
     public Boolean existsByEmail(String email) {

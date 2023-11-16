@@ -36,7 +36,7 @@ public class CallApi {
 
     @Autowired
     private UserRepository userRepository;
-    @Value("${connect.api}")
+    @Value("http://localhost:9999/api/")
     private String URL;
 
 //    @Scheduled(cron = "0 0 */2 * * *")

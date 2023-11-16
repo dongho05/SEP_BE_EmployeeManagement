@@ -19,8 +19,6 @@ public interface HolidayRepository extends JpaRepository<Holiday,Integer> {
             " order by h.holiday_id desc",nativeQuery = true)
     Page<Holiday> getList(String search, Pageable pageable,Integer year);
 
-    @Query(value = "update holiday set holiday_name= :name, start_date= :startDate, end_date= :endDate where holiday_id = :id", nativeQuery = true)
-    void updateHoliday(String name, LocalDate startDate, LocalDate endDate, int id);
     Boolean existsByHolidayName(String holidayName);
     Boolean existsById(int id);
     Holiday findById(int id);

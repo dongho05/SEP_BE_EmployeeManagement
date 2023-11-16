@@ -28,10 +28,10 @@ import java.util.Map;
 public class FileController {
     @Autowired
     FileManagerService fileManagerService;
-    @Value("${upload.image.path}")
+    @Value("src\\\\main\\\\resources\\\\avatar")
     private String fileUploadImage;
 
-    @Value("${upload.contract.path}")
+    @Value("src\\\\main\\\\resources\\\\contractFile")
     private String fileUploadContract;
     @Autowired
     UserRepository userRepository;
