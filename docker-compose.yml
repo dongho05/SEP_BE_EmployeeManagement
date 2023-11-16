@@ -23,7 +23,7 @@ services:
 #    ports:
 #      - "587:587"
   app:
-    image: 'sep-be:latest'
+    image: 'phundhe151425/sep-be:latest'
     container_name: app
     depends_on:
       - mysqldb
@@ -43,7 +43,7 @@ services:
       - 2000:8080
 
   frontend:
-    image: 'sep-fe:latest'
+    image: 'phundhe151425/sep-fe:latest'
     container_name: frontend
     ports:
       - 2001:80
