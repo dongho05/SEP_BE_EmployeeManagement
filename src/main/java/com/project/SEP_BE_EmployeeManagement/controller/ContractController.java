@@ -100,8 +100,17 @@ public class ContractController {
     }
 
     @PutMapping("/update/{contractId}")
-    public MessageResponse updateContract(@PathVariable Long contractId, @Valid @ModelAttribute CreateContractRequest updateContractRequest) throws NotFoundException {
+    public MessageResponse updateContract(@PathVariable Long contractId, @RequestPart("updateContractRequest") CreateContractRequest updateContractRequest
+            , @RequestPart(value = "contractFile",required = false) MultipartFile contractFileR) throws NotFoundException {
+
+        System.out.println("file nhan  la1");
+        System.out.println("ok:"+updateContractRequest.getContractName());
+        System.out.println("ok:"+updateContractRequest.getUserId());
         Long userId = updateContractRequest.getUserId();
+        if(contractFileR != null){
+            System.out.println("da nhan file");
+            updateContractRequest.setContractFile(contractFileR);
+        }
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
         contractService.updateContract(contractId, updateContractRequest);
         return new MessageResponse("Cập nhật hợp đồng thành công");
