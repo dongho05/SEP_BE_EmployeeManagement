@@ -23,7 +23,7 @@ services:
 #    ports:
 #      - "587:587"
   app:
-    image: 'dongho01/sep-java-springboot-docker:v1.1.1'
+    image: 'sep-be:latest'
     container_name: app
     depends_on:
       - mysqldb
@@ -40,13 +40,13 @@ services:
     networks:
       - spring-mysql
     ports:
-      - 8080:8080
+      - 2000:8080
 
   frontend:
-    image: 'dongho01/sep-fe-docker:v1.0.0'
+    image: 'sep-fe:latest'
     container_name: frontend
     ports:
-      - 8090:80
+      - 2001:80
     networks:
       - spring-mysql
 networks:
