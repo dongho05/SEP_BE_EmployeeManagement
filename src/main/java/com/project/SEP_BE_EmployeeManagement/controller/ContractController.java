@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.ContractDto;
+import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
 import com.project.SEP_BE_EmployeeManagement.dto.PositionDto;
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
@@ -13,6 +14,7 @@ import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.ContractService;
 import javassist.NotFoundException;
+import org.aspectj.weaver.ast.Instanceof;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/contract")
@@ -40,10 +43,29 @@ public class ContractController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<Page<ContractDto>> getContract(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
-                                                         @RequestParam(name = "pageSize", defaultValue = "30") int pageSize,
+    public ResponseEntity<Page<ContractDto>> getContract(@RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
+                                                         @RequestParam(name = "pageSize", defaultValue = "4") int  pageSize,
                                                          @RequestParam(name = "search", required = false, defaultValue = "") String search) {
+
+        System.out.println(search);
+        System.out.println(pageNo);
+        System.out.println(pageSize);
         Page<ContractDto> response = contractService.getData(search, pageNo, pageSize);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/data1")
+    public ResponseEntity<Page<Contract>> getContract1(@RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
+                                                         @RequestParam(name = "pageSize", defaultValue = "4") int  pageSize,
+                                                         @RequestParam(name = "search", required = false, defaultValue = "") String search) {
+
+        Page<Contract> response = contractService.getDataTest(search, pageNo, pageSize);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ContractDto> getContrcatById(@PathVariable Integer id) throws NotFoundException {
+        ContractDto response = contractService.getContractById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -53,8 +75,8 @@ public class ContractController {
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 
-    @PostMapping(value = "create")
-    public MessageResponse createContract(@Valid @ModelAttribute CreateContractRequest createContract) throws MessagingException, UnsupportedEncodingException, NotFoundException {
+    @PostMapping(value = "/create")
+    public MessageResponse createContract( @ModelAttribute CreateContractRequest createContract) throws MessagingException, UnsupportedEncodingException, NotFoundException {
         Long userId = createContract.getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
@@ -75,4 +97,10 @@ public class ContractController {
         contractService.deleteContract(contractId);
         return new MessageResponse("Xóa hợp đồng thành công");
     }
+
+    @GetMapping("/employee-contact")
+    public ResponseEntity<List<User>> getEmployee() {
+        return new ResponseEntity<>(this.contractService.listEmployeeContact(), HttpStatus.OK);
+    }
+
 }

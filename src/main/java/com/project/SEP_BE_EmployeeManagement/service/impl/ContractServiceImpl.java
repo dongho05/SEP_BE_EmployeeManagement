@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
 import com.project.SEP_BE_EmployeeManagement.dto.ContractDto;
+import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
 import com.project.SEP_BE_EmployeeManagement.dto.PositionDto;
 import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
 import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
@@ -12,6 +13,7 @@ import com.project.SEP_BE_EmployeeManagement.model.Position;
 import com.project.SEP_BE_EmployeeManagement.model.Role;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.model.mapper.ContractMapper;
+import com.project.SEP_BE_EmployeeManagement.model.mapper.DepartmentMapper;
 import com.project.SEP_BE_EmployeeManagement.model.mapper.PositionMapper;
 import com.project.SEP_BE_EmployeeManagement.model.mapper.UserMapper;
 import com.project.SEP_BE_EmployeeManagement.repository.ContractRepository;
@@ -24,6 +26,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,13 +57,22 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Page<ContractDto> getData(String search, Integer pageNo, Integer pageSize) {
+    public Page<ContractDto> getData(String search, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Contract> page = contractRepository.getContract(search, pageable);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(pageable);
+        System.out.println(page.getContent());
+        System.out.println("test ok");
 
         Page<ContractDto> response = ContractMapper.toDtoPage(page);
 
         return response;
+    }
+
+    @Override
+    public Page<Contract> getDataTest(String search, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(pageable);
+        return page;
     }
 
     @Override
@@ -75,26 +88,15 @@ public class ContractServiceImpl implements ContractService {
         return contract;
     }
 
-//    @Override
-//    public ContractDto updateContract( long contractId, UpdateContractRequest updateContractRequest) throws NotFoundException {
-//        Contract c = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Position with id: " + contractId + " Not Found"));
-//        c.setContractName(updateContractRequest.getContractName());
-//        String contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
-//        c.setContractName(contractFile);
-//        contractRepository.save(c);
-//        return ContractMapper.toDto(contractRepository.save(c));
-//    }
     @Override
     public Contract updateContract(Long contractId, CreateContractRequest updateContractRequest) throws NotFoundException {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
         contract.setContractName(updateContractRequest.getContractName());
         String contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
         contract.setFileName(contractFile);
-
         Long userId = updateContractRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
         contract.setUser(user);
-
         contractRepository.save(contract);
         return contract;
     }
@@ -103,5 +105,18 @@ public class ContractServiceImpl implements ContractService {
     public void deleteContract(Long contractId) throws NotFoundException {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
         contractRepository.delete(contract);
+    }
+    @Override
+    public ContractDto getContractById(long id) throws NotFoundException {
+        ContractDto contractDto = ContractMapper.toDto(contractRepository.findById(id).orElseThrow(() -> new NotFoundException("Department with id: " + id + " Not Found"))) ;
+        return contractDto;
+    }
+
+    @Override
+    public List<User> listEmployeeContact() {
+        List<Long> listEmployeeID_DISTINCT = this.contractRepository.findDistinctUserIds();
+        System.out.println(listEmployeeID_DISTINCT);
+        List<User> listEmployee_conlai = this.userRepository.findAllByIdNotIn(listEmployeeID_DISTINCT);
+        return listEmployee_conlai;
     }
 }
