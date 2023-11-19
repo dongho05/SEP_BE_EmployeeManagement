@@ -56,4 +56,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     //lay tat ca user ma id khong trung voi id da co
     List<User> findAllByIdNotIn(List<Long> userIds);
+    List<User> findAllByIdNotInAndDepartment_Id(List<Long> userIds, Long departmentId);
 }

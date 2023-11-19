@@ -40,11 +40,12 @@ public class ContractServiceImpl implements ContractService {
     FileManagerService fileManagerService;
     @Autowired
     private UserRepository userRepository;
+
     @Override
     public Contract getCurrentContractByUserId(long userId) {
         List<Contract> contracts = contractRepository.getContractsByUser(userId);
-        Contract contract ;
-        if(contracts.size()>0){
+        Contract contract;
+        if (contracts.size() > 0) {
             contract = contracts.get(0);
             return contract;
         }
@@ -57,9 +58,10 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Page<ContractDto> getData(String search, int pageNo, int pageSize) {
+    public Page<ContractDto> getData(String search, String deptId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search,pageable);
+        Long idDept = Long.valueOf(deptId);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
         System.out.println(page.getContent());
         System.out.println("test ok");
 
@@ -69,9 +71,14 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Page<Contract> getDataTest(String search, int pageNo, int pageSize) {
+    public Page<Contract> getDataTest(String search, String deptId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search,pageable);
+
+        Long idDept = null;
+        if (!deptId.isEmpty()) {
+            idDept = Long.valueOf(deptId);
+        }
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
         return page;
     }
 
@@ -93,11 +100,10 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
         contract.setContractName(updateContractRequest.getContractName());
         String contractFile = "";
-        if(updateContractRequest.getContractFile() == null){
+        if (updateContractRequest.getContractFile() == null) {
             System.out.println("file rong");
             contractFile = contract.getFileName();
-        }
-        else {
+        } else {
             contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
         }
         contract.setFileName(contractFile);
@@ -113,17 +119,26 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
         contractRepository.delete(contract);
     }
+
     @Override
     public ContractDto getContractById(long id) throws NotFoundException {
-        ContractDto contractDto = ContractMapper.toDto(contractRepository.findById(id).orElseThrow(() -> new NotFoundException("Department with id: " + id + " Not Found"))) ;
+        ContractDto contractDto = ContractMapper.toDto(contractRepository.findById(id).orElseThrow(() -> new NotFoundException("Department with id: " + id + " Not Found")));
         return contractDto;
     }
 
     @Override
-    public List<User> listEmployeeContact() {
+    public List<User> listEmployeeContact(String id) {
         List<Long> listEmployeeID_DISTINCT = this.contractRepository.findDistinctUserIds();
         System.out.println(listEmployeeID_DISTINCT);
-        List<User> listEmployee_conlai = this.userRepository.findAllByIdNotIn(listEmployeeID_DISTINCT);
-        return listEmployee_conlai;
+        List<User> listEmployee = null;
+        if(!id.isEmpty()){
+            Long idLong = Long.valueOf(id);
+            listEmployee = this.userRepository.findAllByIdNotInAndDepartment_Id(listEmployeeID_DISTINCT, idLong);
+        }
+        else {
+            listEmployee = this.userRepository.findAllByIdNotIn(listEmployeeID_DISTINCT);
+        }
+        return listEmployee;
     }
+
 }

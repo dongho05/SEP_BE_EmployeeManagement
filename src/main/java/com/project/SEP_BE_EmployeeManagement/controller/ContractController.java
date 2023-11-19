@@ -47,21 +47,22 @@ public class ContractController {
     @GetMapping("/data")
     public ResponseEntity<Page<ContractDto>> getContract(@RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
                                                          @RequestParam(name = "pageSize", defaultValue = "4") int  pageSize,
-                                                         @RequestParam(name = "search", required = false, defaultValue = "") String search) {
+                                                         @RequestParam(name = "search", required = false, defaultValue = "") String search,@RequestParam(name = "deptId", required = false, defaultValue = "") String deptId) {
 
         System.out.println(search);
         System.out.println(pageNo);
         System.out.println(pageSize);
-        Page<ContractDto> response = contractService.getData(search, pageNo, pageSize);
+        Page<ContractDto> response = contractService.getData(search,deptId, pageNo, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/data1")
     public ResponseEntity<Page<Contract>> getContract1(@RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
                                                          @RequestParam(name = "pageSize", defaultValue = "4") int  pageSize,
-                                                         @RequestParam(name = "search", required = false, defaultValue = "") String search) {
+                                                         @RequestParam(name = "search", required = false, defaultValue = "") String search,
+                                                       @RequestParam(name = "deptId", required = false, defaultValue = "") String deptId) {
 
-        Page<Contract> response = contractService.getDataTest(search, pageNo, pageSize);
+        Page<Contract> response = contractService.getDataTest(search,deptId, pageNo, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -125,8 +126,8 @@ public class ContractController {
     }
 
     @GetMapping("/employee-contact")
-    public ResponseEntity<List<User>> getEmployee() {
-        return new ResponseEntity<>(this.contractService.listEmployeeContact(), HttpStatus.OK);
+    public ResponseEntity<List<User>> getEmployee(@RequestParam(name = "deptId", required = false, defaultValue = "") String deptId) {
+        return new ResponseEntity<>(this.contractService.listEmployeeContact(deptId), HttpStatus.OK);
     }
 
 }

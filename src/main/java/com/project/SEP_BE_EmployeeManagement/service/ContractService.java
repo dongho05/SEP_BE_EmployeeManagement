@@ -16,9 +16,9 @@ import java.util.List;
 public interface ContractService {
     public Contract getCurrentContractByUserId(long userId);
     List<Contract> GetAll();
-    Page<ContractDto> getData(String search, int pageNo,int pageSize);
+    Page<ContractDto> getData(String search, String deptId, int pageNo,int pageSize);
 
-    Page<Contract> getDataTest(String search, int pageNo,int pageSize);
+    Page<Contract> getDataTest(String search, String deptId, int pageNo,int pageSize);
 
     ContractDto getContractById(long id) throws NotFoundException;
 
@@ -28,5 +28,5 @@ public interface ContractService {
 
     void deleteContract(Long contractId) throws NotFoundException;
 
-    List<User> listEmployeeContact();
+    List<User> listEmployeeContact(String id);
 }
