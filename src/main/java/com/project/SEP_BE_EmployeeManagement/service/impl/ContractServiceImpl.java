@@ -59,7 +59,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Page<ContractDto> getData(String search, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(pageable);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search,pageable);
         System.out.println(page.getContent());
         System.out.println("test ok");
 
@@ -71,7 +71,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Page<Contract> getDataTest(String search, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(pageable);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search,pageable);
         return page;
     }
 
@@ -92,7 +92,14 @@ public class ContractServiceImpl implements ContractService {
     public Contract updateContract(Long contractId, CreateContractRequest updateContractRequest) throws NotFoundException {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new NotFoundException("Contract with id: " + contractId + " Not Found"));
         contract.setContractName(updateContractRequest.getContractName());
-        String contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
+        String contractFile = "";
+        if(updateContractRequest.getContractFile() == null){
+            System.out.println("file rong");
+            contractFile = contract.getFileName();
+        }
+        else {
+            contractFile = fileManagerService.saveUserContract(updateContractRequest.getContractFile());
+        }
         contract.setFileName(contractFile);
         Long userId = updateContractRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));

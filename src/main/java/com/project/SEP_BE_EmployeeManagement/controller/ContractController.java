@@ -65,13 +65,14 @@ public class ContractController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<ContractDto> getContrcatById(@PathVariable Integer id) throws NotFoundException {
+        System.out.println("da chay vao de get du lieu");
         ContractDto response = contractService.getContractById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId")
     public ResponseEntity<Contract> getCurrentContract(@PathVariable long userId) throws NotFoundException {
         Contract contract = contractService.getCurrentContractByUserId(userId);
         return new ResponseEntity<>(contract, HttpStatus.OK);
@@ -109,6 +110,7 @@ public class ContractController {
         Long userId = updateContractRequest.getUserId();
         if(contractFileR != null){
             System.out.println("da nhan file");
+            System.out.println(contractFileR);
             updateContractRequest.setContractFile(contractFileR);
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
