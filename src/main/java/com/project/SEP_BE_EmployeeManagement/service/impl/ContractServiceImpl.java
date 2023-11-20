@@ -128,15 +128,15 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public List<User> listEmployeeContact(String id) {
-        List<Long> listEmployeeID_DISTINCT = this.contractRepository.findDistinctUserIds();
-        System.out.println(listEmployeeID_DISTINCT);
+        //List<Long> listEmployeeID_DISTINCT = this.contractRepository.findDistinctUserIds();
+       // System.out.println(listEmployeeID_DISTINCT);
         List<User> listEmployee = null;
         if(!id.isEmpty()){
             Long idLong = Long.valueOf(id);
-            listEmployee = this.userRepository.findAllByIdNotInAndDepartment_Id(listEmployeeID_DISTINCT, idLong);
+            listEmployee = this.userRepository.findAllByDepartment_Id(idLong);
         }
         else {
-            listEmployee = this.userRepository.findAllByIdNotIn(listEmployeeID_DISTINCT);
+            listEmployee = this.userRepository.findAll();
         }
         return listEmployee;
     }
