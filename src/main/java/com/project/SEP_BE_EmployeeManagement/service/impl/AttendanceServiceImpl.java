@@ -484,7 +484,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
 
             attendanceRepository.save(attendance);
-            finishEditing(attendance.getId());
+//            finishEditing(attendance.getId());
         }
         return new MessageResponse("Successfully!");
     }
