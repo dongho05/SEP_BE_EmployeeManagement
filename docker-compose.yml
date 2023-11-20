@@ -11,7 +11,7 @@ services:
       hostname: "mysqldb"
       container_name: mysqldb
       environment:
-        MYSQL_ROOT_PASSWORD: Abc@123456
+        MYSQL_ROOT_PASSWORD: 123456
         MYSQL_DATABASE: sep
       networks:
         - spring-mysql
@@ -25,15 +25,15 @@ services:
 #    ports:
 #      - "587:587"
   app:
-#    image: 'phundhe151425/sep-be:latest'
-    image: 'sep-be'
+    image: 'phundhe151425/sep-be:latest'
+#    image: 'sep-be'
     container_name: app
     depends_on:
       - mysqldb
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/sep?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=Abc@123456
+      - SPRING_DATASOURCE_PASSWORD=123456
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
       - SPRING_MAIL_HOST=smtp.gmail.com
@@ -46,8 +46,8 @@ services:
       - 2000:8080
 
   frontend:
-    image: 'sep-fe'
-#    image: 'phundhe151425/sep-fe:latest'
+#    image: 'sep-fe'
+    image: 'phundhe151425/sep-fe:latest'
     container_name: frontend
     ports:
       - 2001:80
