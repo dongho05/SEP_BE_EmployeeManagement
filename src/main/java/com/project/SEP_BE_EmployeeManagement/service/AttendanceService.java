@@ -16,6 +16,8 @@ import java.util.List;
 
 @Service
 public interface AttendanceService {
+    public void startEditing(Long entityId, Long userId);
+    public void finishEditing(Long entityId);
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException;
 
     public List<Attendance> findAttendancesForUserInMonth(int year, int month);

@@ -15,7 +15,7 @@ public class NoteCatergory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "note_catergory_id", nullable = false)
-    private Long note_catergory_id;
+    private Long noteCategoryId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "note_catergory_name",length = 20)

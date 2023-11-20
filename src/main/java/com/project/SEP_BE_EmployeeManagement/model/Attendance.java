@@ -58,6 +58,10 @@ public class Attendance extends BaseEntity {
     @OneToMany(mappedBy = "attendance",cascade = CascadeType.ALL)
     private Set<NoteLog> noteLogSet;
 
+    @ManyToOne
+    @JoinColumn(name = "editing_user_id")
+    private User editingUser;
+
     public Attendance(User user, LocalDate dateLog) {
         this.user = user;
         this.dateLog = dateLog;

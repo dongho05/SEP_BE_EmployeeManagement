@@ -31,6 +31,18 @@ public class AttendanceController {
 
     @Autowired
     AttendanceService attendanceService;
+
+    @PostMapping("/startEditing/{attendanceId}/{userId}")
+    public ResponseEntity<String> startEditing(@PathVariable Long attendanceId, @PathVariable Long userId) {
+        attendanceService.startEditing(attendanceId, userId);
+        return ResponseEntity.ok("Editing started successfully");
+    }
+
+    @PostMapping("/finishEditing/{attendanceId}")
+    public ResponseEntity<String> finishEditing(@PathVariable Long attendanceId) {
+        attendanceService.finishEditing(attendanceId);
+        return ResponseEntity.ok("Editing finished successfully");
+    }
     @GetMapping("getAttendanceByMonthAndYear")
     public ResponseEntity<List<Attendance>> getByUserAndMonthAndYear(@RequestParam String code,
                                                                      @RequestParam Integer year

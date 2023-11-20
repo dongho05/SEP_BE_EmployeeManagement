@@ -67,6 +67,39 @@ public class AttendanceServiceImpl implements AttendanceService {
     private LogAttendanceHistoryService logAttendanceHistoryService;
 
     @Override
+    public void startEditing(Long entityId, Long userId) {
+        Attendance attendance = attendanceRepository.findById(entityId).orElse(null);
+
+        if (attendance != null && attendance.getEditingUser() == null) {
+            // Bắt đầu chỉnh sửa bản ghi
+            User user = new User();
+            user.setId(userId);
+            attendance.setEditingUser(user);
+
+            attendanceRepository.save(attendance);
+            // Thực hiện các thay đổi trong bản ghi
+        } else {
+            // Bản ghi đã được chỉnh sửa bởi người khác
+            throw new RuntimeException("Record is already being edited by another user");
+        }
+    }
+
+    @Override
+    public void finishEditing(Long entityId) {
+        Attendance attendance = attendanceRepository.findById(entityId).orElse(null);
+
+        if (attendance != null && attendance.getEditingUser() != null) {
+            // Kết thúc chỉnh sửa bản ghi
+            attendance.setEditingUser(null);
+
+            attendanceRepository.save(attendance);
+        } else {
+            // Bản ghi không được chỉnh sửa
+            throw new RuntimeException("Record is not being edited");
+        }
+    }
+
+    @Override
     @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException {
 
@@ -427,7 +460,8 @@ public class AttendanceServiceImpl implements AttendanceService {
             else {
                 DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 attendance.setUser(userRepository.findByUserCode(editAttendances1.getCode()));
-                attendance.setDateLog(LocalDate.parse(editAttendances1.getDate(),sdf));
+//                attendance.setDateLog(LocalDate.parse(editAttendances1.getDate(),sdf));
+                attendance.setDateLog(date);
                 if(editAttendances1.getSign()==null)
                     attendance.setSigns(null);
                 else
@@ -450,6 +484,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
 
             attendanceRepository.save(attendance);
+            finishEditing(attendance.getId());
         }
         return new MessageResponse("Successfully!");
     }
