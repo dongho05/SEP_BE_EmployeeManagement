@@ -1,7 +1,10 @@
 package com.project.SEP_BE_EmployeeManagement.service.impl;
 
+import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.EditAttendance;
+import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceStatistics;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
+import com.project.SEP_BE_EmployeeManagement.dto.response.exception.UpdateNullException;
 import com.project.SEP_BE_EmployeeManagement.model.*;
 import com.project.SEP_BE_EmployeeManagement.repository.*;
 import com.project.SEP_BE_EmployeeManagement.security.jwt.UserDetailsImpl;
@@ -24,11 +27,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -45,6 +47,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SignRepository signRepository;
+
+    @Autowired
+    private NoteCatergoryRepository noteCatergoryRepository;
 
     @Autowired
     private WorkingTimeRepository workingTimeRepository;
@@ -379,5 +387,70 @@ public class AttendanceServiceImpl implements AttendanceService {
         logAttendanceHistoryService.save(log);
 
         return obj;
+    }
+
+    @Override
+    public MessageResponse updateAttendance(EditAttendance[] editAttendances) {
+        if(editAttendances.length==0){
+            throw  new UpdateNullException("Chưa có chỉnh sửa nào");
+        }
+        for(EditAttendance editAttendances1 : editAttendances){
+            String[] time = editAttendances1.getDate().split("-");
+            LocalDate date = LocalDate.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2]));
+            System.out.println(date.toString());
+            Attendance attendance = new Attendance() ;
+            if(attendanceRepository.findByUserCodeAndDate(editAttendances1.getCode(), date)!=null){
+                attendance= attendanceRepository.findByUserCodeAndDate(editAttendances1.getCode(), date);
+                Sign currentSign = attendance.getSigns();
+                if(editAttendances1.getSign()==null)
+                    attendance.setSigns(null);
+                else
+                    attendance.setSigns(signRepository.findByName(ESign.valueOf(editAttendances1.getSign())));
+                if(editAttendances1.getSign() == attendance.getSigns().getName().toString())
+                    continue;
+                else {
+                    Set<NoteLog> noteCatergorySet = attendance.getNoteLogSet();
+                    if (noteCatergorySet == null)
+                        noteCatergorySet = new HashSet<>();
+                    NoteLog noteLog = new NoteLog();
+                    noteLog.setAttendance(attendance);
+                    noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_EDIT));
+                    noteLog.setContent(editAttendances1.getReason());
+                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
+                    noteLog.setLastSign(currentSign);
+                    noteLog.setCreateDate(LocalDateTime.now());
+                    noteLog.setSignChange(signRepository.findByName(ESign.valueOf(editAttendances1.getSign())));
+                    noteCatergorySet.add(noteLog);
+                    attendance.setNoteLogSet(noteCatergorySet);
+                }
+            }
+            else {
+                DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                attendance.setUser(userRepository.findByUserCode(editAttendances1.getCode()));
+                attendance.setDateLog(LocalDate.parse(editAttendances1.getDate(),sdf));
+                if(editAttendances1.getSign()==null)
+                    attendance.setSigns(null);
+                else
+                    attendance.setSigns(signRepository.findByName(ESign.valueOf(editAttendances1.getSign())));
+                if(editAttendances1.getSign()==null)
+                    continue;
+                Set<NoteLog> noteCatergorySet = attendance.getNoteLogSet();
+                if(noteCatergorySet==null)
+                    noteCatergorySet = new HashSet<>();
+                NoteLog noteLog = new NoteLog();
+                noteLog.setAttendance(attendance);
+                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_EDIT));
+                noteLog.setContent(editAttendances1.getReason());
+                noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
+                noteLog.setLastSign(null);
+                noteLog.setCreateDate(LocalDateTime.now());
+                noteLog.setSignChange(signRepository.findByName(ESign.valueOf(editAttendances1.getSign())));
+                noteCatergorySet.add(noteLog);
+                attendance.setNoteLogSet(noteCatergorySet);
+            }
+
+            attendanceRepository.save(attendance);
+        }
+        return new MessageResponse("Successfully!");
     }
 }

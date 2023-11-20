@@ -1,15 +1,21 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.UserAttendance;
+import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.EditAttendance;
+import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.AttendanceRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
+import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +28,9 @@ public class AttendanceController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    AttendanceService attendanceService;
     @GetMapping("getAttendanceByMonthAndYear")
     public ResponseEntity<List<Attendance>> getByUserAndMonthAndYear(@RequestParam String code,
                                                                      @RequestParam Integer year
@@ -88,5 +97,10 @@ public class AttendanceController {
 
         }
         return new ResponseEntity<>(userAttendanceList, HttpStatus.OK);
+    }
+
+    @PostMapping("edit")
+    public ResponseEntity<MessageResponse> updateLogSign(@Valid @RequestBody EditAttendance[] editAttendances) throws MessagingException, UnsupportedEncodingException {
+        return ResponseEntity.ok(attendanceService.updateAttendance(editAttendances));
     }
 }

@@ -1,5 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.service;
 
+import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.EditAttendance;
+import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceStatistics;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Message;
 import java.util.List;
 
 @Service
@@ -24,4 +27,6 @@ public interface AttendanceService {
     Attendance getByAttendanceId(Long id);
 
     Attendance updateSigns(ESign signId, Long attendanceId, String reason);
+
+    MessageResponse updateAttendance(EditAttendance[] editAttendances);
 }
