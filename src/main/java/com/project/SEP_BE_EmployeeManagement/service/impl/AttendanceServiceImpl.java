@@ -455,6 +455,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     noteLog.setSignChange(signRepository.findByName(ESign.valueOf(editAttendances1.getSign())));
                     noteCatergorySet.add(noteLog);
                     attendance.setNoteLogSet(noteCatergorySet);
+                    attendance.setEditReason(editAttendances1.getReason());
                 }
             }
             else {
@@ -481,6 +482,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 noteLog.setSignChange(signRepository.findByName(ESign.valueOf(editAttendances1.getSign())));
                 noteCatergorySet.add(noteLog);
                 attendance.setNoteLogSet(noteCatergorySet);
+                attendance.setEditReason(editAttendances1.getReason());
             }
 
             attendanceRepository.save(attendance);

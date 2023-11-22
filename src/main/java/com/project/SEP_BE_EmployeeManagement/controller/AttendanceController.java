@@ -74,11 +74,11 @@ public class AttendanceController {
                 }
                 userAttendance.setCode(user.getUserCode());
                 userAttendance.setName(user.getFullName());
-                userAttendance.setLogDetail(list);
+                userAttendance.setAttendances(list);
                 if(search.equals("") )
                     userAttendanceList.add(userAttendance);
                 else{
-                    if(!userAttendance.getLogDetail().isEmpty()){
+                    if(!userAttendance.getAttendances().isEmpty()){
                         userAttendanceList.add(userAttendance);
                     }
                 }
@@ -96,11 +96,11 @@ public class AttendanceController {
                 }
                 userAttendance.setCode(user.getUserCode());
                 userAttendance.setName(user.getFullName());
-                userAttendance.setLogDetail(list);
+                userAttendance.setAttendances(list);
                 if(search.equals("") )
                     userAttendanceList.add(userAttendance);
                 else{
-                    if(!userAttendance.getLogDetail().isEmpty()){
+                    if(!userAttendance.getAttendances().isEmpty()){
                         userAttendanceList.add(userAttendance);
                     }
                 }

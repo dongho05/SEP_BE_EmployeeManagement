@@ -62,6 +62,9 @@ public class Attendance extends BaseEntity {
     @JoinColumn(name = "editing_user_id")
     private User editingUser;
 
+    @Column(name = "edit_reason")
+    private String editReason;
+
     public Attendance(User user, LocalDate dateLog) {
         this.user = user;
         this.dateLog = dateLog;

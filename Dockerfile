@@ -10,5 +10,5 @@ RUN apt-get update && apt-get install -y \
 ADD target/sep-java-springboot-docker.jar sep-java-springboot-docker.jar
 # Bundle application dependencies
 COPY --from=maven:latest /usr/share/maven/ref/ /usr/share/maven/ref/
-EXPOSE 8080
+EXPOSE 2000
 ENTRYPOINT ["java","-jar","sep-java-springboot-docker.jar"]
