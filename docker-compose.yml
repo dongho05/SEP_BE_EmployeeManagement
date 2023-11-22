@@ -43,14 +43,14 @@ services:
     networks:
       - spring-mysql
     ports:
-      - 2000:2000
+      - 2000:8080
 
   frontend:
-#    image: 'sep-fe'
     image: 'phundhe151425/sep-fe:latest'
+#    image: 'sep-fe'
     container_name: frontend
     ports:
-      - 2001:2001
+      - 2001:80
     networks:
       - spring-mysql
 networks:
