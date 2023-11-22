@@ -49,8 +49,6 @@ public class Request extends BaseEntity {
     @Column(name = "note")
     private String note;
 
-    @Column(name = "is_check")
-    private boolean isCheck;
 
     @ManyToOne
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
