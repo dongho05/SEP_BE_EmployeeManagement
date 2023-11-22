@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ExecuteAttendance {
@@ -29,12 +27,16 @@ public class ExecuteAttendance {
 
 
 
-    public void ExecuteAttendance(){
+    public void ExecuteAttendance(Integer day, Integer month, Integer year){
         LocalTime ruleTimeIn = LocalTime.of(8,30,00);
         LocalTime ruleTimeOut = LocalTime.of(17,30,00);
         int breakTime = 1;
+
         LocalDate currentDate = LocalDate.now();
-        LocalDate executeDate = currentDate.minusDays(1);
+        LocalDate executeDate = currentDate.minusDays(0);
+        if(day!=null && month!=null && year!=null){
+            executeDate = LocalDate.of(year, month, day);
+        }
         LocalDate firstDayOfMonth = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), 1);
 
         // Holiday CASE

@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -53,6 +54,16 @@ public class Attendance extends BaseEntity {
 
     @Column(name = "request_active")
     private boolean requestActive;
+
+    @OneToMany(mappedBy = "attendance",cascade = CascadeType.ALL)
+    private Set<NoteLog> noteLogSet;
+
+    @ManyToOne
+    @JoinColumn(name = "editing_user_id")
+    private User editingUser;
+
+    @Column(name = "edit_reason")
+    private String editReason;
 
     public Attendance(User user, LocalDate dateLog) {
         this.user = user;
