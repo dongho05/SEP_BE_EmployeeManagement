@@ -1,5 +1,6 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
+import com.project.SEP_BE_EmployeeManagement.dto.request.workingtime.UpdateWorkingTimeRequest;
 import com.project.SEP_BE_EmployeeManagement.model.EWorkingTime;
 import com.project.SEP_BE_EmployeeManagement.model.WorkingTime;
 import com.project.SEP_BE_EmployeeManagement.service.WorkingTimeService;
@@ -37,14 +38,12 @@ public class WorkingTimeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkingTime> updateWorkingTime(@PathVariable int id,
-                                                         @RequestParam(name = "startTime") String startTime,
-                                                         @RequestParam(name = "endTime") String endTime) throws NotFoundException {
+    public ResponseEntity<WorkingTime> updateWorkingTime(@PathVariable int id, @RequestBody UpdateWorkingTimeRequest request) throws NotFoundException {
         // Định dạng của chuỗi thời gian
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         // Chuyển đổi chuỗi thành LocalTime
-        LocalTime start = LocalTime.parse(startTime, formatter);
-        LocalTime end = LocalTime.parse(endTime, formatter);
+        LocalTime start = request.getStartTime();
+        LocalTime end = request.getEndTime();
         WorkingTime result = workingTimeService.updateWorkingTime(id, start, end);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
