@@ -30,7 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/contract")
+@RequestMapping("/api/auth/contract")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ContractController {
 
