@@ -25,7 +25,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 @RestController
-@RequestMapping("/api/attendance")
+@RequestMapping("/api/auth/attendance")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AttendanceController {
     @Autowired
@@ -48,7 +48,7 @@ public class AttendanceController {
         attendanceService.finishEditing(attendanceId);
         return ResponseEntity.ok("Editing finished successfully");
     }
-    @GetMapping("getAttendanceByMonthAndYear")
+    @GetMapping("/getAttendanceByMonthAndYear")
     public ResponseEntity<List<Attendance>> getByUserAndMonthAndYear(@RequestParam String code,
                                                                      @RequestParam Integer year
     )
@@ -56,7 +56,7 @@ public class AttendanceController {
         return new ResponseEntity<>(attendanceRepository.findByUserCodeAndMonthAndYear(code,year), HttpStatus.OK);
     }
 
-    @GetMapping("allByMonthAndYearAndDepartment")
+    @GetMapping("/allByMonthAndYearAndDepartment")
     public ResponseEntity<List<UserAttendance>> getAllByMonthAndDepartment(
             @RequestParam(name = "month", required = true) Integer month,
             @RequestParam(name = "id", required = false) Long id,
@@ -116,7 +116,7 @@ public class AttendanceController {
         return new ResponseEntity<>(userAttendanceList, HttpStatus.OK);
     }
 
-    @PostMapping("edit")
+    @PostMapping("/edit")
     public ResponseEntity<MessageResponse> updateLogSign(@Valid @RequestBody EditAttendance[] editAttendances) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.ok(attendanceService.updateAttendance(editAttendances));
     }

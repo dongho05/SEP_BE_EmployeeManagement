@@ -25,7 +25,7 @@ services:
 #    ports:
 #      - "587:587"
   app:
-    image: 'phundhe151425/sep-be:latest'
+    image: 'dongho01/sep-be:latest'
 #    image: 'sep-be'
     container_name: app
     depends_on:
@@ -38,15 +38,18 @@ services:
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
       - SPRING_MAIL_HOST=smtp.gmail.com
       - SPRING_MAIL_USERNAME=hophuongdong25052001@gmail.com
-      - SPRING_MAIL_PASSWORD=efxx uzga abuy kpyc
+      - SPRING_MAIL_PASSWORD=xzoh vewu nsvk hqge
       - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+
     networks:
       - spring-mysql
     ports:
       - 2000:8080
 
   frontend:
-    image: 'phundhe151425/sep-fe:latest'
+    image: 'dongho01/sep-fe:latest'
 #    image: 'sep-fe'
     container_name: frontend
     ports:

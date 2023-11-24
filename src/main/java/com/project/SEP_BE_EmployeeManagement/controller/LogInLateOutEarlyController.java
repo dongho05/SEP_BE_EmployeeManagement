@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/api/logInLateOutEarly")
+@RequestMapping("/api/auth/logInLateOutEarly")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class LogInLateOutEarlyController {
     @Autowired
     LogInLateOutEarlyService logInLateOutEarlyService;
 
-    @GetMapping("data")
+    @GetMapping("/data")
     public ResponseEntity<Page<LogInLateOutEarly>> getLogsByDateUserCode(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                          @RequestParam(name = "size", defaultValue = "30") int size,
                                                                          @RequestParam(name = "code", required = false) String code,
