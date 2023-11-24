@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/scheduled/")
+@RequestMapping("/api/auth/scheduled/")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ScheduledController {
 

@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/auth/user")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class UserController {
     @Autowired
@@ -43,7 +43,7 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     DepartmentRepository departmentRepository;
-    @PostMapping(value = "create")
+    @PostMapping(value = "/create")
     public MessageResponse createUser(@Valid @ModelAttribute CreateUser createUser) throws MessagingException, UnsupportedEncodingException {
 
 //            for(CreateUser s : createUser){
@@ -54,7 +54,7 @@ public class UserController {
 
     }
 
-    @GetMapping(value = "data")
+    @GetMapping(value = "/data")
     public ResponseEntity<Page<User>> getData(@RequestParam(name = "page", defaultValue = "0") int page,
                                               @RequestParam(name = "size", defaultValue = "30") int size,
                                               @RequestParam(name = "departmentId", required = false, defaultValue = "") String departmentId,
