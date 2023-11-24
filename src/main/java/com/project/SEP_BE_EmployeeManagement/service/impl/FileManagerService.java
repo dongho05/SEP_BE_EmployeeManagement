@@ -20,10 +20,10 @@ import java.util.List;
 public class FileManagerService {
     @Autowired
     ServletContext app;
-    @Value("${upload.image.path}")
+    @Value("src\\\\main\\\\resources\\\\avatar")
     private String fileUploadImage;
 
-    @Value("${upload.contract.path}")
+    @Value("src\\\\main\\\\resources\\\\contractFile")
     private String fileUploadContract;
     private Path getImagePath(String filename) {
         File dir = Paths.get(fileUploadImage).toFile();

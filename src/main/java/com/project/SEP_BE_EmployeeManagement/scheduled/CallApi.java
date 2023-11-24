@@ -36,15 +36,26 @@ public class CallApi {
 
     @Autowired
     private UserRepository userRepository;
-    @Value("${connect.api}")
+    @Value("http://localhost:9999/api/")
     private String URL;
 
 //    @Scheduled(cron = "0 0 */2 * * *")
     @Scheduled(cron = "0 0/15 * * * ?") // 15'
 //    @Scheduled(cron = "0 0 * * * ?") //1 tieng
-    public List<TmpCheckInOut> getLogCheckInOut() {
+    public List<TmpCheckInOut> getLogCheckInOut(Integer dayInput0, Integer monthInput0, Integer yearInput0) {
         try {
-            String apiUrl = URL + "logCheckInOutByToday";
+            LocalDate date = LocalDate.now();
+            Integer yearInput = date.getYear();
+            Integer monthInput = date.getMonthValue();
+            Integer dayInput = date.getDayOfMonth();
+
+            if(dayInput0!=null && monthInput0 !=null && yearInput0 != null){
+                yearInput = yearInput0;
+                monthInput = monthInput0;
+                dayInput = dayInput0;
+            }
+
+            String apiUrl = URL + "logCheckInOutByToday?day="+dayInput+"&month="+monthInput+"&year="+yearInput;
 
             // Tạo URL từ đường dẫn API
             URL url = new URL(apiUrl);

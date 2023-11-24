@@ -21,12 +21,12 @@ public String getCode() {
     public UserAttendance() {
     }
 
-    public List<Attendance> getLogDetail() {
-        return logDetail;
+    public List<Attendance> getAttendances() {
+        return attendances;
     }
 
-    public void setLogDetail(List<Attendance> logDetail) {
-        this.logDetail = logDetail;
+    public void setAttendances(List<Attendance> attendances) {
+        this.attendances = attendances;
     }
 
 
@@ -38,7 +38,7 @@ public String getCode() {
         this.name = name;
     }
 
-    private List<Attendance> logDetail;
+    private List<Attendance> attendances;
 
     private String code;
     private String name;
