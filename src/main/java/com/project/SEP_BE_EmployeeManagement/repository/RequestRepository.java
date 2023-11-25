@@ -30,7 +30,10 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             "AND YEAR(r.startDate) = YEAR(:date) " +
             "AND MONTH(r.endDate) = MONTH(:date) " +
             "AND YEAR(r.endDate) = YEAR(:date) " +
-            "AND r.status = 2")
+            "AND DAY(r.endDate) <= DAY(:date) " +
+            "AND r.status = 2" +
+            "AND r.isCheck = false " +
+            "ORDER BY r.createdDate" )
     List<Request> findRequestsAcceptedInCurrentMonth(LocalDate date);
 
 }

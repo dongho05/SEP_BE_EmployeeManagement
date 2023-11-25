@@ -2,6 +2,8 @@ package com.project.SEP_BE_EmployeeManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +13,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "request")
 @Data
+@Setter
 public class Request extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,11 +49,12 @@ public class Request extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     private int status;
+
     @Column(name = "note")
     private String note;
 
-    @Column(name = "is_check")
-    private boolean isCheck;
+    @Column(name = "is_Check")
+    private boolean isCheck = false;
 
     @ManyToOne
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
