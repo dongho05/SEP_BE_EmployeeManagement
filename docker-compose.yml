@@ -56,6 +56,15 @@ services:
       - 2001:80
     networks:
       - spring-mysql
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-app
+    volumes:
+      - .nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    depends_on:
+      - frontend
 networks:
   spring-mysql:
 

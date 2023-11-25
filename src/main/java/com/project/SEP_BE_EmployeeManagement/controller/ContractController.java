@@ -73,7 +73,7 @@ public class ContractController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId")
+    @GetMapping("/{userId}")
     public ResponseEntity<Contract> getCurrentContract(@PathVariable long userId) throws NotFoundException {
         Contract contract = contractService.getCurrentContractByUserId(userId);
         return new ResponseEntity<>(contract, HttpStatus.OK);
