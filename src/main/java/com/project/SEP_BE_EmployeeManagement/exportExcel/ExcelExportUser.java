@@ -228,6 +228,7 @@ public class ExcelExportUser {
                     cell.setCellStyle(styleTitleThin);
 
                     cell = row.createCell(3);
+                    if(user.getStartWork()!=null)
                     cell.setCellValue(user.getStartWork().toString());
                     cell.setCellStyle(styleTitleThin);
 
