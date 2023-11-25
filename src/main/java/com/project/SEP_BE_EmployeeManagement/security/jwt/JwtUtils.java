@@ -15,7 +15,7 @@ public class JwtUtils {
     @Value("=======employeemanagementsystemofgroupsep490g79=======")
     private String jwtSecret;
 
-    @Value("600000")
+    @Value("${jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
