@@ -259,7 +259,6 @@ public class RequestServiceImpl implements RequestService {
                 dto.setUser(entity.getUser());
                 dto.setNote(entity.getNote());
                 dto.setRequestType(entity.getRequestType());
-
                 return dto;
             }
         });
@@ -284,15 +283,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 20 L * ?") // chạy vào 20h mỗi ngày
+    @Scheduled(cron = "0 0 22 * * ?")// chạy vào 20h mỗi ngày
     public List<Request> processRequestOnMonth() {
-        LocalDate date = LocalDate.of(2023, 10, 31);
+        LocalDate date = LocalDate.of(2023, 11, 25);
 //        LocalDate date = LocalDate.now();
-        LocalDate lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
         List<Request> requestList = new ArrayList<>();
-        // kiểm tra xem ngày có phải là ngày cuối tháng hay không
-        if (date.equals(lastDayOfMonth)) {
-            // lấy danh sách tất cả các request được accept theo date
+            // lấy danh sách tất cả các request chưa được duyệt từ đầu tháng tới ngày hiện tại
             requestList = requestRepository.findRequestsAcceptedInCurrentMonth(date);
             if(requestList.size() > 0){
                 // duyệt danh sách request
@@ -317,8 +313,8 @@ public class RequestServiceImpl implements RequestService {
                     int checkRequestType = i.getRequestType().getId();
                     switch (checkRequestType){
                         case 1: // nghỉ có lương
-                            // xin nghỉ buổi sáng: start và end không sau giờ kết thúc buổi sáng
-                            if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(morningShift.getEndTime())){
+                            // xin nghỉ buổi sáng: start không  sau giờ kết thúc buổi sáng và end không sau giờ bắt đầu buổi chiều
+                            if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -327,11 +323,17 @@ public class RequestServiceImpl implements RequestService {
                                     }
                                     if(a.getTimeIn() == null && a.getTimeOut() == null){
                                         a.setSigns(new Sign(ESign.P_KL));
+                                        a.setTimeIn(i.getStartTime());
+                                        a.setTimeOut(i.getEndTime());
+                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
+                                                .minusMinutes(morningShift.getStartTime().getMinute())
+                                                .minusSeconds(morningShift.getStartTime().getSecond());
+                                        a.setRegularHour(regularHour);
                                     }
                                 }
                             }
-                            // xin nghỉ buổi chiều: start và end không trước giờ bắt đầu buổi chiều
-                            if(!i.getStartTime().isBefore(afternoonShift.getStartTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
+                            // xin nghỉ buổi chiều: start sau giờ kết thúc buooir sáng và end không trước giờ bắt đầu buổi chiều
+                            if(i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -340,6 +342,12 @@ public class RequestServiceImpl implements RequestService {
                                     }
                                     if(a.getTimeIn() == null && a.getTimeOut() == null){
                                         a.setSigns(new Sign(ESign.KL_P));
+                                        a.setTimeIn(i.getStartTime());
+                                        a.setTimeOut(i.getEndTime());
+                                        LocalTime regularHour = afternoonShift.getEndTime().minusHours(afternoonShift.getStartTime().getHour())
+                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                        a.setRegularHour(regularHour);
                                     }
                                 }
                             }
@@ -357,13 +365,29 @@ public class RequestServiceImpl implements RequestService {
                                     }
                                     if(a.getTimeIn() == null && a.getTimeOut() == null){
                                         a.setSigns(new Sign(ESign.P));
+                                        a.setTimeIn(i.getStartTime());
+                                        a.setTimeOut(i.getEndTime());
+                                        LocalTime morning = morningShift.getEndTime()
+                                                .minusHours(morningShift.getStartTime().getHour())
+                                                .minusMinutes(morningShift.getStartTime().getMinute())
+                                                .minusSeconds(morningShift.getStartTime().getSecond());
+                                        LocalTime afternoon = afternoonShift.getEndTime()
+                                                .minusHours(afternoonShift.getStartTime().getHour())
+                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
+                                                .plusMinutes(afternoon.getMinute())
+                                                .plusSeconds(afternoon.getSecond());
+                                        a.setRegularHour(regularHour);
                                     }
                                 }
                             }
+                            i.setCheck(true);;
+                            requestRepository.save(i);
                             break;
                         case 2: // nghỉ không lương
                             // xin nghỉ buổi sáng: start và end không sau giờ kết thúc buổi sáng
-                            if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(morningShift.getEndTime())){
+                                if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -376,7 +400,7 @@ public class RequestServiceImpl implements RequestService {
                                 }
                             }
                             // xin nghỉ buổi chiều: start và end không trước giờ bắt đầu buổi chiều
-                            if(!i.getStartTime().isBefore(afternoonShift.getStartTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
+                            if(i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -405,16 +429,43 @@ public class RequestServiceImpl implements RequestService {
                                     }
                                 }
                             }
+                            i.setCheck(true);;
+                            requestRepository.save(i);
                             break;
                         case 3: // nghỉ chế độ  (đám cưới, đám tang,..)
                             for(Attendance a : attendanceList){
                                 if(a.getTimeIn() == null && a.getTimeOut() == null){
                                     a.setSigns(new Sign(ESign.CĐ));
+                                    a.setRegularHour(LocalTime.of(8,0,0));
                                 }
                             }
+                            i.setCheck(true);;
+                            requestRepository.save(i);
                             break;
                         case 4: // làm thêm giờ (xin trước)
                             // xin sau
+                            // kiểm tra xem ngày duyệt đơn đã đi qua ngày xin ot trong đơn chưa
+                            if(!date.isBefore(i.getEndDate())){
+                                for(Attendance a : attendanceList){
+                                    LocalTime overTime = LocalTime.of(0, 0, 0);
+                                    if(!a.getTimeOut().isAfter(i.getEndTime())){
+                                        overTime = a.getTimeOut().minusHours(i.getStartTime().getHour())
+                                                .minusMinutes(i.getStartTime().getMinute())
+                                                .minusSeconds(i.getStartTime().getSecond());
+                                    }else{
+                                        overTime = i.getEndTime().minusHours(i.getStartTime().getHour())
+                                                .minusMinutes(i.getStartTime().getMinute())
+                                                .minusSeconds(i.getStartTime().getSecond());
+                                    }
+                                    a.setOverTime(overTime);
+                                    LocalTime totalWork = a.getRegularHour().plusHours(overTime.getHour())
+                                            .plusMinutes(overTime.getMinute())
+                                            .plusSeconds(overTime.getSecond());
+                                    a.setTotalWork(totalWork);
+                                }
+                                i.setCheck(true);;
+                                requestRepository.save(i);
+                            }
                             break;
                         case 5: // làm thêm giờ (xin sau)
                             for(Attendance a : attendanceList){
@@ -434,8 +485,14 @@ public class RequestServiceImpl implements RequestService {
                                                         .plusSeconds(overTime.getSecond());
                                 a.setTotalWork(totalWork);
                             }
+                            i.setCheck(true);;
+                            requestRepository.save(i);
                             break;
                         case 6: // quên chấm công
+                            // giống đi công tác
+                        case 7: // làm việc tại nhà
+                            // giống đi công tác
+                        case 8: // đi công tác
                             for(Attendance a : attendanceList){
                                 a.setTimeIn(i.getStartTime());
                                 a.setTimeOut(i.getEndTime());
@@ -511,12 +568,8 @@ public class RequestServiceImpl implements RequestService {
                                             .plusSeconds(a.getOverTime().getSecond()));
                                 }
                             }
-                            break;
-                        case 7: // làm việc tại nhà
-                            // giống quên chấm công
-                            break;
-                        case 8: // đi công tác
-                            // giống quên chấm công
+                            i.setCheck(true);;
+                            requestRepository.save(i);
                             break;
                     }
                     // save attendance
@@ -525,7 +578,6 @@ public class RequestServiceImpl implements RequestService {
                     }
                 }
             }
-        }
         return requestList;
     }
 }
