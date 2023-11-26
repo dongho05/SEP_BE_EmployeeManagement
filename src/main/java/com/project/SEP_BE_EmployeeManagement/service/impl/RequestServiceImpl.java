@@ -313,8 +313,8 @@ public class RequestServiceImpl implements RequestService {
                     int checkRequestType = i.getRequestType().getId();
                     switch (checkRequestType){
                         case 1: // nghỉ có lương
-                            // xin nghỉ buổi sáng: start và end không sau giờ kết thúc buổi sáng
-                            if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(morningShift.getEndTime())){
+                            // xin nghỉ buổi sáng: start không  sau giờ kết thúc buổi sáng và end không sau giờ bắt đầu buổi chiều
+                            if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -332,8 +332,8 @@ public class RequestServiceImpl implements RequestService {
                                     }
                                 }
                             }
-                            // xin nghỉ buổi chiều: start và end không trước giờ bắt đầu buổi chiều
-                            if(!i.getStartTime().isBefore(afternoonShift.getStartTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
+                            // xin nghỉ buổi chiều: start sau giờ kết thúc buooir sáng và end không trước giờ bắt đầu buổi chiều
+                            if(i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -387,7 +387,7 @@ public class RequestServiceImpl implements RequestService {
                             break;
                         case 2: // nghỉ không lương
                             // xin nghỉ buổi sáng: start và end không sau giờ kết thúc buổi sáng
-                            if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(morningShift.getEndTime())){
+                                if(!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -400,7 +400,7 @@ public class RequestServiceImpl implements RequestService {
                                 }
                             }
                             // xin nghỉ buổi chiều: start và end không trước giờ bắt đầu buổi chiều
-                            if(!i.getStartTime().isBefore(afternoonShift.getStartTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
+                            if(i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())){
                                 // kiểm tra xem có log attendance hay không
                                 for(Attendance a : attendanceList){
                                     if(a.getTimeIn() != null && a.getTimeOut() != null &&
@@ -436,6 +436,7 @@ public class RequestServiceImpl implements RequestService {
                             for(Attendance a : attendanceList){
                                 if(a.getTimeIn() == null && a.getTimeOut() == null){
                                     a.setSigns(new Sign(ESign.CĐ));
+                                    a.setRegularHour(LocalTime.of(8,0,0));
                                 }
                             }
                             i.setCheck(true);;
