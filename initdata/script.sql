@@ -459,6 +459,7 @@ CREATE TABLE `request_category` (
 
 LOCK TABLES `request_category` WRITE;
 /*!40000 ALTER TABLE `request_category` DISABLE KEYS */;
+INSERT INTO `request_category` VALUES (1,'Nghỉ phép'),(2,'Làm thêm giờ'),(3,'Xin chấm công');
 /*!40000 ALTER TABLE `request_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -490,6 +491,7 @@ CREATE TABLE `request_type` (
 
 LOCK TABLES `request_type` WRITE;
 /*!40000 ALTER TABLE `request_type` DISABLE KEYS */;
+INSERT INTO `request_type` VALUES (1,NULL,NULL,'Nghỉ có lương',1),(2,NULL,NULL,'Nghỉ không lương',1),(3,NULL,NULL,'Nghỉ đặc biệt',1),(4,NULL,NULL,'Làm thêm giờ (Xin trước)',2),(5,NULL,NULL,'Làm thêm giờ (Xin sau)',2),(6,NULL,NULL,'Quên chấm công',3),(7,NULL,NULL,'Làm việc tại nhà',3),(8,NULL,NULL,'Đi công tác',3);
 /*!40000 ALTER TABLE `request_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
