@@ -20,8 +20,6 @@ public class RequestTypeServiceImpl implements RequestTypeService {
     public RequestType createRequestType(CreateReqTypeRequest request) {
         RequestType obj = new RequestType();
         obj.setRequestTypeName(request.getRequestTypeName());
-        obj.setReplacementPerson(request.getReplacementPerson());
-        obj.setReplacementWork(request.getReplacementWork());
         obj.setRequestCategory(requestCategoryService.findById(request.getRequestCategoryId()));
         requestTypeRepository.save(obj);
 
@@ -36,8 +34,6 @@ public class RequestTypeServiceImpl implements RequestTypeService {
         }
         obj.setRequestCategory(requestCategoryService.findById(request.getRequestCategoryId()));
         obj.setRequestTypeName(request.getRequestTypeName());
-        obj.setReplacementWork(request.getReplacementWork());
-        obj.setReplacementPerson(request.getReplacementPerson());
 
         requestTypeRepository.save(obj);
         return obj;
