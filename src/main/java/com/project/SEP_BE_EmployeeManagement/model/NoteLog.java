@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-//@Table(name = "TK_NoteLog")
+@Table(name = "note_log")
 public class NoteLog  {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

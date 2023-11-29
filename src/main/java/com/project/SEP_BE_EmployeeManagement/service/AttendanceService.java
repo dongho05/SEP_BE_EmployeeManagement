@@ -18,6 +18,7 @@ import java.util.List;
 public interface AttendanceService {
     public void startEditing(Long entityId, Long userId);
     public void finishEditing(Long entityId);
+    List<Attendance> getForCalendar(String code, Integer year);
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException;
 
     public List<Attendance> findAttendancesForUserInMonth(int year, int month);
@@ -31,4 +32,6 @@ public interface AttendanceService {
     Attendance updateSigns(ESign signId, Long attendanceId, String reason);
 
     MessageResponse updateAttendance(EditAttendance[] editAttendances);
+
+
 }

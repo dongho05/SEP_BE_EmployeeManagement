@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-//@Table(name = "TK_NoteCatergory")
+@Table(name = "note_category")
 public class NoteCatergory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -53,7 +53,7 @@ public class AttendanceController {
                                                                      @RequestParam Integer year
     )
     {
-        return new ResponseEntity<>(attendanceRepository.findByUserCodeAndMonthAndYear(code,year), HttpStatus.OK);
+        return new ResponseEntity<>(attendanceService.getForCalendar(code, year), HttpStatus.OK);
     }
 
     @GetMapping("/allByMonthAndYearAndDepartment")

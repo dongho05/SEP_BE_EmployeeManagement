@@ -100,6 +100,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public List<Attendance> getForCalendar(String code, Integer year) {
+        List<Attendance> attendances = attendanceRepository.findByUserCodeAndMonthAndYear(code,year);
+        return attendances;
+    }
+
+    @Override
     @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
     public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException {
 
