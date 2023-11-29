@@ -44,8 +44,8 @@ public class NoteLog  {
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "note_catergory_id", referencedColumnName = "note_catergory_id")
-    private NoteCatergory noteCatergory;
+    @JoinColumn(name = "note_category_id", referencedColumnName = "note_category_id")
+    private NoteCategory noteCategory;
 
     @OneToOne
     private Sign lastSign;

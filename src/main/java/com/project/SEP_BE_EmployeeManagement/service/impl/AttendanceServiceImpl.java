@@ -453,7 +453,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                         noteCatergorySet = new HashSet<>();
                     NoteLog noteLog = new NoteLog();
                     noteLog.setAttendance(attendance);
-                    noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_EDIT));
+                    noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_EDIT));
                     noteLog.setContent(editAttendances1.getReason());
                     noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                     noteLog.setLastSign(currentSign);
@@ -480,7 +480,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     noteCatergorySet = new HashSet<>();
                 NoteLog noteLog = new NoteLog();
                 noteLog.setAttendance(attendance);
-                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_EDIT));
+                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_EDIT));
                 noteLog.setContent(editAttendances1.getReason());
                 noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                 noteLog.setLastSign(null);

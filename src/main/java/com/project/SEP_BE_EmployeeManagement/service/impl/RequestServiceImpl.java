@@ -323,7 +323,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -385,7 +385,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -444,7 +444,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -507,7 +507,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -560,7 +560,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -615,7 +615,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -663,7 +663,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -747,7 +747,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -871,7 +871,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {
@@ -994,7 +994,7 @@ public class RequestServiceImpl implements RequestService {
                                     noteCatergorySet = new HashSet<>();
                                 NoteLog noteLog = new NoteLog();
                                 noteLog.setAttendance(a);
-                                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
+                                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_REQUEST));
                                 noteLog.setContent(i.getRequestType().getRequestTypeName());
 //                                    noteLog.setAdminEdit(userRepository.findByUserCode(editAttendances1.getCodeAdminEdit()));
                                 if (a.getSigns() == null) {

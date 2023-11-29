@@ -11,14 +11,14 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "note_category")
-public class NoteCatergory {
+public class NoteCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "note_catergory_id", nullable = false)
+    @Column(name = "note_category_id", nullable = false)
     private Long noteCategoryId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "note_catergory_name",length = 20)
+    @Column(name = "note_category_name",length = 20)
     private ENoteCatergory name;
 
 }
