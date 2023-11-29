@@ -410,18 +410,18 @@ CREATE TABLE `request` (
                            `updated_by` varchar(255) DEFAULT NULL,
                            `updated_date` datetime(6) DEFAULT NULL,
                            `accept_at` date DEFAULT NULL,
-                           `accept_by` bigint NOT NULL,
+                           `accept_by` bigint DEFAULT NULL,
                            `end_date` date DEFAULT NULL,
                            `end_time` time DEFAULT NULL,
+                           `is_Check` bit(1) DEFAULT NULL,
+                           `note` varchar(255) DEFAULT NULL,
                            `content` varchar(300) NOT NULL,
                            `request_title` varchar(100) NOT NULL,
-                           `request_type_id` int NOT NULL,
                            `start_date` date DEFAULT NULL,
                            `start_time` time DEFAULT NULL,
-                           `status` bit(1) NOT NULL,
+                           `status` int NOT NULL,
+                           `request_type_id` int NOT NULL,
                            `user_id` bigint NOT NULL,
-                           `note` varchar(255) DEFAULT NULL,
-                           `is_check` bit(1) DEFAULT NULL,
                            PRIMARY KEY (`request_id`),
                            KEY `FKibmr315gqv6g75nhasnydst5w` (`request_type_id`),
                            KEY `FKg03bldv86pfuboqfefx48p6u3` (`user_id`),
@@ -473,16 +473,11 @@ DROP TABLE IF EXISTS `request_type`;
 CREATE TABLE `request_type` (
                                 `request_type_id` int NOT NULL AUTO_INCREMENT,
                                 `request_type_name` varchar(100) NOT NULL,
-                                `request_department_id` int NOT NULL,
-                                `replacement_person` varchar(100) DEFAULT NULL,
-                                `replacement_work` varchar(100) DEFAULT NULL,
                                 `request_category_id` int NOT NULL,
                                 PRIMARY KEY (`request_type_id`),
-                                KEY `FKqbhky5ahwo4lraiw4a5cf8y49` (`request_department_id`),
                                 KEY `FK5hvutd3vg845f5iirsuk8wtc` (`request_category_id`),
-                                CONSTRAINT `FK5hvutd3vg845f5iirsuk8wtc` FOREIGN KEY (`request_category_id`) REFERENCES `request_category` (`request_category_id`),
-                                CONSTRAINT `FKqbhky5ahwo4lraiw4a5cf8y49` FOREIGN KEY (`request_department_id`) REFERENCES `request_category` (`request_category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                                CONSTRAINT `FK5hvutd3vg845f5iirsuk8wtc` FOREIGN KEY (`request_category_id`) REFERENCES `request_category` (`request_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -491,6 +486,7 @@ CREATE TABLE `request_type` (
 
 LOCK TABLES `request_type` WRITE;
 /*!40000 ALTER TABLE `request_type` DISABLE KEYS */;
+INSERT INTO `request_type` VALUES (1,'Nghỉ có lương',1),(2,'Nghỉ không lương',1),(3,'Nghỉ đặc biệt',1),(4,'Làm thêm giờ (Xin trước)',2),(5,'Làm thêm giờ (Xin sau)',2),(6,'Quên chấm công',3),(7,'Làm việc tại nhà',3);
 /*!40000 ALTER TABLE `request_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -604,7 +600,7 @@ CREATE TABLE `working_time` (
                                 `start_time` time DEFAULT NULL,
                                 `working_time_name` varchar(100) NOT NULL,
                                 PRIMARY KEY (`working_time_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -613,6 +609,7 @@ CREATE TABLE `working_time` (
 
 LOCK TABLES `working_time` WRITE;
 /*!40000 ALTER TABLE `working_time` DISABLE KEYS */;
+INSERT INTO `working_time` VALUES (1,'17:00:00','07:00:00','FULLTIME'),(2,'11:00:00','07:00:00','MORNING_SHIFT'),(3,'17:00:00','13:00:00','AFTERNOON_SHIFT');
 /*!40000 ALTER TABLE `working_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -625,4 +622,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-27 14:46:09
+-- Dump completed on 2023-11-29  8:29:30
