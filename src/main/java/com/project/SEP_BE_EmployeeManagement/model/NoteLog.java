@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,8 +44,13 @@ public class NoteLog  {
 
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "note_category_id", referencedColumnName = "note_category_id")
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "note_category_id", referencedColumnName = "note_category_id")
+//    private NoteCategory noteCategory;
+
+    @ManyToOne
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "note_category_id", nullable = false)
     private NoteCategory noteCategory;
 
     @OneToOne
