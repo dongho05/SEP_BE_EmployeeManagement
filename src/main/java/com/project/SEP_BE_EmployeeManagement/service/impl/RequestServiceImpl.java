@@ -341,7 +341,7 @@ public class RequestServiceImpl implements RequestService {
                                 // lấy kis tự chấm công cũ
                                 String[] signs = {"",""};
                                 if(a.getSigns()!= null){
-                                     String[] s = a.getSigns().toString().split("_");
+                                     String[] s = a.getSigns().getName().toString().split("_");
                                      for(int j = 0; j < Math.min(s.length, signs.length); j++){
                                          signs[j] = s[j];
                                      }
@@ -352,7 +352,11 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isAfter(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.P_H));
                                     a.setSigns(signRepository.findByName(ESign.P_H));
-                                    LocalTime regularHour = a.getRegularHour().plusHours(4);
+                                    LocalTime deltaTime = morningShift.getEndTime()
+                                            .minusHours(morningShift.getStartTime().getHour())
+                                            .minusMinutes(morningShift.getStartTime().getMinute())
+                                            .minusSeconds(morningShift.getStartTime().getSecond());
+                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
                                     a.setRegularHour(regularHour);
                                 }
 
@@ -361,16 +365,26 @@ public class RequestServiceImpl implements RequestService {
                                     if(signs[1].equals("P")){
                                         noteLog.setSignChange(signRepository.findByName(ESign.P));
                                         a.setSigns(signRepository.findByName(ESign.P));
-                                        LocalTime regularHour = a.getRegularHour().plusHours(4);
+                                        LocalTime morning = morningShift.getEndTime()
+                                                .minusHours(morningShift.getStartTime().getHour())
+                                                .minusMinutes(morningShift.getStartTime().getMinute())
+                                                .minusSeconds(morningShift.getStartTime().getSecond());
+                                        LocalTime afternoon = afternoonShift.getEndTime()
+                                                .minusHours(afternoonShift.getStartTime().getHour())
+                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
+                                                .plusMinutes(afternoon.getMinute())
+                                                .plusSeconds(afternoon.getSecond());
                                         a.setRegularHour(regularHour);
                                     }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.P_KL));
                                         a.setSigns(signRepository.findByName(ESign.P_KL));
+                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
+                                                .minusMinutes(morningShift.getStartTime().getMinute())
+                                                .minusSeconds(morningShift.getStartTime().getSecond());
+                                        a.setRegularHour(regularHour);
                                     }
-                                    LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
-                                            .minusMinutes(morningShift.getStartTime().getMinute())
-                                            .minusSeconds(morningShift.getStartTime().getSecond());
-                                    a.setRegularHour(regularHour);
                                 }
                             }
                         }
@@ -403,9 +417,9 @@ public class RequestServiceImpl implements RequestService {
                                 // lấy kis tự chấm công cũ
                                 String[] signs = {"",""};
                                 if(a.getSigns()!= null){
-                                    String[] s = a.getSigns().toString().split("_");
+                                    String[] s = a.getSigns().getName().toString().split("_");
                                     for(int j = 0; j < Math.min(s.length, signs.length); j++){
-                                        signs[j] = s[j];
+                                        signs[j] = s[j].trim();
                                     }
                                 }
 
@@ -414,22 +428,40 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isBefore(morningShift.getEndTime()) && a.getTimeOut().isBefore(afternoonShift.getStartTime())) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.H_P));
                                     a.setSigns(signRepository.findByName(ESign.H_P));
+                                    LocalTime deltaTime = afternoonShift.getEndTime()
+                                            .minusHours(afternoonShift.getStartTime().getHour())
+                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+                                    a.setRegularHour(regularHour);
                                 }
+
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
                                     if(signs[0].equals("P")){
                                         noteLog.setSignChange(signRepository.findByName(ESign.P));
                                         a.setSigns(signRepository.findByName(ESign.P));
-                                        LocalTime regularHour = a.getRegularHour().plusHours(4);
+                                        LocalTime morning = morningShift.getEndTime()
+                                                .minusHours(morningShift.getStartTime().getHour())
+                                                .minusMinutes(morningShift.getStartTime().getMinute())
+                                                .minusSeconds(morningShift.getStartTime().getSecond());
+                                        LocalTime afternoon = afternoonShift.getEndTime()
+                                                .minusHours(afternoonShift.getStartTime().getHour())
+                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
+                                                .plusMinutes(afternoon.getMinute())
+                                                .plusSeconds(afternoon.getSecond());
                                         a.setRegularHour(regularHour);
                                     }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL_P));
                                         a.setSigns(signRepository.findByName(ESign.KL_P));
+                                        LocalTime regularHour = afternoonShift.getEndTime()
+                                                .minusHours(afternoonShift.getStartTime().getHour())
+                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                        a.setRegularHour(regularHour);
                                     }
-                                    LocalTime regularHour = afternoonShift.getEndTime().minusHours(afternoonShift.getStartTime().getHour())
-                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                    a.setRegularHour(regularHour);
                                 }
                             }
                         }
@@ -464,6 +496,12 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isAfter(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
                                     a.setSigns(signRepository.findByName(ESign.P_H));
                                     noteLog.setSignChange(signRepository.findByName(ESign.P_H));
+                                    LocalTime deltaTime = morningShift.getEndTime()
+                                            .minusHours(morningShift.getStartTime().getHour())
+                                            .minusMinutes(morningShift.getStartTime().getMinute())
+                                            .minusSeconds(morningShift.getStartTime().getSecond());
+                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+                                    a.setRegularHour(regularHour);
                                 }
 
                                 // buổi sáng có chấm công
@@ -471,6 +509,12 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isBefore(morningShift.getEndTime()) && a.getTimeOut().isBefore(afternoonShift.getStartTime())) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.H_P));
                                     a.setSigns(signRepository.findByName(ESign.H_P));
+                                    LocalTime deltaTime = afternoonShift.getEndTime()
+                                            .minusHours(afternoonShift.getStartTime().getHour())
+                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+                                    a.setRegularHour(regularHour);
                                 }
 
                                 // không chấm công
@@ -495,6 +539,7 @@ public class RequestServiceImpl implements RequestService {
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
+
                     case 2: // nghỉ không lương
 
                         // xin nghỉ buổi sáng: start và end không sau giờ kết thúc buổi sáng
@@ -525,7 +570,7 @@ public class RequestServiceImpl implements RequestService {
                                 // lấy kis tự chấm công cũ
                                 String[] signs = {"",""};
                                 if(a.getSigns()!= null){
-                                    String[] s = a.getSigns().toString().split("_");
+                                    String[] s = a.getSigns().getName().toString().split("_");
                                     for(int j = 0; j < Math.min(s.length, signs.length); j++){
                                         signs[j] = s[j];
                                     }
@@ -542,9 +587,16 @@ public class RequestServiceImpl implements RequestService {
                                     if(signs[1].equals("P")){
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL_P));
                                         a.setSigns(signRepository.findByName(ESign.KL_P));
+                                        LocalTime deltaTime = afternoonShift.getEndTime()
+                                                .minusHours(afternoonShift.getStartTime().getHour())
+                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                        LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+                                        a.setRegularHour(regularHour);
                                     }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL));
                                         a.setSigns(signRepository.findByName(ESign.KL));
+                                        a.setRegularHour(null);
                                     }
                                 }
                             }
@@ -578,7 +630,7 @@ public class RequestServiceImpl implements RequestService {
                                 // lấy kis tự chấm công cũ
                                 String[] signs = {"",""};
                                 if(a.getSigns()!= null){
-                                    String[] s = a.getSigns().toString().split("_");
+                                    String[] s = a.getSigns().getName().toString().split("_");
                                     for(int j = 0; j < Math.min(s.length, signs.length); j++){
                                         signs[j] = s[j];
                                     }
@@ -596,6 +648,10 @@ public class RequestServiceImpl implements RequestService {
                                     if(signs[0].equals("P")){
                                         noteLog.setSignChange(signRepository.findByName(ESign.P_KL));
                                         a.setSigns(signRepository.findByName(ESign.P_KL));
+                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
+                                                .minusMinutes(morningShift.getStartTime().getMinute())
+                                                .minusSeconds(morningShift.getStartTime().getSecond());
+                                        a.setRegularHour(regularHour);
                                     }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL));
                                         a.setSigns(signRepository.findByName(ESign.KL));
@@ -679,7 +735,18 @@ public class RequestServiceImpl implements RequestService {
                                 a.setEditReason(i.getRequestType().getRequestTypeName());
 
                                 a.setSigns(signRepository.findByName(ESign.CĐ));
-                                a.setRegularHour(LocalTime.of(8, 0, 0));
+                                LocalTime morning = morningShift.getEndTime()
+                                        .minusHours(morningShift.getStartTime().getHour())
+                                        .minusMinutes(morningShift.getStartTime().getMinute())
+                                        .minusSeconds(morningShift.getStartTime().getSecond());
+                                LocalTime afternoon = afternoonShift.getEndTime()
+                                        .minusHours(afternoonShift.getStartTime().getHour())
+                                        .minusMinutes(afternoonShift.getStartTime().getMinute())
+                                        .minusSeconds(afternoonShift.getStartTime().getSecond());
+                                LocalTime regularHour = morning.plusHours(afternoon.getHour())
+                                        .plusMinutes(afternoon.getMinute())
+                                        .plusSeconds(afternoon.getSecond());
+                                a.setRegularHour(regularHour);
                             }
                         }
                         i.setCheck(true);
@@ -765,7 +832,7 @@ public class RequestServiceImpl implements RequestService {
                                 // lấy kis tự chấm công cũ
                                 String[] signs = {"",""};
                                 if(a.getSigns()!= null){
-                                    String[] s = a.getSigns().toString().split("_");
+                                    String[] s = a.getSigns().getName().toString().split("_");
                                     for(int j = 0; j < Math.min(s.length, signs.length); j++){
                                         signs[j] = s[j];
                                     }
@@ -889,7 +956,7 @@ public class RequestServiceImpl implements RequestService {
                                 // lấy kis tự chấm công cũ
                                 String[] signs = {"",""};
                                 if(a.getSigns()!= null){
-                                    String[] s = a.getSigns().toString().split("_");
+                                    String[] s = a.getSigns().getName().toString().split("_");
                                     for(int j = 0; j < Math.min(s.length, signs.length); j++){
                                         signs[j] = s[j];
                                     }
