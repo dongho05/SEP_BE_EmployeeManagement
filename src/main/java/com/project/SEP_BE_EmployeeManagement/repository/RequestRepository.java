@@ -16,12 +16,12 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             " join users u on r.user_id = u.id " +
             " where (:search is null or :search = '' or r.request_title LIKE %:search% or u.user_code LIKE %:search% or u.full_name LIKE %:search% ) " +
             " and (:departmentId is null or :departmentId ='' or u.department_id = :departmentId) " +
-            " and (:statusReq is null or :statusReq = 0 or r.status = :statusReq) "+
+            " and (:statusReq is null or :statusReq = '' or r.status = :statusReq) "+
             " and (:userId is null or :userId ='' or r.user_id = :userId) " +
             " and (:fromDate is null or :fromDate='' or r.create_date >= :fromDate) " +
             " and (:toDate is null or :toDate='' or r.create_date <= :toDate) " +
             " order by r.request_id",nativeQuery = true)
-    Page<Request> getList(String search, String departmentId, int statusReq, Long userId, String fromDate, String toDate, Pageable pageable);
+    Page<Request> getList(String search, String departmentId, String statusReq, Long userId, String fromDate, String toDate, Pageable pageable);
     Boolean existsById(int id);
     Request findById(long id);
 

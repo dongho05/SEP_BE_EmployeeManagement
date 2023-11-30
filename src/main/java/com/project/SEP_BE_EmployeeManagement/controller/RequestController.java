@@ -65,7 +65,7 @@ public class RequestController {
     public ResponseEntity<?> getList(@RequestParam(name = "search", required = false, defaultValue = "") String search,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "30") int size,
-                                     @RequestParam(name = "status", defaultValue = "0") int statusReq,
+                                     @RequestParam(name = "status",required = false, defaultValue = "") String statusReq,
                                      @RequestParam(name = "departmentId", defaultValue = "") String departmentId,
                                      @RequestParam(name = "from", defaultValue = "",required = false) String fromDate,
                                      @RequestParam(name = "to", defaultValue = "",required = false) String toDate) {
@@ -78,7 +78,7 @@ public class RequestController {
     public ResponseEntity<?> getListByUserId(@RequestParam(name = "search", required = false, defaultValue = "") String search,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "30") int size,
-                                     @RequestParam(name = "status", defaultValue = "0") int statusReq,
+                                     @RequestParam(name = "status",required = false, defaultValue = "") String statusReq,
                                      @RequestParam(name = "from", defaultValue = "",required = false) String fromDate,
                                      @RequestParam(name = "to", defaultValue = "",required = false) String toDate) {
         Pageable pageable = PageRequest.of(page, size);
