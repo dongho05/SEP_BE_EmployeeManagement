@@ -1,32 +1,32 @@
 version: '3'
 services:
   mysqldb:
-#      image: 'postgres:16-alpine'
-#      container_name: db
-#      environment:
-#        - POSTGRES_USER=postgres
-#        - POSTGRES_PASSWORD=postgres
-#        - POSTGRES_DB=ems
-      image: mysql:8.0.32
-      hostname: "mysqldb"
-      container_name: mysqldb
-      environment:
-        MYSQL_ROOT_PASSWORD: 123456
-        MYSQL_DATABASE: sep
-      networks:
-        - spring-mysql
-      ports:
-        - 3306:3306
-      volumes:
-        - ./initdata:/docker-entrypoint-initdb.d/
-#  maildev:
-#    image: maildev/maildev
-#    restart: always
-#    ports:
-#      - "587:587"
+    #      image: 'postgres:16-alpine'
+    #      container_name: db
+    #      environment:
+    #        - POSTGRES_USER=postgres
+    #        - POSTGRES_PASSWORD=postgres
+    #        - POSTGRES_DB=ems
+    image: mysql:8.0.32
+    hostname: "mysqldb"
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: sep
+    networks:
+      - spring-mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./initdata:/docker-entrypoint-initdb.d/
+  #  maildev:
+  #    image: maildev/maildev
+  #    restart: always
+  #    ports:
+  #      - "587:587"
   app:
-    image: 'dongho01/sep-be:latest'
-#    image: 'sep-be'
+    image: 'phundhe151425/sep-be:latest'
+    #    image: 'sep-be'
     container_name: app
     depends_on:
       - mysqldb
@@ -49,8 +49,8 @@ services:
       - 2000:8080
 
   frontend:
-    image: 'dongho01/sep-fe:latest'
-#    image: 'sep-fe'
+    image: 'phundhe151425/sep-fe:latest'
+    #    image: 'sep-fe'
     container_name: frontend
     ports:
       - 2001:80
