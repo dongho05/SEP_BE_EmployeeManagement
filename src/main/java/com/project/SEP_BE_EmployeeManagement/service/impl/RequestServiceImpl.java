@@ -319,6 +319,15 @@ public class RequestServiceImpl implements RequestService {
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
 
+                                // Buổi sáng có chấm công
+                                if (a.getTimeIn() != null && a.getTimeOut() != null &&
+                                        a.getTimeIn().isBefore(morningShift.getEndTime())){
+                                    // dừng duyệt request
+                                    i.setCheck(true);
+                                    requestRepository.save(i);
+                                    break;
+                                }
+
                                 // lưu vào bảng note log
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
@@ -354,12 +363,12 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isAfter(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.P_H));
                                     a.setSigns(signRepository.findByName(ESign.P_H));
-                                    LocalTime deltaTime = morningShift.getEndTime()
-                                            .minusHours(morningShift.getStartTime().getHour())
-                                            .minusMinutes(morningShift.getStartTime().getMinute())
-                                            .minusSeconds(morningShift.getStartTime().getSecond());
-                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
-                                    a.setRegularHour(regularHour);
+//                                    LocalTime deltaTime = morningShift.getEndTime()
+//                                            .minusHours(morningShift.getStartTime().getHour())
+//                                            .minusMinutes(morningShift.getStartTime().getMinute())
+//                                            .minusSeconds(morningShift.getStartTime().getSecond());
+//                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+//                                    a.setRegularHour(regularHour);
                                 }
 
                                 // không chấm công
@@ -367,25 +376,25 @@ public class RequestServiceImpl implements RequestService {
                                     if (signs[1].equals("P")) {
                                         noteLog.setSignChange(signRepository.findByName(ESign.P));
                                         a.setSigns(signRepository.findByName(ESign.P));
-                                        LocalTime morning = morningShift.getEndTime()
-                                                .minusHours(morningShift.getStartTime().getHour())
-                                                .minusMinutes(morningShift.getStartTime().getMinute())
-                                                .minusSeconds(morningShift.getStartTime().getSecond());
-                                        LocalTime afternoon = afternoonShift.getEndTime()
-                                                .minusHours(afternoonShift.getStartTime().getHour())
-                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
-                                                .plusMinutes(afternoon.getMinute())
-                                                .plusSeconds(afternoon.getSecond());
-                                        a.setRegularHour(regularHour);
-                                    } else {
+//                                        LocalTime morning = morningShift.getEndTime()
+//                                                .minusHours(morningShift.getStartTime().getHour())
+//                                                .minusMinutes(morningShift.getStartTime().getMinute())
+//                                                .minusSeconds(morningShift.getStartTime().getSecond());
+//                                        LocalTime afternoon = afternoonShift.getEndTime()
+//                                                .minusHours(afternoonShift.getStartTime().getHour())
+//                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
+//                                                .plusMinutes(afternoon.getMinute())
+//                                                .plusSeconds(afternoon.getSecond());
+//                                        a.setRegularHour(regularHour);
+                                    }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.P_KL));
                                         a.setSigns(signRepository.findByName(ESign.P_KL));
-                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
-                                                .minusMinutes(morningShift.getStartTime().getMinute())
-                                                .minusSeconds(morningShift.getStartTime().getSecond());
-                                        a.setRegularHour(regularHour);
+//                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
+//                                                .minusMinutes(morningShift.getStartTime().getMinute())
+//                                                .minusSeconds(morningShift.getStartTime().getSecond());
+//                                        a.setRegularHour(regularHour);
                                     }
                                 }
                             }
@@ -395,6 +404,16 @@ public class RequestServiceImpl implements RequestService {
                         if (i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())) {
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
+
+                                // buổi chiều có chấm công
+                                if (a.getTimeIn() != null && a.getTimeOut() != null &&
+                                        a.getTimeOut().isBefore(afternoonShift.getStartTime())){
+                                    // dừng duyệt request
+                                    i.setCheck(true);
+                                    requestRepository.save(i);
+                                    break;
+                                }
+
                                 // lưu vào bảng note log
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
@@ -430,12 +449,12 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isBefore(morningShift.getEndTime()) && a.getTimeOut().isBefore(afternoonShift.getStartTime())) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.H_P));
                                     a.setSigns(signRepository.findByName(ESign.H_P));
-                                    LocalTime deltaTime = afternoonShift.getEndTime()
-                                            .minusHours(afternoonShift.getStartTime().getHour())
-                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
-                                    a.setRegularHour(regularHour);
+//                                    LocalTime deltaTime = afternoonShift.getEndTime()
+//                                            .minusHours(afternoonShift.getStartTime().getHour())
+//                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+//                                    a.setRegularHour(regularHour);
                                 }
 
                                 // không chấm công
@@ -443,26 +462,26 @@ public class RequestServiceImpl implements RequestService {
                                     if (signs[0].equals("P")) {
                                         noteLog.setSignChange(signRepository.findByName(ESign.P));
                                         a.setSigns(signRepository.findByName(ESign.P));
-                                        LocalTime morning = morningShift.getEndTime()
-                                                .minusHours(morningShift.getStartTime().getHour())
-                                                .minusMinutes(morningShift.getStartTime().getMinute())
-                                                .minusSeconds(morningShift.getStartTime().getSecond());
-                                        LocalTime afternoon = afternoonShift.getEndTime()
-                                                .minusHours(afternoonShift.getStartTime().getHour())
-                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
-                                                .plusMinutes(afternoon.getMinute())
-                                                .plusSeconds(afternoon.getSecond());
-                                        a.setRegularHour(regularHour);
-                                    } else {
+//                                        LocalTime morning = morningShift.getEndTime()
+//                                                .minusHours(morningShift.getStartTime().getHour())
+//                                                .minusMinutes(morningShift.getStartTime().getMinute())
+//                                                .minusSeconds(morningShift.getStartTime().getSecond());
+//                                        LocalTime afternoon = afternoonShift.getEndTime()
+//                                                .minusHours(afternoonShift.getStartTime().getHour())
+//                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                        LocalTime regularHour = morning.plusHours(afternoon.getHour())
+//                                                .plusMinutes(afternoon.getMinute())
+//                                                .plusSeconds(afternoon.getSecond());
+//                                        a.setRegularHour(regularHour);
+                                    }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL_P));
                                         a.setSigns(signRepository.findByName(ESign.KL_P));
-                                        LocalTime regularHour = afternoonShift.getEndTime()
-                                                .minusHours(afternoonShift.getStartTime().getHour())
-                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                        a.setRegularHour(regularHour);
+//                                        LocalTime regularHour = afternoonShift.getEndTime()
+//                                                .minusHours(afternoonShift.getStartTime().getHour())
+//                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                        a.setRegularHour(regularHour);
                                     }
                                 }
                             }
@@ -472,6 +491,15 @@ public class RequestServiceImpl implements RequestService {
                         if (!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())) {
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
+                                // cả ngày có chấm công
+                                if (a.getTimeIn() != null && a.getTimeOut() != null &&
+                                        !a.getTimeIn().isAfter(morningShift.getEndTime()) && !a.getTimeOut().isBefore(afternoonShift.getStartTime())){
+                                    // dừng duyệt request
+                                    i.setCheck(true);
+                                    requestRepository.save(i);
+                                    break;
+                                }
+
                                 // lưu vào bảng note log
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
@@ -498,12 +526,12 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isAfter(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
                                     a.setSigns(signRepository.findByName(ESign.P_H));
                                     noteLog.setSignChange(signRepository.findByName(ESign.P_H));
-                                    LocalTime deltaTime = morningShift.getEndTime()
-                                            .minusHours(morningShift.getStartTime().getHour())
-                                            .minusMinutes(morningShift.getStartTime().getMinute())
-                                            .minusSeconds(morningShift.getStartTime().getSecond());
-                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
-                                    a.setRegularHour(regularHour);
+//                                    LocalTime deltaTime = morningShift.getEndTime()
+//                                            .minusHours(morningShift.getStartTime().getHour())
+//                                            .minusMinutes(morningShift.getStartTime().getMinute())
+//                                            .minusSeconds(morningShift.getStartTime().getSecond());
+//                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+//                                    a.setRegularHour(regularHour);
                                 }
 
                                 // buổi sáng có chấm công
@@ -511,33 +539,34 @@ public class RequestServiceImpl implements RequestService {
                                         a.getTimeIn().isBefore(morningShift.getEndTime()) && a.getTimeOut().isBefore(afternoonShift.getStartTime())) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.H_P));
                                     a.setSigns(signRepository.findByName(ESign.H_P));
-                                    LocalTime deltaTime = afternoonShift.getEndTime()
-                                            .minusHours(afternoonShift.getStartTime().getHour())
-                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
-                                    a.setRegularHour(regularHour);
+//                                    LocalTime deltaTime = afternoonShift.getEndTime()
+//                                            .minusHours(afternoonShift.getStartTime().getHour())
+//                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+//                                    a.setRegularHour(regularHour);
                                 }
 
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
                                     noteLog.setSignChange(signRepository.findByName(ESign.P));
                                     a.setSigns(signRepository.findByName(ESign.P));
-                                    LocalTime morning = morningShift.getEndTime()
-                                            .minusHours(morningShift.getStartTime().getHour())
-                                            .minusMinutes(morningShift.getStartTime().getMinute())
-                                            .minusSeconds(morningShift.getStartTime().getSecond());
-                                    LocalTime afternoon = afternoonShift.getEndTime()
-                                            .minusHours(afternoonShift.getStartTime().getHour())
-                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                    LocalTime regularHour = morning.plusHours(afternoon.getHour())
-                                            .plusMinutes(afternoon.getMinute())
-                                            .plusSeconds(afternoon.getSecond());
-                                    a.setRegularHour(regularHour);
+//                                    LocalTime morning = morningShift.getEndTime()
+//                                            .minusHours(morningShift.getStartTime().getHour())
+//                                            .minusMinutes(morningShift.getStartTime().getMinute())
+//                                            .minusSeconds(morningShift.getStartTime().getSecond());
+//                                    LocalTime afternoon = afternoonShift.getEndTime()
+//                                            .minusHours(afternoonShift.getStartTime().getHour())
+//                                            .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                    LocalTime regularHour = morning.plusHours(afternoon.getHour())
+//                                            .plusMinutes(afternoon.getMinute())
+//                                            .plusSeconds(afternoon.getSecond());
+//                                    a.setRegularHour(regularHour);
                                 }
                             }
                         }
+
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
@@ -548,6 +577,14 @@ public class RequestServiceImpl implements RequestService {
                         if (!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())) {
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
+                                // buổi sáng có chấm công
+                                if (a.getTimeIn() != null && a.getTimeOut() != null &&
+                                        !a.getTimeIn().isAfter(morningShift.getEndTime())) {
+                                    i.setCheck(true);
+                                    requestRepository.save(i);
+                                    break;
+                                }
+
                                 // lưu vào bảng note log
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
@@ -589,12 +626,12 @@ public class RequestServiceImpl implements RequestService {
                                     if (signs[1].equals("P")) {
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL_P));
                                         a.setSigns(signRepository.findByName(ESign.KL_P));
-                                        LocalTime deltaTime = afternoonShift.getEndTime()
-                                                .minusHours(afternoonShift.getStartTime().getHour())
-                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                        LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
-                                        a.setRegularHour(regularHour);
+//                                        LocalTime deltaTime = afternoonShift.getEndTime()
+//                                                .minusHours(afternoonShift.getStartTime().getHour())
+//                                                .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                                .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                        LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
+//                                        a.setRegularHour(regularHour);
                                     }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL));
                                         a.setSigns(signRepository.findByName(ESign.KL));
@@ -608,6 +645,16 @@ public class RequestServiceImpl implements RequestService {
                         if (i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())) {
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
+
+                                // buổi chiều có chấm công
+                                if (a.getTimeIn() != null && a.getTimeOut() != null &&
+                                        a.getTimeOut().isBefore(afternoonShift.getStartTime())) {
+                                    // dừng duyệt request
+                                    i.setCheck(true);
+                                    requestRepository.save(i);
+                                    break;
+                                }
+
                                 // lưu vào bảng note log
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
@@ -650,10 +697,10 @@ public class RequestServiceImpl implements RequestService {
                                     if (signs[0].equals("P")) {
                                         noteLog.setSignChange(signRepository.findByName(ESign.P_KL));
                                         a.setSigns(signRepository.findByName(ESign.P_KL));
-                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
-                                                .minusMinutes(morningShift.getStartTime().getMinute())
-                                                .minusSeconds(morningShift.getStartTime().getSecond());
-                                        a.setRegularHour(regularHour);
+//                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
+//                                                .minusMinutes(morningShift.getStartTime().getMinute())
+//                                                .minusSeconds(morningShift.getStartTime().getSecond());
+//                                        a.setRegularHour(regularHour);
                                     }else{
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL));
                                         a.setSigns(signRepository.findByName(ESign.KL));
@@ -667,6 +714,15 @@ public class RequestServiceImpl implements RequestService {
                         if (!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())) {
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
+
+                                // cả ngày có chấm công
+                                if (a.getTimeIn() != null && a.getTimeOut() != null &&
+                                        a.getTimeIn().isBefore(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
+                                    i.setCheck(true);
+                                    requestRepository.save(i);
+                                    break;
+                                }
+
                                 // lưu vào bảng note log
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
@@ -712,6 +768,7 @@ public class RequestServiceImpl implements RequestService {
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
+
                     case 3: // nghỉ chế độ  (đám cưới, đám tang,..)
                         for (Attendance a : attendanceList) {
                             // không chấm công
@@ -737,23 +794,24 @@ public class RequestServiceImpl implements RequestService {
                                 a.setEditReason(i.getRequestType().getRequestTypeName());
 
                                 a.setSigns(signRepository.findByName(ESign.CĐ));
-                                LocalTime morning = morningShift.getEndTime()
-                                        .minusHours(morningShift.getStartTime().getHour())
-                                        .minusMinutes(morningShift.getStartTime().getMinute())
-                                        .minusSeconds(morningShift.getStartTime().getSecond());
-                                LocalTime afternoon = afternoonShift.getEndTime()
-                                        .minusHours(afternoonShift.getStartTime().getHour())
-                                        .minusMinutes(afternoonShift.getStartTime().getMinute())
-                                        .minusSeconds(afternoonShift.getStartTime().getSecond());
-                                LocalTime regularHour = morning.plusHours(afternoon.getHour())
-                                        .plusMinutes(afternoon.getMinute())
-                                        .plusSeconds(afternoon.getSecond());
-                                a.setRegularHour(regularHour);
+//                                LocalTime morning = morningShift.getEndTime()
+//                                        .minusHours(morningShift.getStartTime().getHour())
+//                                        .minusMinutes(morningShift.getStartTime().getMinute())
+//                                        .minusSeconds(morningShift.getStartTime().getSecond());
+//                                LocalTime afternoon = afternoonShift.getEndTime()
+//                                        .minusHours(afternoonShift.getStartTime().getHour())
+//                                        .minusMinutes(afternoonShift.getStartTime().getMinute())
+//                                        .minusSeconds(afternoonShift.getStartTime().getSecond());
+//                                LocalTime regularHour = morning.plusHours(afternoon.getHour())
+//                                        .plusMinutes(afternoon.getMinute())
+//                                        .plusSeconds(afternoon.getSecond());
+//                                a.setRegularHour(regularHour);
                             }
                         }
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
+
                     case 4: // làm thêm giờ (xin trước)
                         // xin sau
                         // kiểm tra xem ngày duyệt đơn đã đi qua ngày xin ot trong đơn chưa
@@ -779,6 +837,7 @@ public class RequestServiceImpl implements RequestService {
                             requestRepository.save(i);
                         }
                         break;
+
                     case 5: // làm thêm giờ (xin sau)
                         for (Attendance a : attendanceList) {
                             LocalTime overTime = LocalTime.of(0, 0, 0);
@@ -800,6 +859,7 @@ public class RequestServiceImpl implements RequestService {
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
+
                     case 6: // quên chấm công
                         // giống đi công tác
                     case 7: // làm việc tại nhà
@@ -841,7 +901,7 @@ public class RequestServiceImpl implements RequestService {
                                 }
 
                                 // nếu chưa có thì cập nhật timein, timeout, regular, sign
-                                if (a.getTimeIn() == null && a.getTimeOut() == null) {
+                                if(a.getTimeIn() == null && a.getTimeOut() == null){
                                     // set timein timeout
                                     a.setTimeIn(i.getStartTime());
                                     a.setTimeOut(i.getEndTime());
@@ -965,7 +1025,7 @@ public class RequestServiceImpl implements RequestService {
                                 }
 
                                 // nếu chưa có thì cập nhật timein, timeout, regular, sign
-                                if (a.getTimeIn() == null && a.getTimeOut() == null) {
+                                if(a.getTimeIn() == null && a.getTimeOut() == null){
                                     // set timein timeout
                                     a.setTimeIn(i.getStartTime());
                                     a.setTimeOut(i.getEndTime());
