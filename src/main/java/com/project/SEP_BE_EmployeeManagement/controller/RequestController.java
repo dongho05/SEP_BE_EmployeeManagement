@@ -92,9 +92,6 @@ public class RequestController {
         if (request.getStartDate().isAfter(request.getEndDate()) == true) {
             return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
         }
-        if (request.getStartTime().isAfter(request.getEndTime()) == true) {
-            return ResponseEntity.internalServerError().body("Hãy chọn giờ bắt đầu nhỏ hơn giờ kết thúc.");
-        }
 
         Request obj = requestService.updateRequest(request, id);
         return ResponseEntity.ok("Cập nhật yêu cầu thành công.");
