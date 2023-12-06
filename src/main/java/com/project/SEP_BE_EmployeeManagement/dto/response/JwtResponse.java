@@ -17,10 +17,10 @@ public class JwtResponse {
     private String departmentName;
     private String fullName;
     private String userImage;
-    private Integer dayoff;
+    private Double dayoff;
 
     public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String userCode,
-                       Long departmentId, String departmentName, String fullName,String userImage, Integer dayoff) {
+                       Long departmentId, String departmentName, String fullName,String userImage, Double dayoff) {
         this.token = accessToken;
         this.id = id;
         this.username = username;

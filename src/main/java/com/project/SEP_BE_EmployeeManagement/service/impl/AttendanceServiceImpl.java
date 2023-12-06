@@ -105,11 +105,16 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendances;
     }
 
+//    @Override
+//    @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
+//    public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException {
     @Override
-    @Scheduled(cron = "0 0 22 * * ?") // process attendance vào 22h hàng ngày
-    public List<Attendance> processAttendanceForUserOnDate() throws NotFoundException {
+    public List<Attendance> processAttendanceForUserOnDate(Integer day, Integer month, Integer year) throws NotFoundException {
 
-        LocalDate date = LocalDate.of(2023, 10, 26);
+        LocalDate date = LocalDate.now();
+        if(day!=null && month!=null && year!=null){
+            date = LocalDate.of(year, month, day);
+        }
 //        LocalDate date = LocalDate.now();
         List<Attendance> attendanceList = new ArrayList<>();
         DayOfWeek dayOfWeek = date.getDayOfWeek();

@@ -58,8 +58,12 @@ public class ScheduledController {
     }
 
     @GetMapping("processAttendance")
-    public ResponseEntity<List<Attendance>> attendanceToDay() throws NotFoundException {
-        List<Attendance> attendanceList = attendanceService.processAttendanceForUserOnDate();
+//    public ResponseEntity<List<Attendance>> attendanceToDay() throws NotFoundException {
+    public ResponseEntity<List<Attendance>> attendanceToDay(@RequestParam(name = "day", required = false) Integer day,
+                                                            @RequestParam(name = "month", required = false) Integer month,
+                                                            @RequestParam(name = "year",required = false) Integer year) throws NotFoundException {
+        List<Attendance> attendanceList = attendanceService.processAttendanceForUserOnDate(day, month, year);
+//        List<Attendance> attendanceList = attendanceService.processAttendanceForUserOnDate();
         return new ResponseEntity<>(attendanceList, HttpStatus.OK);
     }
 
@@ -93,8 +97,12 @@ public class ScheduledController {
     }
 
     @GetMapping("processRequest")
-    public ResponseEntity<List<Request>> processRequestOnMonth() throws NotFoundException {
-        List<Request> requestList = requestService.processRequestOnMonth();
+//    public ResponseEntity<List<Request>> processRequestOnMonth() throws NotFoundException {
+    public ResponseEntity<List<Request>> processRequestOnMonth(@RequestParam(name = "day", required = false) Integer day,
+                                                               @RequestParam(name = "month", required = false) Integer month,
+                                                               @RequestParam(name = "year",required = false) Integer year) throws NotFoundException {
+        List<Request> requestList = requestService.processRequestOnMonth(day, month, year);
+//        List<Request> requestList = requestService.processRequestOnMonth();
         return new ResponseEntity<>(requestList, HttpStatus.OK);
     }
 

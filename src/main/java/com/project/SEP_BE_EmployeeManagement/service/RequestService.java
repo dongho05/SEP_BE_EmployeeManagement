@@ -21,5 +21,6 @@ public interface RequestService {
     Page<RequestResponse> getList(String search, String departmentId, String statusReq, String fromDate, String toDate, Pageable pageable);
     Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate, Pageable pageable);
     void updateStatusRequest(long requestId, int statusRequest,String note);
-    List<Request> processRequestOnMonth();
+    List<Request> processRequestOnMonth(Integer day, Integer month, Integer year);
+//    List<Request> processRequestOnMonth();
 }

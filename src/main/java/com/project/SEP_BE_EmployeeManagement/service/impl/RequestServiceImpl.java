@@ -281,10 +281,15 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.save(obj);
     }
 
+//    @Override
+//    @Scheduled(cron = "0 0 22 * * ?")// chạy vào 20h mỗi ngày
+//    public List<Request> processRequestOnMonth() {
     @Override
-    @Scheduled(cron = "0 0 22 * * ?")// chạy vào 20h mỗi ngày
-    public List<Request> processRequestOnMonth() {
-        LocalDate date = LocalDate.of(2023, 11, 25);
+    public List<Request> processRequestOnMonth(Integer day, Integer month, Integer year){
+            LocalDate date = LocalDate.now();
+            if(day!=null && month!=null && year!=null){
+                date = LocalDate.of(year, month, day);
+            }
 //        LocalDate date = LocalDate.now();
         List<Request> requestList = new ArrayList<>();
         // lấy danh sách tất cả các request chưa được duyệt từ đầu tháng tới ngày hiện tại
@@ -316,6 +321,7 @@ public class RequestServiceImpl implements RequestService {
 
                         // xin nghỉ buổi sáng: start không  sau giờ kết thúc buổi sáng và end không sau giờ bắt đầu buổi chiều
                         if (!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())) {
+
                             // kiểm tra xem có log attendance hay không
                             for (Attendance a : attendanceList) {
 
@@ -397,6 +403,11 @@ public class RequestServiceImpl implements RequestService {
 //                                        a.setRegularHour(regularHour);
                                     }
                                 }
+
+                                // người tạo request
+                                User u = i.getUser();
+                                u.setDayoff(u.getDayoff() - 0.5);
+                                userRepository.save(u);
                             }
                         }
 
@@ -484,6 +495,11 @@ public class RequestServiceImpl implements RequestService {
 //                                        a.setRegularHour(regularHour);
                                     }
                                 }
+
+                                // người tạo request
+                                User u = i.getUser();
+                                u.setDayoff(u.getDayoff() - 0.5);
+                                userRepository.save(u);
                             }
                         }
 
@@ -532,6 +548,10 @@ public class RequestServiceImpl implements RequestService {
 //                                            .minusSeconds(morningShift.getStartTime().getSecond());
 //                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
 //                                    a.setRegularHour(regularHour);
+                                    // người tạo request
+                                    User u = i.getUser();
+                                    u.setDayoff(u.getDayoff() - 0.5);
+                                    userRepository.save(u);
                                 }
 
                                 // buổi sáng có chấm công
@@ -545,6 +565,10 @@ public class RequestServiceImpl implements RequestService {
 //                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
 //                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
 //                                    a.setRegularHour(regularHour);
+                                    // người tạo request
+                                    User u = i.getUser();
+                                    u.setDayoff(u.getDayoff() - 0.5);
+                                    userRepository.save(u);
                                 }
 
                                 // không chấm công
@@ -563,8 +587,13 @@ public class RequestServiceImpl implements RequestService {
 //                                            .plusMinutes(afternoon.getMinute())
 //                                            .plusSeconds(afternoon.getSecond());
 //                                    a.setRegularHour(regularHour);
+                                    // người tạo request
+                                    User u = i.getUser();
+                                    u.setDayoff(u.getDayoff() - 1);
+                                    userRepository.save(u);
                                 }
                             }
+
                         }
 
                         i.setCheck(true);
@@ -618,12 +647,29 @@ public class RequestServiceImpl implements RequestService {
                                 // buổi chiều có chấm công
                                 if (a.getTimeIn() != null && a.getTimeOut() != null &&
                                         a.getTimeIn().isAfter(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
-                                    noteLog.setSignChange(signRepository.findByName(ESign.KL_H));
-                                    a.setSigns(signRepository.findByName(ESign.KL_H));
+                                    // buổi sáng có xin nghir phép
+                                    if(signs[0].equals("P")){
+                                        i.setCheck(true);
+                                        requestRepository.save(i);
+                                        break;
+                                    }else{
+                                        noteLog.setSignChange(signRepository.findByName(ESign.KL_H));
+                                        a.setSigns(signRepository.findByName(ESign.KL_H));
+                                    }
                                 }
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
-                                    if (signs[1].equals("P")) {
+
+                                    // kiểm tra xem có xin nghỉ phép hay không
+
+                                    // cả xin nghỉ phép cả ngày hoặc nghỉ phép buổi sáng
+                                    if(signs[0].equals("P")){
+                                        i.setCheck(true);
+                                        requestRepository.save(i);
+                                        break;
+                                    }
+                                    // xin nghỉ phép buổi chiều
+                                    else if(signs[1].equals("P")) {
                                         noteLog.setSignChange(signRepository.findByName(ESign.KL_P));
                                         a.setSigns(signRepository.findByName(ESign.KL_P));
 //                                        LocalTime deltaTime = afternoonShift.getEndTime()
@@ -688,13 +734,26 @@ public class RequestServiceImpl implements RequestService {
                                 // buổi sáng có chấm công
                                 if (a.getTimeIn() != null && a.getTimeOut() != null &&
                                         a.getTimeIn().isBefore(morningShift.getEndTime()) && a.getTimeOut().isBefore(afternoonShift.getStartTime())) {
-                                    noteLog.setSignChange(signRepository.findByName(ESign.H_KL));
-                                    a.setSigns(signRepository.findByName(ESign.H_KL));
+                                    // buổi chiều nghỉ phép
+                                    if(signs[1].equals("P")){
+                                        i.setCheck(true);
+                                        requestRepository.save(i);
+                                        break;
+                                    }else{
+                                        noteLog.setSignChange(signRepository.findByName(ESign.H_KL));
+                                        a.setSigns(signRepository.findByName(ESign.H_KL));
+                                    }
                                 }
 
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
-                                    if (signs[0].equals("P")) {
+                                    // cả ngày nghỉ phép hoặc buoir chiều nghỉ phép
+                                    if(signs[1].equals("P") || (signs[0].equals("P") && signs[1].equals(""))){
+                                        i.setCheck(true);
+                                        requestRepository.save(i);
+                                        break;
+                                    }
+                                    else if(signs[0].equals("P")) {
                                         noteLog.setSignChange(signRepository.findByName(ESign.P_KL));
                                         a.setSigns(signRepository.findByName(ESign.P_KL));
 //                                        LocalTime regularHour = morningShift.getEndTime().minusHours(morningShift.getStartTime().getHour())
@@ -744,6 +803,15 @@ public class RequestServiceImpl implements RequestService {
                                 a.setNoteLogSet(noteCatergorySet);
                                 a.setEditReason(i.getRequestType().getRequestTypeName());
 
+                                // lấy kis tự chấm công cũ
+                                String[] signs = {"",""};
+                                if(a.getSigns()!= null){
+                                    String[] s = a.getSigns().getName().toString().split("_");
+                                    for(int j = 0; j < Math.min(s.length, signs.length); j++){
+                                        signs[j] = s[j];
+                                    }
+                                }
+
                                 // buổi chiều có chấm công
                                 if (a.getTimeIn() != null && a.getTimeOut() != null &&
                                         a.getTimeIn().isAfter(morningShift.getEndTime()) && a.getTimeOut().isAfter(afternoonShift.getStartTime())) {
@@ -760,8 +828,27 @@ public class RequestServiceImpl implements RequestService {
 
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
-                                    noteLog.setSignChange(signRepository.findByName(ESign.KL));
-                                    a.setSigns(signRepository.findByName(ESign.KL));
+
+                                    // cả ngày xin nghỉ phép
+                                    if (signs[0].equals("P") && signs[1].equals("")) {
+                                        i.setCheck(true);
+                                        requestRepository.save(i);
+                                        break;
+                                    }
+                                    // buổi sáng xin nghỉ phép
+                                    else if (signs[0].equals("P")) {
+                                        noteLog.setSignChange(signRepository.findByName(ESign.P_KL));
+                                        a.setSigns(signRepository.findByName(ESign.P_KL));
+                                    }
+                                    // buổi chiều xin nghỉ phép
+                                    else if (signs[1].equals("P")) {
+                                        noteLog.setSignChange(signRepository.findByName(ESign.KL_P));
+                                        a.setSigns(signRepository.findByName(ESign.KL_P));
+                                    }
+                                    else{
+                                        noteLog.setSignChange(signRepository.findByName(ESign.KL));
+                                        a.setSigns(signRepository.findByName(ESign.KL));
+                                    }
                                 }
                             }
                         }
@@ -771,8 +858,15 @@ public class RequestServiceImpl implements RequestService {
 
                     case 3: // nghỉ chế độ  (đám cưới, đám tang,..)
                         for (Attendance a : attendanceList) {
+                            // có chấm công
+                            if (a.getTimeIn() != null && a.getTimeOut() != null) {
+                                i.setCheck(true);
+                                requestRepository.save(i);
+                                break;
+                            }
                             // không chấm công
                             if (a.getTimeIn() == null && a.getTimeOut() == null) {
+
                                 Set<NoteLog> noteCatergorySet = a.getNoteLogSet();
                                 if (noteCatergorySet == null)
                                     noteCatergorySet = new HashSet<>();
@@ -989,7 +1083,6 @@ public class RequestServiceImpl implements RequestService {
                             }
                         }
 
-
                         // xin điểm danh buổi chiều
                         if (i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isBefore(afternoonShift.getStartTime())) {
                             // kiểm tra xem ngày hôm đấy đã có log chưa
@@ -1049,6 +1142,7 @@ public class RequestServiceImpl implements RequestService {
                                     a.setSigns(signRepository.findByName(ESign.KL_H));
                                     noteLog.setSignChange(signRepository.findByName(ESign.KL_H));
                                 }
+
                                 // nếu có rồi
                                 if (a.getTimeIn() != null || a.getTimeOut() != null) {
                                     // kiểm tra timein và cập nhật timein
@@ -1179,6 +1273,7 @@ public class RequestServiceImpl implements RequestService {
                                     a.setSigns(signRepository.findByName(ESign.H));
                                     noteLog.setSignChange(signRepository.findByName(ESign.H));
                                 }
+
                                 // nếu có rồi
                                 if (a.getTimeIn() != null || a.getTimeOut() != null) {
                                     // kiểm tra timein và cập nhật timein

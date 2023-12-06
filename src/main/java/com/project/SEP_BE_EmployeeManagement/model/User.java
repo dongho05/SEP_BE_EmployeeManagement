@@ -62,7 +62,7 @@ public class User extends BaseEntity{
 
 //    Số ngày nghỉ phép trong 1 năm
     @Column(name = "day_off")
-    private Integer dayoff;
+    private Double dayoff;
 
 
     // Many to One Có nhiều người ở 1 contract.
