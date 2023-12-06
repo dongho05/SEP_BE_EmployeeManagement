@@ -571,8 +571,40 @@ public class RequestServiceImpl implements RequestService {
                                     userRepository.save(u);
                                 }
 
+                                // lấy kis tự chấm công cũ
+                                String[] signs = {"",""};
+                                if(a.getSigns()!= null){
+                                    String[] s = a.getSigns().getName().toString().split("_");
+                                    for(int j = 0; j < Math.min(s.length, signs.length); j++){
+                                        signs[j] = s[j].trim();
+                                    }
+                                }
+
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
+                                    // buổi sáng đã xin nghỉ phép
+                                    if(signs[0].equals("P")){
+                                        User u = i.getUser();
+                                        u.setDayoff(u.getDayoff() - 0.5);
+                                        userRepository.save(u);
+                                    }
+                                    // buổi chiều đã xin nghỉ phép
+                                    else if(signs[1].equals("P")){
+                                        User u = i.getUser();
+                                        u.setDayoff(u.getDayoff() - 0.5);
+                                        userRepository.save(u);
+                                    }
+                                    // cả ngày xin nghỉ phép
+                                    else if(signs[0].equals("P") && signs[0].equals("")){
+                                        User u = i.getUser();
+                                        u.setDayoff(u.getDayoff());
+                                        userRepository.save(u);
+                                    }else{
+                                        User u = i.getUser();
+                                        u.setDayoff(u.getDayoff() - 1);
+                                        userRepository.save(u);
+                                    }
+                                    // chưa xin nghỉ phép
                                     noteLog.setSignChange(signRepository.findByName(ESign.P));
                                     a.setSigns(signRepository.findByName(ESign.P));
 //                                    LocalTime morning = morningShift.getEndTime()
@@ -587,10 +619,6 @@ public class RequestServiceImpl implements RequestService {
 //                                            .plusMinutes(afternoon.getMinute())
 //                                            .plusSeconds(afternoon.getSecond());
 //                                    a.setRegularHour(regularHour);
-                                    // người tạo request
-                                    User u = i.getUser();
-                                    u.setDayoff(u.getDayoff() - 1);
-                                    userRepository.save(u);
                                 }
                             }
 
@@ -1305,6 +1333,7 @@ public class RequestServiceImpl implements RequestService {
                                 }
                             }
                         }
+
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
