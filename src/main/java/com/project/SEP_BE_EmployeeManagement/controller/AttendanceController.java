@@ -5,9 +5,11 @@ import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.EditAttendan
 import com.project.SEP_BE_EmployeeManagement.dto.request.attendance.UpdateSignInAttendanceRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.dto.response.attendance.AttendanceResponse;
+import com.project.SEP_BE_EmployeeManagement.exportExcel.ExcelExporterReport;
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.AttendanceRepository;
+import com.project.SEP_BE_EmployeeManagement.repository.DepartmentRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @RestController
 @RequestMapping("/api/auth/attendance")
@@ -33,6 +40,10 @@ public class AttendanceController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    DepartmentRepository departmentRepository;
+
 
     @Autowired
     AttendanceService attendanceService;
@@ -149,5 +160,30 @@ public class AttendanceController {
         }
         attendanceService.updateSigns(request.getSign(), attendanceId, request.getReason());
         return ResponseEntity.ok(obj);
+    }
+
+    @GetMapping("/export_report")
+    public ResponseEntity exportToExcel(@RequestParam(name = "id", defaultValue = "0") Long id, @RequestParam int month, @RequestParam(name = "year",required = true) Integer year, HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=Bang Cham Cong " + currentDateTime + ".xlsx";
+
+        response.setHeader(headerKey, headerValue);
+        List<Attendance> listLogs = new ArrayList<>();
+        if(id==0){
+            listLogs = attendanceRepository.findByMonthSortDate(month, year);
+            ExcelExporterReport excelExporter = new ExcelExporterReport(listLogs,month,departmentRepository,userRepository,attendanceRepository);
+            excelExporter.export(response);
+        }
+        else {
+            listLogs = attendanceRepository.findByMonthAndDepartmentSortDate(id, month,year);
+            ExcelExporterReport excelExporter = new ExcelExporterReport(listLogs, id,month,departmentRepository,userRepository,attendanceRepository);
+            excelExporter.export(response);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
