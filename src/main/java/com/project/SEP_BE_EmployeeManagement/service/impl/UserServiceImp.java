@@ -266,6 +266,11 @@ public class UserServiceImp implements UserService {
         return false;
     }
 
+    @Override
+    public Double getDayOffByUserId(Long id) {
+        return userRepository.getDayOffByUserId(id).orElseThrow();
+    }
+
 
     private static String alphaNumericString(int len) {
         String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

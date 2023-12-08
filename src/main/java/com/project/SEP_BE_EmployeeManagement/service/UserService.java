@@ -37,4 +37,5 @@ public interface UserService {
 //    public void UpdatePassword(String email,String newPassword);
 
     Boolean existsByEmail(String email);
+    Double getDayOffByUserId(Long id);
 }

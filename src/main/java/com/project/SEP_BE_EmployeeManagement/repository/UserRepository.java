@@ -56,4 +56,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //List<User> findAllByIdNotInAndDepartment_Id(List<Long> userIds, Long departmentId);
 
     List<User> findAllByDepartment_Id(Long departmentId);
+
+    @Query(
+            value = "select u.day_off from users u where id = :id",
+            nativeQuery = true
+    )
+    Optional<Double> getDayOffByUserId(Long id);
 }
