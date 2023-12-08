@@ -57,4 +57,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             " join l.user u " +
             "where MONTH (l.dateLog) = ?1 and YEAR (l.dateLog) = ?2 and u.fullName LIKE %?3% ")
     List<Attendance> findByMonth(Integer month,Integer year, String search);
+
+    @Query(value = "select l from Attendance l\n" +
+            " join l.user u " +
+            "where  MONTH (l.dateLog) = ?1 and YEAR (l.dateLog) = ?2 " +
+            "order by l.dateLog asc ")
+    List<Attendance> findByMonthSortDate(Integer month, Integer year);
+
+    @Query(value = "select l from Attendance l\n" +
+            " join l.user u " +
+            "where u.department.id= ?1 and MONTH (l.dateLog) = ?2 and YEAR (l.dateLog) = ?3 " +
+            "order by l.dateLog asc ")
+    List<Attendance> findByMonthAndDepartmentSortDate(Long id, Integer month,Integer year);
 }
