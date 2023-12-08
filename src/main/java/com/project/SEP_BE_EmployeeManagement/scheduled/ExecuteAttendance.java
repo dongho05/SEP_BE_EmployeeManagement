@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExecuteAttendance {
@@ -25,9 +27,15 @@ public class ExecuteAttendance {
     @Autowired
     LogCheckInOutRepository logCheckInOutRepository;
 
+    @Autowired
+    NoteCatergoryRepository noteCatergoryRepository;
 
+    @Autowired
+    WorkingTimeRepository workingTimeRepository;
 
     public void ExecuteAttendance(Integer day, Integer month, Integer year){
+        WorkingTime morningShift = workingTimeRepository.findByWorkingTimeName(EWorkingTime.MORNING_SHIFT).orElseThrow();
+        WorkingTime afternoonShift = workingTimeRepository.findByWorkingTimeName(EWorkingTime.AFTERNOON_SHIFT).orElseThrow();
         LocalTime ruleTimeIn = LocalTime.of(8,30,00);
         LocalTime ruleTimeOut = LocalTime.of(17,30,00);
         int breakTime = 1;
@@ -47,17 +55,17 @@ public class ExecuteAttendance {
                 System.out.println(user.getUserCode() + " Add Log HOLIDAY");
                 // create log
                 Attendance attendance = new Attendance();
-//                Set<NoteLog> noteCatergorySet = logDetail.getNoteLogSet();
-//                if (noteCatergorySet == null)
-//                    noteCate              rgorySet = new HashSet<>();
-//                NoteLog noteLog = new NoteLog();
-//                noteLog.setLogDetail(logDetail);
-//                noteLog.setNoteCatergory(noteCatergoryRepository.findByName(ENoteCatergory.E_HOLIDAY));
-//                noteLog.setContent(holidayYesterday.getHolidayName());
-//                noteLog.setCreateDate(LocalDateTime.now());
-//                noteLog.setSignChange(signRepository.findByName(ESign.L));
-//                noteCatergorySet.add(noteLog);
-//                attendance.setNoteLogSet(noteCatergorySet);
+                Set<NoteLog> noteCatergorySet = attendance.getNoteLogSet();
+                if (noteCatergorySet == null)
+                    noteCatergorySet = new HashSet<>();
+                NoteLog noteLog = new NoteLog();
+                noteLog.setAttendance(attendance);
+                noteLog.setNoteCategory(noteCatergoryRepository.findByName(ENoteCatergory.E_HOLIDAY));
+                noteLog.setContent(holidayYesterday.getHolidayName());
+                noteLog.setCreateDate(LocalDateTime.now());
+                noteLog.setSignChange(signRepository.findByName(ESign.L));
+                noteCatergorySet.add(noteLog);
+                attendance.setNoteLogSet(noteCatergorySet);
 
                 attendance.setSigns(signRepository.findByName(ESign.L));
                 attendance.setDateLog(executeDate);
