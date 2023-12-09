@@ -47,6 +47,7 @@ public class UserMapper {
         userDto.setContracts(user.getContracts());
         userDto.setPosition(user.getPosition());
         userDto.setDepartment(user.getDepartment());
+        userDto.setDayOff(user.getDayoff());
 
         return userDto;
     }

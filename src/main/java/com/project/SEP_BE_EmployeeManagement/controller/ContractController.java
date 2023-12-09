@@ -1,32 +1,20 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.ContractDto;
-import com.project.SEP_BE_EmployeeManagement.dto.DepartmentDto;
-import com.project.SEP_BE_EmployeeManagement.dto.PositionDto;
-import com.project.SEP_BE_EmployeeManagement.dto.UserDto;
-import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
-import com.project.SEP_BE_EmployeeManagement.dto.request.User.UpdateUserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.contract.CreateContractRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.contract.UpdateContractRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Contract;
 import com.project.SEP_BE_EmployeeManagement.model.User;
 import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.ContractService;
 import javassist.NotFoundException;
-import org.aspectj.weaver.ast.Instanceof;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController

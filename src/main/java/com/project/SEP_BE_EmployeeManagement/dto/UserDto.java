@@ -33,4 +33,5 @@ public class UserDto {
     private Set<Contract> contracts;
     private Position position;
     private Department department;
+    private Double dayOff;
 }
