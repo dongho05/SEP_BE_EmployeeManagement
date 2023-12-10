@@ -60,6 +60,7 @@ public class RequestServiceImpl implements RequestService {
 //        parse localDate to date
         LocalDate localDate = LocalDate.now();
         Double numberOfDays = 0.0;
+        Request obj = new Request();
 
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -74,27 +75,25 @@ public class RequestServiceImpl implements RequestService {
             long hours = duration.toHours();
             numberOfDays = Double.parseDouble(hours / 24 + "." + hours % 24);
 
+            if (numberOfDays < dayOff) {
+                User user = userRepository.findById(userDetails.getId()).orElseThrow();
+                user.setDayoff(dayOff - numberOfDays);
+                userRepository.save(user);
+            }
         }
-        if (numberOfDays < dayOff) {
-            Request obj = new Request();
-            obj.setRequestContent(request.getRequestContent());
-            obj.setRequestTitle(request.getRequestTitle());
-            obj.setEndDate(request.getEndDate());
-            obj.setStartDate(request.getStartDate());
-            obj.setStartTime(request.getStartTime());
-            obj.setEndTime(request.getEndTime());
-            obj.setStatus(1);
-            obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
-            obj.setUser(userRepository.findById(userDetails.getId()).get());
 
-            User user = userRepository.findById(userDetails.getId()).orElseThrow();
-            user.setDayoff(dayOff - numberOfDays);
-            userRepository.save(user);
+        obj.setRequestContent(request.getRequestContent());
+        obj.setRequestTitle(request.getRequestTitle());
+        obj.setEndDate(request.getEndDate());
+        obj.setStartDate(request.getStartDate());
+        obj.setStartTime(request.getStartTime());
+        obj.setEndTime(request.getEndTime());
+        obj.setStatus(1);
+        obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
+        obj.setUser(userRepository.findById(userDetails.getId()).get());
 
-            requestRepository.save(obj);
-            return obj;
-        }
-        return null;
+        requestRepository.save(obj);
+        return obj;
     }
 
     @Override
