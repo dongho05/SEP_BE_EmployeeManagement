@@ -53,7 +53,6 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private SignRepository signRepository;
 
-
     @Override
     public Request createRequest(CreateReqRequest request) {
 
@@ -73,7 +72,13 @@ public class RequestServiceImpl implements RequestService {
 
             Duration duration = Duration.between(startTime, endTime);
             long hours = duration.toHours();
-            numberOfDays = Double.parseDouble(hours / 24 + "." + hours % 24);
+
+            if(checkFullTime(request.getStartTime(),request.getEndTime()) == true){
+                numberOfDays = hours / 24  + (hours % 24 == 0 ? 0 : 0.5) ;
+            }
+            if(checkPartTime(request.getStartTime(),request.getEndTime()) == true){
+                numberOfDays = 0.5;
+            }
 
             if (numberOfDays < dayOff) {
                 User user = userRepository.findById(userDetails.getId()).orElseThrow();
@@ -94,6 +99,25 @@ public class RequestServiceImpl implements RequestService {
 
         requestRepository.save(obj);
         return obj;
+    }
+
+    public boolean checkFullTime(LocalTime startTime, LocalTime endTime){
+        WorkingTime workingTime = workingTimeRepository.findByWorkingTimeName(EWorkingTime.FULLTIME).orElseThrow();
+        if(startTime.compareTo(workingTime.getStartTime()) == 0 && endTime.compareTo(workingTime.getEndTime()) ==0){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkPartTime(LocalTime startTime, LocalTime endTime){
+        WorkingTime morningTime = workingTimeRepository.findByWorkingTimeName(EWorkingTime.MORNING_SHIFT).orElseThrow();
+        WorkingTime afternoonTime = workingTimeRepository.findByWorkingTimeName(EWorkingTime.AFTERNOON_SHIFT).orElseThrow();
+        if((startTime.compareTo(morningTime.getStartTime()) == 0 && endTime.compareTo(morningTime.getEndTime()) == 0) ||
+                (startTime.compareTo(afternoonTime.getStartTime()) == 0 && endTime.compareTo(afternoonTime.getEndTime()) == 0)
+        ){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -305,7 +329,12 @@ public class RequestServiceImpl implements RequestService {
 
                     Duration duration = Duration.between(startTime, endTime);
                     long hours = duration.toHours();
-                    numberOfDays = Double.parseDouble(hours / 24 + "." + hours % 24);
+                    if(checkFullTime(obj.getStartTime(),obj.getEndTime()) == true){
+                        numberOfDays = hours / 24  + (hours % 24 == 0 ? 0 : 0.5) ;
+                    }
+                    if(checkPartTime(obj.getStartTime(),obj.getEndTime()) == true){
+                        numberOfDays = 0.5;
+                    }
 
                     User user = userRepository.findById(userDetails.getId()).get();
                     user.setDayoff(dayOff + numberOfDays);

@@ -131,6 +131,7 @@ public class AttendanceController {
     public ResponseEntity<MessageResponse> updateLogSign(@Valid @RequestBody EditAttendance[] editAttendances) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.ok(attendanceService.updateAttendance(editAttendances));
     }
+    // them tim kiem ho ten nhan vien voi ma nhan vien
     @GetMapping("/get-list-attendance")
     public ResponseEntity<?> getList(@RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "30") int size,
