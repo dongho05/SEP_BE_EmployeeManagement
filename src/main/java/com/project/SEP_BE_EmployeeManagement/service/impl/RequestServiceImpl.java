@@ -382,7 +382,6 @@ public class RequestServiceImpl implements RequestService {
                 int checkRequestType = i.getRequestType().getId();
                 switch (checkRequestType) {
                     case 1: // nghỉ có lương
-
                         // xin nghỉ buổi sáng: start không  sau giờ kết thúc buổi sáng và end không sau giờ bắt đầu buổi chiều
                         if (!i.getStartTime().isAfter(morningShift.getEndTime()) && !i.getEndTime().isAfter(afternoonShift.getStartTime())) {
 
@@ -467,11 +466,6 @@ public class RequestServiceImpl implements RequestService {
 //                                        a.setRegularHour(regularHour);
                                     }
                                 }
-
-                                // người tạo request
-                                User u = i.getUser();
-                                u.setDayoff(u.getDayoff() - 0.5);
-                                userRepository.save(u);
                             }
                         }
 
@@ -559,11 +553,6 @@ public class RequestServiceImpl implements RequestService {
 //                                        a.setRegularHour(regularHour);
                                     }
                                 }
-
-                                // người tạo request
-                                User u = i.getUser();
-                                u.setDayoff(u.getDayoff() - 0.5);
-                                userRepository.save(u);
                             }
                         }
 
@@ -612,10 +601,6 @@ public class RequestServiceImpl implements RequestService {
 //                                            .minusSeconds(morningShift.getStartTime().getSecond());
 //                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
 //                                    a.setRegularHour(regularHour);
-                                    // người tạo request
-                                    User u = i.getUser();
-                                    u.setDayoff(u.getDayoff() - 0.5);
-                                    userRepository.save(u);
                                 }
 
                                 // buổi sáng có chấm công
@@ -629,10 +614,6 @@ public class RequestServiceImpl implements RequestService {
 //                                            .minusSeconds(afternoonShift.getStartTime().getSecond());
 //                                    LocalTime regularHour = a.getRegularHour().plusHours(deltaTime.getHour()).plusMinutes(deltaTime.getMinute()).plusSeconds(deltaTime.getSecond());
 //                                    a.setRegularHour(regularHour);
-                                    // người tạo request
-                                    User u = i.getUser();
-                                    u.setDayoff(u.getDayoff() - 0.5);
-                                    userRepository.save(u);
                                 }
 
                                 // lấy kis tự chấm công cũ
@@ -646,28 +627,6 @@ public class RequestServiceImpl implements RequestService {
 
                                 // không chấm công
                                 if (a.getTimeIn() == null && a.getTimeOut() == null) {
-                                    // buổi sáng đã xin nghỉ phép
-                                    if (signs[0].equals("P")) {
-                                        User u = i.getUser();
-                                        u.setDayoff(u.getDayoff() - 0.5);
-                                        userRepository.save(u);
-                                    }
-                                    // buổi chiều đã xin nghỉ phép
-                                    else if (signs[1].equals("P")) {
-                                        User u = i.getUser();
-                                        u.setDayoff(u.getDayoff() - 0.5);
-                                        userRepository.save(u);
-                                    }
-                                    // cả ngày xin nghỉ phép
-                                    else if (signs[0].equals("P") && signs[0].equals("")) {
-                                        User u = i.getUser();
-                                        u.setDayoff(u.getDayoff());
-                                        userRepository.save(u);
-                                    } else {
-                                        User u = i.getUser();
-                                        u.setDayoff(u.getDayoff() - 1);
-                                        userRepository.save(u);
-                                    }
                                     // chưa xin nghỉ phép
                                     noteLog.setSignChange(signRepository.findByName(ESign.P));
                                     a.setSigns(signRepository.findByName(ESign.P));
@@ -685,9 +644,7 @@ public class RequestServiceImpl implements RequestService {
 //                                    a.setRegularHour(regularHour);
                                 }
                             }
-
                         }
-
                         i.setCheck(true);
                         requestRepository.save(i);
                         break;
