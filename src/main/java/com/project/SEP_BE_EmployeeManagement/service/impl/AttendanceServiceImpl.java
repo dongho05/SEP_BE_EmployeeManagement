@@ -32,6 +32,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
@@ -325,13 +326,15 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Page<AttendanceResponse> getList(String departmentId, String fromDate, String toDate, Pageable pageable) {
+    public Page<AttendanceResponse> getList(String departmentId, String searchInput, String fromDate, String toDate, Pageable pageable) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
         String from = fromDate == null || fromDate.equals("") ? null : fromDate;
         String to = toDate == null || toDate.equals("") ? null : toDate;
+        String search = searchInput == null || searchInput.equals("") ? null : searchInput;
+
 
         Page<Attendance> list = null;
 
@@ -371,7 +374,15 @@ public class AttendanceServiceImpl implements AttendanceService {
                 return dto;
             }
         });
-        return result;
+        if(search == null){
+            return result;
+
+        }
+        List<AttendanceResponse> listFilter = result.stream()
+                .filter(dto->dto.getEmployeeCode().contains(search) || dto.getEmployeeCode().contains(search))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(listFilter,pageable,listFilter.size());
     }
 
     @Override

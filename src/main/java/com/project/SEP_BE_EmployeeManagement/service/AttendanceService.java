@@ -25,7 +25,7 @@ public interface AttendanceService {
     public List<Attendance> findAttendancesForUserInMonth(int year, int month);
 
     public Page<AttendanceStatistics> getAttendanceStatisticsOnMonth(int month, int year, Pageable pageable);
-    Page<AttendanceResponse> getList(String departmentId, String fromDate, String toDate, Pageable pageable);
+    Page<AttendanceResponse> getList(String departmentId,String search, String fromDate, String toDate, Pageable pageable);
     Page<AttendanceResponse> getListByUserId(String fromDate, String toDate, Pageable pageable);
 
     Attendance getByAttendanceId(Long id);
