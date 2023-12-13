@@ -379,7 +379,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         }
         List<AttendanceResponse> listFilter = result.stream()
-                .filter(dto->dto.getEmployeeCode().contains(search) || dto.getEmployeeName().contains(search))
+                .filter(dto->dto.getEmployeeCode().toLowerCase().contains(search.toLowerCase()) || dto.getEmployeeName().toLowerCase().contains(search.toLowerCase()))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(listFilter,pageable,listFilter.size());

@@ -71,10 +71,10 @@ public class RequestServiceImpl implements RequestService {
             LocalDateTime endTime = LocalDateTime.of(request.getEndDate(), request.getEndTime());
 
             Duration duration = Duration.between(startTime, endTime);
-            long hours = duration.toHours();
+            long days = duration.toDays();
 
             if(checkFullTime(request.getStartTime(),request.getEndTime()) == true){
-                numberOfDays = hours / 24  + (hours % 24 == 0 ? 0 : 0.5) ;
+                numberOfDays = days + 1.0;
             }
             if(checkPartTime(request.getStartTime(),request.getEndTime()) == true){
                 numberOfDays = 0.5;
@@ -328,9 +328,9 @@ public class RequestServiceImpl implements RequestService {
                     LocalDateTime endTime = LocalDateTime.of(obj.getEndDate(), obj.getEndTime());
 
                     Duration duration = Duration.between(startTime, endTime);
-                    long hours = duration.toHours();
+                    long days = duration.toDays();
                     if(checkFullTime(obj.getStartTime(),obj.getEndTime()) == true){
-                        numberOfDays = hours / 24  + (hours % 24 == 0 ? 0 : 0.5) ;
+                        numberOfDays = days + 1.0 ;
                     }
                     if(checkPartTime(obj.getStartTime(),obj.getEndTime()) == true){
                         numberOfDays = 0.5;
