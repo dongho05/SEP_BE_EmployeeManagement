@@ -140,5 +140,14 @@ public class RequestController {
         return ResponseEntity.ok("");
     }
 
+    @GetMapping("/get-list-request-by-user-id-and-start-date")
+    public ResponseEntity<?> getListByUserIdAndStartDate(@RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
+                                             @RequestParam(name = "page", defaultValue = "0") int page,
+                                             @RequestParam(name = "size", defaultValue = "30") int size
+                                             ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RequestResponse> pageRequests = requestService.getListByUserIdAndStartDate(startDate,pageable);
+        return ResponseEntity.ok(pageRequests);
+    }
 
 }

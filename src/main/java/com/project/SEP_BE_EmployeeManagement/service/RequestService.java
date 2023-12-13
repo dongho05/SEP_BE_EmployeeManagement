@@ -23,4 +23,6 @@ public interface RequestService {
     void updateStatusRequest(long requestId, int statusRequest,String note);
     List<Request> processRequestOnMonth(Integer day, Integer month, Integer year);
 //    List<Request> processRequestOnMonth();
+
+    Page<RequestResponse> getListByUserIdAndStartDate(String startDate,Pageable pageable);
 }

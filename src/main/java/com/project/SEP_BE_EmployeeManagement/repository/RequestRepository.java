@@ -35,5 +35,10 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             "AND r.isCheck = false " +
             "ORDER BY r.createdDate" )
     List<Request> findRequestsAcceptedInCurrentMonth(LocalDate date);
+    @Query(value = "select * from Request where  request_type_id = 4 \n" +
+            "and start_date= :startDate\n" +
+            "and user_id = :userId",
+    nativeQuery = true)
+    Page<Request> getListByUserIdAndStartDate(String startDate, Long userId,Pageable pageable);
 
 }

@@ -1365,4 +1365,44 @@ public class RequestServiceImpl implements RequestService {
         }
         return requestList;
     }
+
+    @Override
+    public Page<RequestResponse> getListByUserIdAndStartDate(String startDate,Pageable pageable) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String dateInput = startDate == null || startDate.equals("") ? null : startDate;
+
+        Page<Request> list = requestRepository.getListByUserIdAndStartDate(dateInput,userDetails.getId(),pageable);
+
+        Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
+            @Override
+            public RequestResponse apply(Request entity) {
+
+                RequestResponse dto = new RequestResponse();
+                // Conversion logic
+                dto.setId(entity.getId());
+                dto.setRequestContent(entity.getRequestContent());
+                dto.setRequestTitle(entity.getRequestTitle());
+                dto.setCreatedBy(entity.getCreatedBy());
+                dto.setCreatedDate(entity.getCreatedDate());
+                dto.setEndDate(entity.getEndDate());
+                dto.setEndTime(entity.getEndTime());
+                dto.setRequestTypeId(entity.getRequestType().getId());
+                dto.setStartDate(entity.getStartDate());
+                dto.setStartTime(entity.getStartTime());
+                dto.setUpdatedBy(entity.getUpdatedBy());
+                dto.setUpdatedDate(entity.getUpdatedDate());
+                dto.setUserId(entity.getUser().getId());
+                dto.setStatus(entity.getStatus());
+                dto.setDepartmentId(Math.toIntExact(entity.getUser().getDepartment().getId()));
+                dto.setDepartment(entity.getUser().getDepartment());
+                dto.setUser(entity.getUser());
+                dto.setNote(entity.getNote());
+                dto.setRequestType(entity.getRequestType());
+                return dto;
+            }
+        });
+        return result;
+    }
 }
