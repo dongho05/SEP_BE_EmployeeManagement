@@ -1,6 +1,7 @@
 package com.project.SEP_BE_EmployeeManagement.controller;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.request.CreateReqRequest;
+import com.project.SEP_BE_EmployeeManagement.dto.request.request.UpdateReqRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.request.UpdateStatusRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.request.RequestResponse;
 import com.project.SEP_BE_EmployeeManagement.dto.response.user.UserResponse;
@@ -100,14 +101,9 @@ public class RequestController {
         return ResponseEntity.ok(pageRequests);
     }
 
-    @PutMapping("/update-request/{id}")
-    public ResponseEntity<?> updateRequest(@RequestBody CreateReqRequest request, @PathVariable int id) {
-
-        if (request.getStartDate().isAfter(request.getEndDate()) == true) {
-            return ResponseEntity.internalServerError().body("Hãy chọn ngày bắt đầu nhỏ hơn ngày kết thúc.");
-        }
-
-        Request obj = requestService.updateRequest(request, id);
+    @PostMapping("/update-request/{id}")
+    public ResponseEntity<?> updateRequest(@RequestBody UpdateReqRequest statusRequest , @PathVariable int id) {
+        requestService.updateRequest(id,statusRequest.getStatus());
         return ResponseEntity.ok("Cập nhật yêu cầu thành công.");
     }
 

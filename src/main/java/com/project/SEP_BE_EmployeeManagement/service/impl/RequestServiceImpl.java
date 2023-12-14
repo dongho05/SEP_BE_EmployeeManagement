@@ -121,26 +121,46 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request updateRequest(CreateReqRequest request, long id) {
+    public void updateRequest(long id , int statusRequest) {
+        LocalDate localDate = LocalDate.now();
+
+        Double numberOfDays = 0.0;
+
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Double dayOff = userService.getDayOffByUserId(userDetails.getId());
+
 
         Request obj = requestRepository.findById(id);
         if (obj == null) {
             throw new RuntimeException("Không tìm thấy yêu cầu");
         }
 
-        obj.setRequestContent(request.getRequestContent());
-        obj.setRequestTitle(request.getRequestTitle());
-        obj.setEndDate(request.getEndDate());
-        obj.setStartDate(request.getStartDate());
-        obj.setStartTime(request.getStartTime());
-        obj.setEndTime(request.getEndTime());
-        obj.setRequestType(requestTypeService.findById(request.getRequestTypeId()));
-        obj.setUser(userRepository.findById(userDetails.getId()).get());
+        if (obj != null) {
+            obj.setStatus(statusRequest);
+            obj.setAcceptBy(userDetails.getId());
+            obj.setAcceptAt(localDate);
+            if (obj.getRequestType().getId() == 1) {
+                if (statusRequest == 4) {
+                    LocalDateTime startTime = LocalDateTime.of(obj.getStartDate(), obj.getStartTime());
+                    LocalDateTime endTime = LocalDateTime.of(obj.getEndDate(), obj.getEndTime());
 
-        requestRepository.save(obj);
-        return obj;
+                    Duration duration = Duration.between(startTime, endTime);
+                    long days = duration.toDays();
+                    if(checkFullTime(obj.getStartTime(),obj.getEndTime()) == true){
+                        numberOfDays = days + 1.0 ;
+                    }
+                    if(checkPartTime(obj.getStartTime(),obj.getEndTime()) == true){
+                        numberOfDays = 0.5;
+                    }
+
+                    User user = userRepository.findById(userDetails.getId()).get();
+                    user.setDayoff(dayOff + numberOfDays);
+                    userRepository.save(user);
+                }
+            }
+            requestRepository.save(obj);
+        }
     }
 
     @Override
