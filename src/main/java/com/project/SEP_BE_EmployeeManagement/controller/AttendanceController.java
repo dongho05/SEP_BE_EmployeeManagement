@@ -206,7 +206,7 @@ public class AttendanceController {
         return new ResponseEntity(HttpStatus.OK);
     }
     @PostMapping("/get-attendance-by-user-and-date-log")
-    public ResponseEntity<?> getAttendanceByUserIdAndDateLog(@RequestBody AttendanceRequestDTO requestDTO){
+    public ResponseEntity<?> getAttendanceByUserIdAndDateLog(@RequestBody AttendanceRequestDTO requestDTO) throws Exception {
         return ResponseEntity.ok(attendanceService.getAttendanceByUserIdAndDateLog(requestDTO.getDateLog()));
     }
 }

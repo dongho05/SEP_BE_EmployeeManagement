@@ -514,12 +514,15 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Attendance getAttendanceByUserIdAndDateLog(String dateLog) {
+    public Attendance getAttendanceByUserIdAndDateLog(String dateLog) throws Exception {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String date = dateLog == null || dateLog.equals("") ? null : dateLog;
-        Attendance attendance = attendanceRepository.getAttendanceByUserIdAndDateLog(userDetails.getId(),date).orElseThrow();
+        Attendance attendance = attendanceRepository.getAttendanceByUserIdAndDateLog(userDetails.getId(),date).get();
+        if(attendance == null){
+            throw new Exception("Không tìm thấy dữ liệu tương ứng.");
+        }
         return attendance;
     }
 }

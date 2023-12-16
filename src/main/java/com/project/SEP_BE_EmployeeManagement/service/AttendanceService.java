@@ -36,6 +36,6 @@ public interface AttendanceService {
 
     MessageResponse updateAttendance(EditAttendance[] editAttendances);
 
-    Attendance getAttendanceByUserIdAndDateLog(String dateLog);
+    Attendance getAttendanceByUserIdAndDateLog(String dateLog) throws Exception;
 
 }
