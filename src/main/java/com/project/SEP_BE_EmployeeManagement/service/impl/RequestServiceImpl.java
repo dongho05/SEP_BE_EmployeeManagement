@@ -83,7 +83,7 @@ public class RequestServiceImpl implements RequestService {
             if(dayOff < 0){
                 throw new RuntimeException("Bạn đã hết ngày nghỉ.");
             }
-            if (numberOfDays < dayOff) {
+            if (numberOfDays <= dayOff) {
                 User user = userRepository.findById(userDetails.getId()).orElseThrow();
                 user.setDayoff(dayOff - numberOfDays);
                 userRepository.save(user);
