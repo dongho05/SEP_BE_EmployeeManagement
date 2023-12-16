@@ -512,4 +512,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         return new MessageResponse("Successfully!");
     }
+
+    @Override
+    public Attendance getAttendanceByUserIdAndDateLog(String dateLog) {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String date = dateLog == null || dateLog.equals("") ? null : dateLog;
+        Attendance attendance = attendanceRepository.getAttendanceByUserIdAndDateLog(userDetails.getId(),date).orElseThrow();
+        return attendance;
+    }
 }

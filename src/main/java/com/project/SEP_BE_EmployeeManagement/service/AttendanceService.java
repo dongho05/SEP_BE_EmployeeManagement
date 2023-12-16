@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface AttendanceService {
@@ -34,5 +36,6 @@ public interface AttendanceService {
 
     MessageResponse updateAttendance(EditAttendance[] editAttendances);
 
+    Attendance getAttendanceByUserIdAndDateLog(String dateLog);
 
 }

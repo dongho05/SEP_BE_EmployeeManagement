@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
@@ -69,4 +70,8 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "where u.department.id= ?1 and MONTH (l.dateLog) = ?2 and YEAR (l.dateLog) = ?3 " +
             "order by l.dateLog asc ")
     List<Attendance> findByMonthAndDepartmentSortDate(Long id, Integer month,Integer year);
+
+    @Query(value = "select a from Attendance a where a.user_id = :userId and a.date_log= :dateLog",
+    nativeQuery = true)
+    Optional<Attendance> getAttendanceByUserIdAndDateLog(Long userId, String dateLog);
 }
