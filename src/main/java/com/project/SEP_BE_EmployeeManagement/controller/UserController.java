@@ -52,6 +52,12 @@ public class UserController {
 
     }
 
+    @GetMapping(value = "/getAll")
+    public List<User> getAll() throws MessagingException, UnsupportedEncodingException {
+        return userRepository.findAll();
+
+    }
+
     @GetMapping(value = "/data")
     public ResponseEntity<Page<User>> getData(@RequestParam(name = "page", defaultValue = "0") int page,
                                               @RequestParam(name = "size", defaultValue = "30") int size,

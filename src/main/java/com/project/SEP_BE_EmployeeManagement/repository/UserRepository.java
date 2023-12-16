@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUserCode(String code);
 
+    List<User> findAll();
+
 
     @Query(value = "select u from User u " +
             " join u.department d " +

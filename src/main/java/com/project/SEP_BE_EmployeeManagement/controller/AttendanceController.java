@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,14 +84,21 @@ public class AttendanceController {
             for (User user : usersDepart) {
                 UserAttendance userAttendance = new UserAttendance();
                 List<Attendance> list = new ArrayList<>();
+                LocalTime otHour = LocalTime.of(0, 0, 0);
                 for (Attendance attendance : attendances) {
                     if (attendance.getUser() == user) {
                         list.add(attendance);
+                        if(attendance.getOverTime()!=null){
+                            otHour = attendance.getOverTime().plusHours(otHour.getHour())
+                                    .plusMinutes(otHour.getMinute())
+                                    .plusSeconds(otHour.getSecond());
+                        }
                     } else continue;
                 }
                 userAttendance.setCode(user.getUserCode());
                 userAttendance.setName(user.getFullName());
                 userAttendance.setAttendances(list);
+                userAttendance.setOtHour(otHour);
                 if(search.equals("") )
                     userAttendanceList.add(userAttendance);
                 else{
@@ -105,14 +113,22 @@ public class AttendanceController {
             for (User user : users) {
                 UserAttendance userAttendance = new UserAttendance();
                 List<Attendance> list = new ArrayList<>();
+                LocalTime otHour = LocalTime.of(0, 0, 0);
                 for (Attendance attendance : attendances) {
                     if (attendance.getUser() == user) {
                         list.add(attendance);
+                        if(attendance.getOverTime()!=null){
+                            otHour = attendance.getOverTime().plusHours(otHour.getHour())
+                                    .plusMinutes(otHour.getMinute())
+                                    .plusSeconds(otHour.getSecond());
+                        }
+
                     } else continue;
                 }
                 userAttendance.setCode(user.getUserCode());
                 userAttendance.setName(user.getFullName());
                 userAttendance.setAttendances(list);
+                userAttendance.setOtHour(otHour);
                 if(search.equals("") )
                     userAttendanceList.add(userAttendance);
                 else{

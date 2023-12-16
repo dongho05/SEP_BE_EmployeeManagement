@@ -3,6 +3,7 @@ package com.project.SEP_BE_EmployeeManagement.dto;
 import com.project.SEP_BE_EmployeeManagement.model.Attendance;
 import lombok.Data;
 
+import java.time.LocalTime;
 import java.util.List;
 @Data
 public class UserAttendance {
@@ -42,4 +43,5 @@ public String getCode() {
 
     private String code;
     private String name;
+    private LocalTime otHour;
 }
