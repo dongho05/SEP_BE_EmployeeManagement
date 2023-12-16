@@ -71,7 +71,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "order by l.dateLog asc ")
     List<Attendance> findByMonthAndDepartmentSortDate(Long id, Integer month,Integer year);
 
-    @Query(value = "select a from Attendance a where a.user_id = :userId and a.date_log= :dateLog",
+    @Query(value = "select * from Attendance a where a.user_id = :userId and a.date_log= :dateLog",
     nativeQuery = true)
     Optional<Attendance> getAttendanceByUserIdAndDateLog(Long userId, String dateLog);
 }
