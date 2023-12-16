@@ -1007,20 +1007,22 @@ public class RequestServiceImpl implements RequestService {
                     case 5: // làm thêm giờ (xin sau)
                         for (Attendance a : attendanceList) {
                             LocalTime overTime = LocalTime.of(0, 0, 0);
-                            if (!a.getTimeOut().isAfter(i.getEndTime())) {
-                                overTime = a.getTimeOut().minusHours(i.getStartTime().getHour())
-                                        .minusMinutes(i.getStartTime().getMinute())
-                                        .minusSeconds(i.getStartTime().getSecond());
-                            } else {
-                                overTime = i.getEndTime().minusHours(i.getStartTime().getHour())
-                                        .minusMinutes(i.getStartTime().getMinute())
-                                        .minusSeconds(i.getStartTime().getSecond());
+                            if(a.getTimeOut()!= null){
+                                if (!a.getTimeOut().isAfter(i.getEndTime())) {
+                                    overTime = a.getTimeOut().minusHours(i.getStartTime().getHour())
+                                            .minusMinutes(i.getStartTime().getMinute())
+                                            .minusSeconds(i.getStartTime().getSecond());
+                                } else {
+                                    overTime = i.getEndTime().minusHours(i.getStartTime().getHour())
+                                            .minusMinutes(i.getStartTime().getMinute())
+                                            .minusSeconds(i.getStartTime().getSecond());
+                                }
+                                a.setOverTime(overTime);
+                                LocalTime totalWork = a.getRegularHour().plusHours(overTime.getHour())
+                                        .plusMinutes(overTime.getMinute())
+                                        .plusSeconds(overTime.getSecond());
+                                a.setTotalWork(totalWork);
                             }
-                            a.setOverTime(overTime);
-                            LocalTime totalWork = a.getRegularHour().plusHours(overTime.getHour())
-                                    .plusMinutes(overTime.getMinute())
-                                    .plusSeconds(overTime.getSecond());
-                            a.setTotalWork(totalWork);
                         }
                         i.setCheck(true);
                         requestRepository.save(i);
