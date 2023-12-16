@@ -5,7 +5,6 @@ import com.project.SEP_BE_EmployeeManagement.dto.request.CreateUser;
 import com.project.SEP_BE_EmployeeManagement.dto.request.LoginRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.UpdateUserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.request.User.ProfileRequest;
-import com.project.SEP_BE_EmployeeManagement.dto.request.User.UserRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.MessageResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Contract;
 import com.project.SEP_BE_EmployeeManagement.model.Department;
@@ -264,6 +263,11 @@ public class UserServiceImp implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Double getDayOffByUserId(Long id) {
+        return userRepository.getDayOffByUserId(id).orElseThrow();
     }
 
 

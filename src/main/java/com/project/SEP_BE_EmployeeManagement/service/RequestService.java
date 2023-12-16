@@ -16,11 +16,13 @@ import java.util.List;
 public interface RequestService {
 
     Request createRequest(CreateReqRequest request);
-    Request updateRequest(CreateReqRequest request, long id);
+    void updateRequest(long id , int statusRequest);
     RequestResponse findById(long id);
     Page<RequestResponse> getList(String search, String departmentId, String statusReq, String fromDate, String toDate, Pageable pageable);
     Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate, Pageable pageable);
     void updateStatusRequest(long requestId, int statusRequest,String note);
     List<Request> processRequestOnMonth(Integer day, Integer month, Integer year);
 //    List<Request> processRequestOnMonth();
+
+    Page<RequestResponse> getListByUserIdAndStartDate(String startDate,Pageable pageable);
 }
