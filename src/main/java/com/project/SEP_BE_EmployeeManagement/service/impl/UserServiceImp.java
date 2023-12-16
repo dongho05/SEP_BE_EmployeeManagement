@@ -20,6 +20,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -180,11 +182,20 @@ public class UserServiceImp implements UserService {
         user.setPassword(encoder.encode(password.trim()));
 //        user.setPassword(encoder.encode(createUser.getPassword()));
 
+        String userCode = createUser.getUserCode().trim();
+        int length = userCode.length();
+        if (length == 1) userCode = "FPT_0000" + createUser.getUserCode().trim();
+        if (length == 2) userCode = "FPT_000" + createUser.getUserCode().trim();
+        if (length == 3) userCode = "FPT_00" + createUser.getUserCode().trim();
+        if (length == 4) userCode = "FPT_0" + createUser.getUserCode().trim();
+        if (length == 5) userCode = "FPT_" + createUser.getUserCode().trim();
         // set user code
         if (userRepository.existsByUserCode(createUser.getUserCode().trim())) {
             throw new RuntimeException("Mã nhân viên đã tồn tại!");
+//            return new ResponseEntity<>("Mã nhân viên đã tồn tại!", HttpStatus.OK);
         }
-        user.setUserCode("FPT_"+createUser.getUserCode());
+//        user.setUserCode("FPT_"+createUser.getUserCode());
+        user.setUserCode(userCode);
 
         if (userRepository.existsByEmail(createUser.getEmail().trim())) {
             throw new RuntimeException("Email đã tồn tại!");
@@ -221,17 +232,20 @@ public class UserServiceImp implements UserService {
         userRepository.save(user);
 
         //set contracts
-        Set<Contract> contracts = new HashSet<>();
-        Contract contract = new Contract();
-        String contractFile = fileManagerService.saveUserContract(createUser.getContractFile());
-        contract.setFileName(contractFile);
-        contract.setUser(user);
+        if(createUser.getContractFile() != null){
+            Set<Contract> contracts = new HashSet<>();
+            Contract contract = new Contract();
+            String contractFile = fileManagerService.saveUserContract(createUser.getContractFile());
+            contract.setFileName(contractFile);
+            contract.setUser(user);
 //        contract.setContractName(createUser.getContractName());
-        contract.setContractName("Hợp đồng");
-        contractRepository.save(contract);
+            contract.setContractName("Hợp đồng");
+            contractRepository.save(contract);
 
-        contracts.add(contract);
-        user.setContracts(contracts);
+            contracts.add(contract);
+            user.setContracts(contracts);
+        }
+
         userRepository.save(user);
         return user;
     }
