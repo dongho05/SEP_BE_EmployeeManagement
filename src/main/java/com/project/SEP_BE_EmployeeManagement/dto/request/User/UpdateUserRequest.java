@@ -26,4 +26,8 @@ public class UpdateUserRequest {
     private long departmentId;
     private MultipartFile userImage;
     private MultipartFile contractFile;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startWork;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endWork;
 }
