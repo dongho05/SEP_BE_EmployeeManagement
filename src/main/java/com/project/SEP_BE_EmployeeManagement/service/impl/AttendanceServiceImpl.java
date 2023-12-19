@@ -234,7 +234,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                         LogInLateOutEarly logInLateOutEarly = new LogInLateOutEarly();
                         logInLateOutEarly.setUser(user);
                         logInLateOutEarly.setDateCheck(date);
-                        logInLateOutEarly.setIOKind("LATE_CHECKIN");
+                        logInLateOutEarly.setIOKind("Đến muộn");
                         logInLateOutEarly.setTimeStart(attendance.getTimeIn());
                         logInLateOutEarly.setTimeEnd(attendance.getTimeOut());
                         LocalTime duration = logInLateOutEarly.getTimeStart()
@@ -248,7 +248,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                         LogInLateOutEarly logInLateOutEarly = new LogInLateOutEarly();
                         logInLateOutEarly.setUser(user);
                         logInLateOutEarly.setDateCheck(date);
-                        logInLateOutEarly.setIOKind("EARLY_CHECKOUT");
+                        logInLateOutEarly.setIOKind("Về sớm");
                         logInLateOutEarly.setTimeStart(attendance.getTimeIn());
                         logInLateOutEarly.setTimeEnd(attendance.getTimeOut());
                         LocalTime duration = afternoonShift.getEndTime()
