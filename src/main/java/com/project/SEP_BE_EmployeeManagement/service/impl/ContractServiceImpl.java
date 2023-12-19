@@ -57,11 +57,13 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Page<Contract> getDataTest(String search, String deptId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-
+        System.out.println("Data test: "+ search);
+        System.out.println("Data test: "+ deptId);
         Long idDept = null;
         if (!deptId.isEmpty()) {
             idDept = Long.valueOf(deptId);
         }
+        System.out.println("Data test: "+ deptId);
         Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
         return page;
     }

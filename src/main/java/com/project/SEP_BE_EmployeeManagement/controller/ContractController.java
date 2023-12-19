@@ -50,6 +50,8 @@ public class ContractController {
                                                          @RequestParam(name = "search", required = false, defaultValue = "") String search,
                                                        @RequestParam(name = "deptId", required = false, defaultValue = "") String deptId) {
 
+
+
         Page<Contract> response = contractService.getDataTest(search,deptId, pageNo, pageSize);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
