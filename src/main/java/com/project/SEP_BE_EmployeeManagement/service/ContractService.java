@@ -18,7 +18,7 @@ public interface ContractService {
     List<Contract> GetAll();
     Page<ContractDto> getData(String search, String deptId, int pageNo,int pageSize);
 
-    Page<Contract> getDataTest(String search, String deptId, int pageNo,int pageSize);
+    Page<Contract> getDataTest(String search, String deptId, String empId, int pageNo,int pageSize);
 
     ContractDto getContractById(long id) throws NotFoundException;
 

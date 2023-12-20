@@ -43,28 +43,30 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Page<ContractDto> getData(String search, String deptId, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Long idDept = Long.valueOf(deptId);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
-        System.out.println(page.getContent());
-        System.out.println("test ok");
-
-        Page<ContractDto> response = ContractMapper.toDtoPage(page);
-
-        return response;
+//        Pageable pageable = PageRequest.of(pageNo, pageSize);
+//        Long idDept = Long.valueOf(deptId);
+//        String empId="";
+//        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept,empId, pageable);
+//        System.out.println(page.getContent());
+//        System.out.println("test ok");
+//
+//        Page<ContractDto> response = ContractMapper.toDtoPage(page);
+//
+//        return response;
+        return null;
     }
 
     @Override
-    public Page<Contract> getDataTest(String search, String deptId, int pageNo, int pageSize) {
+    public Page<Contract> getDataTest(String search, String deptId,String empId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        System.out.println("Data test: "+ search);
-        System.out.println("Data test: "+ deptId);
         Long idDept = null;
         if (!deptId.isEmpty()) {
             idDept = Long.valueOf(deptId);
         }
         System.out.println("Data test: "+ deptId);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
+        System.out.println("Data test: "+ empId);
+        System.out.println("Data test: "+ search);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept,empId, pageable);
         return page;
     }
 

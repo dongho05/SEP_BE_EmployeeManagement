@@ -19,8 +19,8 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query(value = "select * from contract where user_id = ?1 order by updated_date desc",nativeQuery = true)
     List<Contract> getContractsByUser(long userId);
 
-    @Query(value = "SELECT d FROM Contract d WHERE (d.contractName IS NOT NULL) AND (d.user.fullName LIKE %:text%)  AND (:deptId IS NULL OR d.user.department.id = :deptId)")
-    Page<Contract> findAllByContractNameIsNotNull(@Param("text") String search, @Param("deptId") Long deptId,Pageable pageable);
+    @Query(value = "SELECT d FROM Contract d WHERE (d.contractName IS NOT NULL) AND (d.user.fullName LIKE %:text%) AND (d.user.userCode LIKE %:empId%)  AND (:deptId IS NULL OR d.user.department.id = :deptId)")
+    Page<Contract> findAllByContractNameIsNotNull(@Param("text") String search, @Param("deptId") Long deptId, @Param("empId") String empId,Pageable pageable);
     //Page<Contract> findAllByContractNameIsNotNull(Pageable pageable);
     //Page<Contract> getAllByContractNameIsNotNull(); //AND (d.contractName LIKE %:search%)
 
