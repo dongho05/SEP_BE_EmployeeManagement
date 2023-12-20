@@ -220,13 +220,14 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getList(String searchInput, String departmentId, String statusReq, String fromDate, String toDate, Pageable pageable) {
+    public Page<RequestResponse> getList(String searchInput, String departmentId, String statusReq, String fromDate,String requestType, String toDate, Pageable pageable) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
         String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
         String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String requestTypeInput = requestType == null || requestType.equals("") ? null : requestType;
         String to = toDate == null || toDate.equals("") ? null : toDate;
         String status = statusReq == null || statusReq.equals("") ? "" : statusReq;
 
@@ -242,6 +243,7 @@ public class RequestServiceImpl implements RequestService {
                     , null
                     , from
                     , to
+                    ,Integer.parseInt(requestTypeInput)
                     , pageable);
         } else if (isMod) {
             list = requestRepository.getList(search
@@ -250,9 +252,10 @@ public class RequestServiceImpl implements RequestService {
                     , null
                     , from
                     , to
+                    ,Integer.parseInt(requestTypeInput)
                     , pageable);
         } else {
-            list = requestRepository.getList(search, null, status, userDetails.getId(), from, to, pageable);
+            list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,Integer.parseInt(requestTypeInput), pageable);
         }
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
@@ -288,16 +291,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate, Pageable pageable) {
+    public Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate,String requestType, Pageable pageable) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
         String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String requestTypeInput = requestType == null || requestType.equals("") ? null : requestType;
         String to = toDate == null || toDate.equals("") ? null : toDate;
         String status = statusReq == null || statusReq.equals("") ? "" : statusReq;
 
-        Page<Request> list = requestRepository.getList(search, null, status, userDetails.getId(), from, to, pageable);
+        Page<Request> list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,Integer.parseInt(requestTypeInput), pageable);
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
             @Override
