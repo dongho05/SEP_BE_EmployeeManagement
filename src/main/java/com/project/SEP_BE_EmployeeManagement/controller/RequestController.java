@@ -81,11 +81,12 @@ public class RequestController {
                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "30") int size,
                                      @RequestParam(name = "status", required = false, defaultValue = "") String statusReq,
+                                     @RequestParam(name = "type", required = false, defaultValue = "") String requestType,
                                      @RequestParam(name = "departmentId", defaultValue = "") String departmentId,
                                      @RequestParam(name = "from", defaultValue = "", required = false) String fromDate,
                                      @RequestParam(name = "to", defaultValue = "", required = false) String toDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestResponse> pageRequests = requestService.getList(search, departmentId, statusReq, fromDate, toDate, pageable);
+        Page<RequestResponse> pageRequests = requestService.getList(search, departmentId, statusReq, fromDate, toDate,requestType, pageable);
         return ResponseEntity.ok(pageRequests);
     }
 
@@ -94,10 +95,11 @@ public class RequestController {
                                              @RequestParam(name = "page", defaultValue = "0") int page,
                                              @RequestParam(name = "size", defaultValue = "30") int size,
                                              @RequestParam(name = "status", required = false, defaultValue = "") String statusReq,
+                                             @RequestParam(name = "type", required = false, defaultValue = "") String requestType,
                                              @RequestParam(name = "from", defaultValue = "", required = false) String fromDate,
                                              @RequestParam(name = "to", defaultValue = "", required = false) String toDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RequestResponse> pageRequests = requestService.getListByUserId(search, statusReq, fromDate, toDate, pageable);
+        Page<RequestResponse> pageRequests = requestService.getListByUserId(search, statusReq, fromDate, toDate,requestType, pageable);
         return ResponseEntity.ok(pageRequests);
     }
 

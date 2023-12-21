@@ -19,9 +19,10 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             " and (:statusReq is null or :statusReq = '' or r.status = :statusReq) "+
             " and (:userId is null or :userId ='' or r.user_id = :userId) " +
             " and (:fromDate is null or :fromDate='' or r.create_date >= :fromDate) " +
+            " and (:requestType is null or :requestType='' or r.request_type_id = :requestType) " +
             " and (:toDate is null or :toDate='' or r.create_date <= :toDate) " +
             " order by r.request_id",nativeQuery = true)
-    Page<Request> getList(String search, String departmentId, String statusReq, Long userId, String fromDate, String toDate, Pageable pageable);
+    Page<Request> getList(String search, String departmentId, String statusReq, Long userId, String fromDate, String toDate, int requestType, Pageable pageable);
     Boolean existsById(int id);
     Request findById(long id);
 
@@ -35,7 +36,7 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
             "AND r.isCheck = false " +
             "ORDER BY r.createdDate" )
     List<Request> findRequestsAcceptedInCurrentMonth(LocalDate date);
-    @Query(value = "select * from Request where  request_type_id = 4 \n" +
+    @Query(value = "select * from Request where  request_type_id = 4 and status in (1,2) \n" +
             "and start_date= :startDate\n" +
             "and user_id = :userId",
     nativeQuery = true)
