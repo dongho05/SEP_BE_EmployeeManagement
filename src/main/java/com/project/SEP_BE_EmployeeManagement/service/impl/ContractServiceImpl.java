@@ -76,10 +76,15 @@ public class ContractServiceImpl implements ContractService {
         contract.setContractName(createContract.getContractName());
         String contractFile = fileManagerService.saveUserContract(createContract.getContractFile());
         contract.setFileName(contractFile);
+        contract.setStartWork(createContract.getStartWork());
+        contract.setEndWork(createContract.getEndWork());
         Long userId = createContract.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
         contract.setUser(user);
         contractRepository.save(contract);
+        user.setStartWork(createContract.getStartWork());
+        user.setEndWork(createContract.getEndWork());
+        userRepository.save(user);
         return contract;
     }
 

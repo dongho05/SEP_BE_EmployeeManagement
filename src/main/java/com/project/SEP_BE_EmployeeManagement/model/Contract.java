@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,12 @@ public class Contract extends BaseEntity{
 ////    @EqualsAndHashCode.Exclude // không sử dụng trường này trong equals và hashcode
 ////    @ToString.Exclude // Khoonhg sử dụng trong toString()
 //    private Set<User> users;
+
+    @Column(name = "start_work")
+    private LocalDate startWork;
+
+    @Column(name = "end_work")
+    private LocalDate endWork;
 
     @ManyToOne
     @JoinColumn(name = "user_id") // thông qua khóa ngoại contract_id
