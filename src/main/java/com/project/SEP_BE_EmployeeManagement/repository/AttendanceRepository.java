@@ -26,7 +26,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             " and (:userId is null or :userId ='' or a.user_id = :userId) " +
             " and (:fromDate is null or :fromDate='' or a.date_log >= :fromDate) " +
             " and (:toDate is null or :toDate='' or a.date_log <= :toDate) " +
-            " order by a.attendance_id",nativeQuery = true)
+            " order by a.date_log desc ",nativeQuery = true)
     Page<Attendance> getList(String departmentId, String userId, String fromDate, String toDate, Pageable pageable);
 
     @Query("SELECT a FROM Attendance a WHERE a.user.id = :userId AND a.dateLog = :targetDate")
