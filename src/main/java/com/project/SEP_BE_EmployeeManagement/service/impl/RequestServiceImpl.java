@@ -243,7 +243,7 @@ public class RequestServiceImpl implements RequestService {
                     , null
                     , from
                     , to
-                    ,Integer.parseInt(requestTypeInput)
+                    ,requestTypeInput
                     , pageable);
         } else if (isMod) {
             list = requestRepository.getList(search
@@ -252,10 +252,10 @@ public class RequestServiceImpl implements RequestService {
                     , null
                     , from
                     , to
-                    ,Integer.parseInt(requestTypeInput)
+                    ,requestTypeInput
                     , pageable);
         } else {
-            list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,Integer.parseInt(requestTypeInput), pageable);
+            list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,requestTypeInput, pageable);
         }
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
@@ -301,7 +301,7 @@ public class RequestServiceImpl implements RequestService {
         String to = toDate == null || toDate.equals("") ? null : toDate;
         String status = statusReq == null || statusReq.equals("") ? "" : statusReq;
 
-        Page<Request> list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,Integer.parseInt(requestTypeInput), pageable);
+        Page<Request> list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,requestTypeInput, pageable);
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
             @Override
