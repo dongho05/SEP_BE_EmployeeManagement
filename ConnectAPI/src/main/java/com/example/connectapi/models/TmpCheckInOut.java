@@ -29,7 +29,7 @@ public class TmpCheckInOut {
     private String PhotoImage;
     private Float temperature;
     private Integer maskflag;
-    private String CardNo;
+//    private String CardNo;
 
 
 //    @Column(name = "BadgeNumber")

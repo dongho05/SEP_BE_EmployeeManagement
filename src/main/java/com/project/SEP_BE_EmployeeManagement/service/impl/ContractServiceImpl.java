@@ -43,26 +43,30 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Page<ContractDto> getData(String search, String deptId, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Long idDept = Long.valueOf(deptId);
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
-        System.out.println(page.getContent());
-        System.out.println("test ok");
-
-        Page<ContractDto> response = ContractMapper.toDtoPage(page);
-
-        return response;
+//        Pageable pageable = PageRequest.of(pageNo, pageSize);
+//        Long idDept = Long.valueOf(deptId);
+//        String empId="";
+//        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept,empId, pageable);
+//        System.out.println(page.getContent());
+//        System.out.println("test ok");
+//
+//        Page<ContractDto> response = ContractMapper.toDtoPage(page);
+//
+//        return response;
+        return null;
     }
 
     @Override
-    public Page<Contract> getDataTest(String search, String deptId, int pageNo, int pageSize) {
+    public Page<Contract> getDataTest(String search, String deptId,String empId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-
         Long idDept = null;
         if (!deptId.isEmpty()) {
             idDept = Long.valueOf(deptId);
         }
-        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept, pageable);
+        System.out.println("Data test: "+ deptId);
+        System.out.println("Data test: "+ empId);
+        System.out.println("Data test: "+ search);
+        Page<Contract> page = contractRepository.findAllByContractNameIsNotNull(search, idDept,empId, pageable);
         return page;
     }
 
@@ -72,10 +76,15 @@ public class ContractServiceImpl implements ContractService {
         contract.setContractName(createContract.getContractName());
         String contractFile = fileManagerService.saveUserContract(createContract.getContractFile());
         contract.setFileName(contractFile);
+        contract.setStartWork(createContract.getStartWork());
+        contract.setEndWork(createContract.getEndWork());
         Long userId = createContract.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
         contract.setUser(user);
         contractRepository.save(contract);
+        user.setStartWork(createContract.getStartWork());
+        user.setEndWork(createContract.getEndWork());
+        userRepository.save(user);
         return contract;
     }
 

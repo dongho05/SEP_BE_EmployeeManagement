@@ -18,8 +18,8 @@ public interface RequestService {
     Request createRequest(CreateReqRequest request);
     void updateRequest(long id , int statusRequest);
     RequestResponse findById(long id);
-    Page<RequestResponse> getList(String search, String departmentId, String statusReq, String fromDate, String toDate, Pageable pageable);
-    Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate, Pageable pageable);
+    Page<RequestResponse> getList(String search, String departmentId, String statusReq, String fromDate, String toDate,String requestType, Pageable pageable);
+    Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate,String requestType, Pageable pageable);
     void updateStatusRequest(long requestId, int statusRequest,String note);
     List<Request> processRequestOnMonth(Integer day, Integer month, Integer year);
 //    List<Request> processRequestOnMonth();

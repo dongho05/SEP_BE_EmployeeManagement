@@ -220,13 +220,14 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getList(String searchInput, String departmentId, String statusReq, String fromDate, String toDate, Pageable pageable) {
+    public Page<RequestResponse> getList(String searchInput, String departmentId, String statusReq, String fromDate, String toDate,String requestType, Pageable pageable) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
         String did = departmentId == null || departmentId.toString() == "" ? "" : departmentId;
         String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String requestTypeInput = requestType == null || requestType.equals("") ? null : requestType;
         String to = toDate == null || toDate.equals("") ? null : toDate;
         String status = statusReq == null || statusReq.equals("") ? "" : statusReq;
 
@@ -242,6 +243,7 @@ public class RequestServiceImpl implements RequestService {
                     , null
                     , from
                     , to
+                    ,requestTypeInput
                     , pageable);
         } else if (isMod) {
             list = requestRepository.getList(search
@@ -250,9 +252,10 @@ public class RequestServiceImpl implements RequestService {
                     , null
                     , from
                     , to
+                    ,requestTypeInput
                     , pageable);
         } else {
-            list = requestRepository.getList(search, null, status, userDetails.getId(), from, to, pageable);
+            list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,requestTypeInput, pageable);
         }
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
@@ -288,16 +291,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate, Pageable pageable) {
+    public Page<RequestResponse> getListByUserId(String searchInput, String statusReq, String fromDate, String toDate,String requestType, Pageable pageable) {
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String search = searchInput == null || searchInput.toString() == "" ? "" : searchInput;
         String from = fromDate == null || fromDate.equals("") ? null : fromDate;
+        String requestTypeInput = requestType == null || requestType.equals("") ? null : requestType;
         String to = toDate == null || toDate.equals("") ? null : toDate;
         String status = statusReq == null || statusReq.equals("") ? "" : statusReq;
 
-        Page<Request> list = requestRepository.getList(search, null, status, userDetails.getId(), from, to, pageable);
+        Page<Request> list = requestRepository.getList(search, null, status, userDetails.getId(), from, to,requestTypeInput, pageable);
 
         Page<RequestResponse> result = list.map(new Function<Request, RequestResponse>() {
             @Override
@@ -981,33 +985,33 @@ public class RequestServiceImpl implements RequestService {
                     case 4: // làm thêm giờ (xin trước)
                         // xin sau
                         // kiểm tra xem ngày duyệt đơn đã đi qua ngày xin ot trong đơn chưa
-                        if (!date.isBefore(i.getEndDate())) {
-                            for (Attendance a : attendanceList) {
-                                LocalTime overTime = LocalTime.of(0, 0, 0);
-                                if (!a.getTimeOut().isAfter(i.getEndTime())) {
-                                    overTime = a.getTimeOut().minusHours(i.getStartTime().getHour())
-                                            .minusMinutes(i.getStartTime().getMinute())
-                                            .minusSeconds(i.getStartTime().getSecond());
-                                } else {
-                                    overTime = i.getEndTime().minusHours(i.getStartTime().getHour())
-                                            .minusMinutes(i.getStartTime().getMinute())
-                                            .minusSeconds(i.getStartTime().getSecond());
-                                }
-                                a.setOverTime(overTime);
-                                LocalTime totalWork = a.getRegularHour().plusHours(overTime.getHour())
-                                        .plusMinutes(overTime.getMinute())
-                                        .plusSeconds(overTime.getSecond());
-                                a.setTotalWork(totalWork);
-                            }
+//                        if (!date.isBefore(i.getEndDate())) {
+//                            for (Attendance a : attendanceList) {
+//                                LocalTime overTime = LocalTime.of(0, 0, 0);
+//                                if (!a.getTimeOut().isAfter(i.getEndTime())) {
+//                                    overTime = a.getTimeOut().minusHours(i.getStartTime().getHour())
+//                                            .minusMinutes(i.getStartTime().getMinute())
+//                                            .minusSeconds(i.getStartTime().getSecond());
+//                                } else {
+//                                    overTime = i.getEndTime().minusHours(i.getStartTime().getHour())
+//                                            .minusMinutes(i.getStartTime().getMinute())
+//                                            .minusSeconds(i.getStartTime().getSecond());
+//                                }
+//                                a.setOverTime(overTime);
+//                                LocalTime totalWork = a.getRegularHour().plusHours(overTime.getHour())
+//                                        .plusMinutes(overTime.getMinute())
+//                                        .plusSeconds(overTime.getSecond());
+//                                a.setTotalWork(totalWork);
+//                            }
                             i.setCheck(true);
                             requestRepository.save(i);
-                        }
+//                        }
                         break;
 
                     case 5: // làm thêm giờ (xin sau)
                         for (Attendance a : attendanceList) {
                             LocalTime overTime = LocalTime.of(0, 0, 0);
-                            if(a.getTimeOut()!= null){
+                            if(a.getTimeOut()!= null && a.getTimeOut().isAfter(afternoonShift.getEndTime())){
                                 if (!a.getTimeOut().isAfter(i.getEndTime())) {
                                     overTime = a.getTimeOut().minusHours(i.getStartTime().getHour())
                                             .minusMinutes(i.getStartTime().getMinute())
