@@ -16,7 +16,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.Color;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -171,14 +174,14 @@ public class ExcelExporterReport {
         sheet.setColumnWidth(34, 2000);
 
         cell = row.createCell(35);
-        cell.setCellValue("Nghỉ phép");
+        cell.setCellValue("Tổng số giờ OT");
         cell.setCellStyle(styleTitle);
         sheet.setColumnWidth(35, 2000);
 
-        cell = row.createCell(36);
-        cell.setCellValue("Phép tồn");
-        cell.setCellStyle(styleTitle);
-        sheet.setColumnWidth(36, 4000);
+//        cell = row.createCell(36);
+//        cell.setCellValue("Phép tồn");
+//        cell.setCellStyle(styleTitle);
+//        sheet.setColumnWidth(36, 4000);
 
 
         row = sheet.createRow(5);
@@ -262,6 +265,14 @@ public class ExcelExporterReport {
         styleBodyColor.setAlignment(HorizontalAlignment.CENTER);
         styleBodyColor.setVerticalAlignment(VerticalAlignment.CENTER);
         styleBodyColor.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        CellStyle timeStyle = workbook.createCellStyle();
+        DataFormat dataFormat = workbook.createDataFormat();
+        timeStyle.setDataFormat(dataFormat.getFormat("hh:mm:ss"));
+        timeStyle.setBorderBottom(BorderStyle.THIN);
+        timeStyle.setBorderTop(BorderStyle.THIN);
+        timeStyle.setBorderLeft(BorderStyle.THIN);
+        timeStyle.setBorderRight(BorderStyle.THIN);
 
         // font Body
         XSSFFont fontBody = workbook.createFont();
@@ -361,10 +372,8 @@ public class ExcelExporterReport {
                             cell.setCellStyle(styleBodyCenter);
                         }
                         if (k == 35) {
-                            cell.setCellFormula("(COUNTIF(C" + rowCount + ":AG" + rowCount + ",\"P\")" +
-                                    "+(COUNTIF(C" + rowCount + ":AG" + rowCount + ",\"P/*\")/2)" +
-                                    "+(COUNTIF(C" + rowCount + ":AG" + rowCount + ",\"*/P\")/2))"); // Tổng ngày hưởng lương
-                            cell.setCellStyle(styleBodyCenter);
+                            cell.setCellValue(java.sql.Time.valueOf(LocalTime.of(0,0,0)));
+                            cell.setCellStyle(timeStyle);
                         }
                     }
                 }
@@ -375,6 +384,16 @@ public class ExcelExporterReport {
                 if (user.getUserCode() == ul.getCode()) {
                     String sign = null;
                     List<Attendance> logDetails = ul.getAttendances();
+                    LocalTime otHour = LocalTime.of(0, 0, 0);
+                    for (Attendance attendance : logDetails) {
+                        if (attendance.getUser() == user) {
+                            if(attendance.getOverTime()!=null){
+                                otHour = attendance.getOverTime().plusHours(otHour.getHour())
+                                        .plusMinutes(otHour.getMinute())
+                                        .plusSeconds(otHour.getSecond());
+                            }
+                        } else continue;
+                    }
                     for (Attendance logDetail : logDetails) {
                         cell = row.createCell(logDetail.getDateLog().getDayOfMonth() + 1);
                         if (logDetail.getSigns() == null) {
@@ -481,10 +500,14 @@ public class ExcelExporterReport {
                             cell.setCellStyle(styleBodyCenter);
                         }
                         if (k == 35) {
-                            cell.setCellFormula("(COUNTIF(C" + rowCount + ":AG" + rowCount + ",\"P\")" +
-                                    "+(COUNTIF(C" + rowCount + ":AG" + rowCount + ",\"P/*\")/2)" +
-                                    "+(COUNTIF(C" + rowCount + ":AG" + rowCount + ",\"*/P\")/2))");
-                            cell.setCellStyle(styleBodyCenter);
+
+
+                            cell.setCellValue(java.sql.Time.valueOf(otHour));
+                            cell.setCellStyle(timeStyle);
+//                            Date date = java.sql.Time.valueOf(otHour);
+//                            cell.setCellValue(date);
+//                            cell.setCellValue(0);
+//                            cell.setCellStyle(styleBodyCenter);
                         }
                     }
                 }
@@ -513,9 +536,9 @@ public class ExcelExporterReport {
         cell.setCellFormula("SUM(AI7:AI" + rowIndex + ")");
         cell.setCellStyle(styleBodyCenter);
 
-        cell = row.createCell(35);
-        cell.setCellFormula("SUM(AJ7:AJ" + rowIndex + ")");
-        cell.setCellStyle(styleBodyCenter);
+//        cell = row.createCell(35);
+//        cell.setCellFormula("SUM(AJ7:AJ" + rowIndex + ")");
+//        cell.setCellStyle(styleBodyCenter);
 
         rowIndex = sheet.getLastRowNum();
 

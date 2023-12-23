@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 @Service
@@ -222,6 +224,11 @@ public class UserServiceImp implements UserService {
         }
         user.setPosition(position.get());
 
+        LocalDate lastDay = LocalDate.of(2023, 12, 31);
+        Period period = Period.between(createUser.getStartWork(), lastDay);
+
+        // Lấy số tháng
+        Double monthsDifference = (double) period.getMonths();
         // common
         user.setFullName(createUser.getFullName().trim());
         user.setGender(createUser.getGender());
@@ -230,6 +237,7 @@ public class UserServiceImp implements UserService {
         user.setBirthDay(createUser.getBirthDay());
         user.setPhone(createUser.getPhone().trim());
         user.setAddress(createUser.getAddress().trim());
+        user.setDayoff(monthsDifference);
         user.setStatus(1);
         userRepository.save(user);
 
@@ -242,6 +250,8 @@ public class UserServiceImp implements UserService {
             contract.setUser(user);
 //        contract.setContractName(createUser.getContractName());
             contract.setContractName("Hợp đồng");
+            contract.setStartWork(createUser.getStartWork());
+            contract.setEndWork(createUser.getEndWork());
             contractRepository.save(contract);
 
             contracts.add(contract);
