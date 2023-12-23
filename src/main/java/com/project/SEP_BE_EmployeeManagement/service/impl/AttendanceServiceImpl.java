@@ -123,7 +123,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (holidayService.isDateHoliday(date)) {
             List<User> userList = userRepository.findAll();
             for (User u : userList) {
-                Attendance attendance = new Attendance(u, date);
+                Attendance attendance = attendanceRepository.findAttendanceByUserAndDate(u.getId(), date);
+                if(attendance == null){
+                    attendance = new Attendance(u, date);
+                }
                 attendance.setSigns(signRepository.findByName(ESign.L));
                 attendanceRepository.save(attendance);
                 attendanceList.add(attendance);

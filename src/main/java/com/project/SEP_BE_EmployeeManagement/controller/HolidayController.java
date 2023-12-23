@@ -4,6 +4,7 @@ import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
 import com.project.SEP_BE_EmployeeManagement.model.Holiday;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +25,7 @@ public class HolidayController {
 
     @PostMapping("/create-holiday")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createHoliday(@RequestBody HolidayRequest request) {
+    public ResponseEntity<?> createHoliday(@RequestBody HolidayRequest request) throws NotFoundException {
         if (request.getStartDate().isBefore(LocalDate.now())) {
             return ResponseEntity.internalServerError().body("Không thể chọn ngày bắt đầu đã qua.");
         }

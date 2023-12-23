@@ -32,6 +32,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("SELECT a FROM Attendance a WHERE a.user.id = :userId AND a.dateLog = :targetDate")
     Attendance findAttendanceByUserAndDate(Long userId, LocalDate targetDate);
 
+    @Query("SELECT a FROM Attendance a WHERE a.dateLog = :targetDate")
+    List<Attendance> findAttendanceByDate(LocalDate targetDate);
+
 
     @Query(value = "select * from attendance l \n" +
             "join users u on l.user_id = u.id \n" +
