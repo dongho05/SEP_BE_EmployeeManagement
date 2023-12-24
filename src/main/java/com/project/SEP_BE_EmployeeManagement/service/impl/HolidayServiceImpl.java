@@ -2,13 +2,11 @@ package com.project.SEP_BE_EmployeeManagement.service.impl;
 
 import com.project.SEP_BE_EmployeeManagement.dto.request.holiday.HolidayRequest;
 import com.project.SEP_BE_EmployeeManagement.dto.response.holiday.HolidayResponse;
-import com.project.SEP_BE_EmployeeManagement.model.Attendance;
-import com.project.SEP_BE_EmployeeManagement.model.ESign;
-import com.project.SEP_BE_EmployeeManagement.model.Holiday;
-import com.project.SEP_BE_EmployeeManagement.model.Request;
+import com.project.SEP_BE_EmployeeManagement.model.*;
 import com.project.SEP_BE_EmployeeManagement.repository.AttendanceRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.HolidayRepository;
 import com.project.SEP_BE_EmployeeManagement.repository.SignRepository;
+import com.project.SEP_BE_EmployeeManagement.repository.UserRepository;
 import com.project.SEP_BE_EmployeeManagement.service.AttendanceService;
 import com.project.SEP_BE_EmployeeManagement.service.HolidayService;
 import javassist.NotFoundException;
@@ -19,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.accessibility.AccessibleText;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,10 @@ public class HolidayServiceImpl implements HolidayService {
     AttendanceRepository attendanceRepository;
 
     @Autowired
-    @Lazy
-    AttendanceService attendanceService;
+    private UserRepository userRepository;
+
+    @Autowired
+    private SignRepository signRepository;
 
     @Override
     public Page<HolidayResponse> getList(String searchInput, Pageable pageable,Integer year) {
@@ -74,7 +75,19 @@ public class HolidayServiceImpl implements HolidayService {
         LocalDate endDate = request.getEndDate();
         LocalDate currentDate = startDate;
         while (!currentDate.isAfter(endDate)) {
-            List<Attendance> attendanceList = attendanceService.processAttendanceForUserOnDate(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear());
+            DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+            if(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY){
+                endDate = endDate.plusDays(1);
+            }
+            List<User> userList = userRepository.findAll();
+            for (User u : userList) {
+                Attendance attendance = attendanceRepository.findAttendanceByUserAndDate(u.getId(), currentDate);
+                if(attendance == null){
+                    attendance = new Attendance(u, currentDate);
+                }
+                attendance.setSigns(signRepository.findByName(ESign.L));
+                attendanceRepository.save(attendance);
+            }
             // Di chuyển đến ngày tiếp theo
             currentDate = currentDate.plusDays(1);
         }
@@ -112,7 +125,19 @@ public class HolidayServiceImpl implements HolidayService {
         endDate = request.getEndDate();
         currentDate = startDate;
         while (!currentDate.isAfter(endDate)) {
-            List<Attendance> attendanceList = attendanceService.processAttendanceForUserOnDate(currentDate.getDayOfMonth(), currentDate.getMonthValue(), currentDate.getYear());
+            DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+            if(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY){
+                endDate = endDate.plusDays(1);
+            }
+            List<User> userList = userRepository.findAll();
+            for (User u : userList) {
+                Attendance attendance = attendanceRepository.findAttendanceByUserAndDate(u.getId(), currentDate);
+                if(attendance == null){
+                    attendance = new Attendance(u, currentDate);
+                }
+                attendance.setSigns(signRepository.findByName(ESign.L));
+                attendanceRepository.save(attendance);
+            }
             // Di chuyển đến ngày tiếp theo
             currentDate = currentDate.plusDays(1);
         }
