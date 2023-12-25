@@ -81,7 +81,7 @@ public class UserServiceImp implements UserService {
         u.setEmail(updateUserRequest.getEmail());
         u.setPhone(updateUserRequest.getPhone());
         u.setBirthDay(updateUserRequest.getBirthDay());
-        u.setStartWork(updateUserRequest.getStartWork());
+//        u.setStartWork(updateUserRequest.getStartWork());
         u.setEndWork(updateUserRequest.getEndWork());
 
         // set department

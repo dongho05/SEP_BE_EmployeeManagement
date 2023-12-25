@@ -132,6 +132,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 attendanceList.add(attendance);
             }
         }
+
         // kiểm tra ngày hôm đó có phải là ngày cuối tuần hay không
         if (dayOfWeek == DayOfWeek.SUNDAY || dayOfWeek == DayOfWeek.SATURDAY) {
             List<User> userList = userRepository.findAll();
@@ -149,6 +150,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         }
         List<LogCheckInOut> logCheckInOuts = logCheckInOutRepository.findByDateCheck(date);
+
         // trường hợp không phải là ngày cuối tuần và ngày lễ
         if(logCheckInOutRepository.findByDateCheck(date).size() > 0) {
             List<Long> listUserId = logCheckInOutRepository.findDistinctUserIdByDateCheck(date);
@@ -270,6 +272,15 @@ public class AttendanceServiceImpl implements AttendanceService {
                     }
                 }
             }
+        }
+
+        // nếu ngày 1/1 thì cập nhật lại ngày nghỉ
+        if(date.getDayOfMonth() == 1 && date.getMonthValue() == 1){
+            List<User> userList = userRepository.findAll();
+            for (User u : userList) {
+                u.setDayoff(12.0);
+            }
+            userRepository.saveAll(userList);
         }
         return attendanceList;
     }
