@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ public class UpdateUserRequest {
     private long positionId;
     private long departmentId;
     private MultipartFile userImage;
+    @Required
     private MultipartFile contractFile;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startWork;

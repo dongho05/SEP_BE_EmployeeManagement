@@ -26,6 +26,9 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
     Optional<Contract> findById(long id);
 
+    @Query(value = "select d from Contract d where d.user.id = ?1")
+    Optional<Contract> findByUserId(long id);
+
     //lay tat ca id user da co
     @Query("SELECT DISTINCT c.user.id FROM Contract c WHERE c.user.id IS NOT NULL")
     List<Long> findDistinctUserIds();

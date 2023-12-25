@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -108,9 +109,6 @@ public class UserServiceImp implements UserService {
 //        String userImage = fileManagerService.saveUserImage(updateUserRequest.getUserImage());
 //        u.setUserImage(userImage);
         userRepository.save(u);
-
-
-
         //set contracts
         if(updateUserRequest.getContractFile() != null && updateUserRequest.getContractFile().getSize()  >0){
             Set<Contract> contracts = new HashSet<>();
@@ -120,12 +118,13 @@ public class UserServiceImp implements UserService {
             contract.setUser(u);
 //        contract.setContractName(createUser.getContractName());
             contract.setContractName("Hợp đồng");
-            contractRepository.save(contract);
-
-            contracts.add(contract);
-            u.setContracts(contracts);
+//            contractRepository.save(contract);
+//            contracts.add(contract);
+//            u.setContracts(contracts);
             userRepository.save(u);
         }
+
+
 
 
         //set contracts
