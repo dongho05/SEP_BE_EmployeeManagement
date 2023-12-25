@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Page<Contract> getDataTest(String search, String deptId,String empId, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
         Long idDept = null;
         if (!deptId.isEmpty()) {
             idDept = Long.valueOf(deptId);

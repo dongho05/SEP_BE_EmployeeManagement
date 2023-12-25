@@ -12,10 +12,7 @@ import com.project.SEP_BE_EmployeeManagement.service.DepartmentService;
 import javassist.NotFoundException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -34,7 +31,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Page<DepartmentDto> getData(String search, Integer pageNo, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Pageable pageable = PageRequest.of(pageNo,pageSize, Sort.by("createdDate").descending());
         Page<Department> page = departmentRepository.getDepartment(search,pageable);
 
         Page<DepartmentDto> response =  DepartmentMapper.toDtoPage(page);

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -40,7 +41,7 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public Page<PositionDto> getData(String search, Integer pageNo, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("createdDate").descending());
         Page<Position> page = repository.getPosition(search, pageable);
 
         Page<PositionDto> response = PositionMapper.toDtoPage(page);

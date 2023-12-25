@@ -15,7 +15,7 @@ import java.util.List;
 public interface HolidayRepository extends JpaRepository<Holiday,Integer> {
     @Query(value = "select * from holiday h " +
             " where (:search is null or :search = '' or h.holiday_name LIKE %:search% ) " +
-            " and (:year is null or :year ='' or YEAR(h.start_date) = :year) ",nativeQuery = true)
+            " and (:year is null or :year ='' or YEAR(h.start_date) = :year) order by h.start_date ",nativeQuery = true)
     Page<Holiday> getList(String search, Pageable pageable,Integer year);
 
     Boolean existsByHolidayName(String holidayName);
