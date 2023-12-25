@@ -133,31 +133,38 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         }
         // kiểm tra ngày hôm đó có phải là ngày cuối tuần hay không
-        else if (dayOfWeek == DayOfWeek.SUNDAY || dayOfWeek == DayOfWeek.SATURDAY) {
+        if (dayOfWeek == DayOfWeek.SUNDAY || dayOfWeek == DayOfWeek.SATURDAY) {
             List<User> userList = userRepository.findAll();
             // kiểm nếu ngày cuối tuần đó không có log chấm công
             for (User u : userList) {
                 if (logCheckInOutRepository.findByUserAndDateCheck(u.getId(), date).size() == 0) {
-                    Attendance attendance = new Attendance(u, date);
+                    Attendance attendance = attendanceRepository.findAttendanceByUserAndDate(u.getId(), date);
+                    if(attendance == null){
+                        attendance = new Attendance(u, date);
+                    }
                     attendance.setSigns(signRepository.findByName(ESign.NT));
                     attendanceRepository.save(attendance);
                     attendanceList.add(attendance);
                 }
             }
         }
+        List<LogCheckInOut> logCheckInOuts = logCheckInOutRepository.findByDateCheck(date);
         // trường hợp không phải là ngày cuối tuần và ngày lễ
-        else {
+        if(logCheckInOutRepository.findByDateCheck(date).size() > 0) {
             List<Long> listUserId = logCheckInOutRepository.findDistinctUserIdByDateCheck(date);
             WorkingTime morningShift = workingTimeRepository.findByWorkingTimeName(EWorkingTime.MORNING_SHIFT).orElseThrow();
             WorkingTime afternoonShift = workingTimeRepository.findByWorkingTimeName(EWorkingTime.AFTERNOON_SHIFT).orElseThrow();
             for (Long i : listUserId) {
-                User user = userRepository.findById(i).orElseThrow();
+                User user = userRepository.findById(i).get();
                 List<LogCheckInOut> checkInOutRecords = logCheckInOutRepository.findByUserAndDateCheck(i, date);
                 if (checkInOutRecords.size() > 0) {
                     // lưu vào attendance
                     LocalTime earliestCheckIn = checkInOutRecords.get(0).getTimeCheck();
                     LocalTime latestCheckOut = checkInOutRecords.get(checkInOutRecords.size() - 1).getTimeCheck();
-                    Attendance attendance = new Attendance(user, date);
+                    Attendance attendance = attendanceRepository.findAttendanceByUserAndDate(user.getId(), date);
+                    if(attendance == null){
+                        attendance = new Attendance(user, date);
+                    }
                     // set timein timeout
                     attendance.setTimeIn(earliestCheckIn);
                     attendance.setTimeOut(latestCheckOut);

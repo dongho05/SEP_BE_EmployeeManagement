@@ -38,6 +38,10 @@ public interface LogCheckInOutRepository extends JpaRepository<LogCheckInOut, Lo
             " where l.dateCheck = ?2 and l.user.id = ?1 order by l.timeCheck asc")
     List<LogCheckInOut> findByUserAndDateCheck(Long userId, LocalDate dateCheck);
 
+    @Query(value = "select l from LogCheckInOut l\n" +
+            " where l.dateCheck = ?1 order by l.timeCheck asc")
+    List<LogCheckInOut> findByDateCheck(LocalDate dateCheck);
+
     @Query("SELECT DISTINCT lc.user.id FROM LogCheckInOut lc WHERE lc.dateCheck = :date")
     List<Long> findDistinctUserIdByDateCheck(LocalDate date);
 }
