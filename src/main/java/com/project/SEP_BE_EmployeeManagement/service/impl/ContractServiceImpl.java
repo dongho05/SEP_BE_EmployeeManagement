@@ -82,7 +82,7 @@ public class ContractServiceImpl implements ContractService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id: " + userId + " Not Found"));
         contract.setUser(user);
         contractRepository.save(contract);
-        user.setStartWork(createContract.getStartWork());
+//        user.setStartWork(createContract.getStartWork());
         user.setEndWork(createContract.getEndWork());
         userRepository.save(user);
         return contract;
